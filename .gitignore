@@ -1,3 +1,6 @@
 *.swp
 datasource.json
 config.json
+
+#Ignore the stuff we get with 'go get'
+github.com/
