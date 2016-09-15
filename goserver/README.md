@@ -1,7 +1,7 @@
+# Go Server
 This directory is to house the code for the go server.
 
-
-
+## Running the project
 To run the web server:
 export GOPATH="/Path/To/Project/cse_cit_480/goserver"
 
@@ -13,3 +13,6 @@ go get github.com/gorilla/mux
 
 Then run the main program (assuming it isn't already compiled)
 go run src/treview.com/bloom/main.go
+
+## Editing the project
+Before committing your code, you must run the 'go fmt' command on your go files. 
