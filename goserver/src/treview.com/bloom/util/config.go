@@ -1,40 +1,40 @@
 package util
 
 import (
+	"encoding/json"
+	"os"
 	"strconv"
 	"strings"
-	"os"
-	"encoding/json"
 )
 
 var Config Configuration
 
 type Configuration struct {
-	HTMLRoot string
-	TemplateRoot string
-	DefaultPage string
-	IP   string
-	Port int64
-	TimeFmt string
-	ErrorFmt string
-	DatasourceFile string
+	HTMLRoot           string
+	TemplateRoot       string
+	DefaultPage        string
+	IP                 string
+	Port               int64
+	TimeFmt            string
+	ErrorFmt           string
+	DatasourceFile     string
 	DatabaseConnection DatabaseConnection
 }
 
-func (c *Configuration)GetURL() (string) {
-	return c.IP + ":" + strconv.FormatInt(c.Port,10)
+func (c *Configuration) GetURL() string {
+	return c.IP + ":" + strconv.FormatInt(c.Port, 10)
 }
 
-func (c Configuration)Pretty() (string) {
+func (c Configuration) Pretty() string {
 	return "Config:" +
 		"\n\tHTMLRoot = " + c.HTMLRoot +
 		"\n\tTemplateRoot = " + c.TemplateRoot +
 		"\n\tDefaultPage = " + c.DefaultPage +
 		"\n\tIP = " + c.IP +
-		"\n\tPort = " + strconv.FormatInt(c.Port,10) +
+		"\n\tPort = " + strconv.FormatInt(c.Port, 10) +
 		"\n\tTimeFmt = " + c.TimeFmt +
 		"\n\tErrorFmt = " + c.ErrorFmt +
-		"\n\tDatasourceFile = " + c.DatasourceFile;
+		"\n\tDatasourceFile = " + c.DatasourceFile
 }
 
 type DatabaseConnection struct {
@@ -63,7 +63,6 @@ func GetDatabaseConnectionInfo(filename string) (DatabaseConnection, error) {
 	return dbConfig, nil
 }
 
-
 func ReadConfigurationInfo(filenames []string) (Configuration, error) {
 	out := Config
 
@@ -81,18 +80,18 @@ func ReadConfigurationInfo(filenames []string) (Configuration, error) {
 			out = prechange
 		}
 	}
-	out.ErrorFmt = strings.Replace(out.ErrorFmt, "%", "%%",-1)
-	out.TimeFmt = strings.Replace(out.TimeFmt, "%", "%%",-1)
-	return out,nil
+	out.ErrorFmt = strings.Replace(out.ErrorFmt, "%", "%%", -1)
+	out.TimeFmt = strings.Replace(out.TimeFmt, "%", "%%", -1)
+	return out, nil
 }
 
 func initConfig() {
-	Config = Configuration{ HTMLRoot: "html",
-		TemplateRoot: "templates",
-		Port: 8080,
-		DefaultPage: "index.html",
-		IP: "",
-		TimeFmt: "2006 Jan 2 15:04:05",
-		ErrorFmt: "${level} ${time}:\t${msg}\n",
-		DatasourceFile: "datasource.json" }
+	Config = Configuration{HTMLRoot: "html",
+		TemplateRoot:   "templates",
+		Port:           8080,
+		DefaultPage:    "index.html",
+		IP:             "",
+		TimeFmt:        "2006 Jan 2 15:04:05",
+		ErrorFmt:       "${level} ${time}:\t${msg}\n",
+		DatasourceFile: "datasource.json"}
 }
