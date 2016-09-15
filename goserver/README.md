@@ -2,7 +2,7 @@
 This directory is to house the code for the go server.
 
 ## Running the project
-To run the web server:
+To run the web server(in Git Bash or Linux):
 export GOPATH="/Path/To/Project/cse_cit_480/goserver"
 
 Then, go get the PostgreSQL connecter we use lib/pq:
