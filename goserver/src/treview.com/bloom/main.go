@@ -47,6 +47,7 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", handlers.Root)
 	router.HandleFunc("/users", handlers.UsersRoot)
+	router.HandleFunc("/users/{userId}", handlers.Users)
 	router.HandleFunc("/projects", handlers.ProjectsRoot)
 	http.ListenAndServe(config.GetURL(), router)
 }
