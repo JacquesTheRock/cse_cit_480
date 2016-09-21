@@ -4,15 +4,10 @@ import (
 	"database/sql"
 	//"encoding/json"
 	"fmt"
-	//"github.com/gorilla/mux"
 	_ "github.com/lib/pq" //Required for Postgres
 	//"html/template"
 	"net/http"
-	//"path/filepath"
-	//"treview.com/bloom/handlers"
 	"treview.com/bloom/util"
-	//"strings"
-	//"io/ioutil"
 )
 
 var config *util.Configuration
@@ -44,8 +39,6 @@ func init() {
 
 func main() {
 	fmt.Println(util.Config.Pretty())
-	//router := mux.NewRouter().StrictSlash(true)
-	//router.HandleFunc("/", handlers.Root)
-	router := NewRouter()
+	router := NewRouter("/v1")
 	http.ListenAndServe(config.GetURL(), router)
 }

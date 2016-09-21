@@ -14,13 +14,13 @@ type Route struct {
 }
 
 
-func NewRouter() *mux.Router {
+func NewRouter(root string) *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range routes {
 		handler := route.HandlerFunc
 		router.
 			Methods(route.Methods...).
-			Path(route.Pattern).
+			Path(root + route.Pattern).
 			Name(route.Name).
 			Handler(handler)
 	}
