@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"github.com/gorilla/mux"
 	"treview.com/bloom/handlers"
+	"treview.com/bloom/util"
 )
 
 type Route struct {
@@ -13,11 +14,21 @@ type Route struct {
 	HandlerFunc http.HandlerFunc
 }
 
+func Wrapper(inner http.Handler, name string) http.Handler {
+	return http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			inner.ServeHTTP(w,r)
+			util.PrintInfo(
+				r.Method + "\t" +
+				r.RequestURI + "\t" +
+				name + "\t")
+	})
+}
 
 func NewRouter(root string) *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range routes {
-		handler := route.HandlerFunc
+		handler := Wrapper(route.HandlerFunc, route.Name)
 		router.
 			Methods(route.Methods...).
 			Path(root + route.Pattern).
