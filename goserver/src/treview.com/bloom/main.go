@@ -1,17 +1,16 @@
 package main
 
 import (
-	"database/sql"
 	//"encoding/json"
-	"fmt"
+	"database/sql"
 	_ "github.com/lib/pq" //Required for Postgres
+	"fmt"
 	//"html/template"
 	"net/http"
 	"treview.com/bloom/util"
 )
 
 var config *util.Configuration
-var database *sql.DB
 
 func init() {
 	configFiles := make([]string, 0)
@@ -31,7 +30,7 @@ func init() {
 	} else {
 		fmt.Printf("Database Using URL value, ignoring others\n")
 	}
-	database, err = sql.Open("postgres", config.DatabaseConnection.URL)
+	util.Database, err = sql.Open("postgres", config.DatabaseConnection.URL)
 	if err != nil {
 		panic(err)
 	}
