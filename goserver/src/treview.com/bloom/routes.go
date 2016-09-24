@@ -17,11 +17,11 @@ type Route struct {
 func Wrapper(inner http.Handler, name string) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			inner.ServeHTTP(w,r)
 			util.PrintInfo(
 				r.Method + "\t" +
 				r.RequestURI + "\t" +
 				name + "\t")
+			inner.ServeHTTP(w,r)
 	})
 }
 
