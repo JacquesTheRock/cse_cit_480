@@ -24,7 +24,10 @@ func getBreeds(w http.ResponseWriter, r *http.Request) {
 	encoder.Encode(b)
 }
 func postBreeds(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(r.Form)
 }
 
 func BreedsBid(w http.ResponseWriter, r *http.Request) {
