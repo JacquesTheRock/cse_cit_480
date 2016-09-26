@@ -2,6 +2,8 @@ package handlers
 
 import (
 	"net/http"
+	"encoding/json"
+	"treview.com/bloom/entity"
 )
 
 func Projects(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +15,12 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjects(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//token := r.Header.Get("Authorization")
+	p := [10]entity.Project{}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(p)
 }
 func postProjects(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -30,7 +37,12 @@ func ProjectsPid(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPid(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//token := r.Header.Get("Authorization")
+	p := entity.Project{}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(p)
 }
 func putProjectsPid(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -48,7 +60,12 @@ func ProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//token := r.Header.Get("Authorization")
+	t := [10]entity.Trait{}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(t)
 }
 func postProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -65,7 +82,12 @@ func ProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//token := r.Header.Get("Authorization")
+	t := entity.Trait{}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(t)
 }
 func putProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -82,7 +104,12 @@ func ProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//token := r.Header.Get("Authorization")
+	c := [10]entity.Cross{}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(c)
 }
 func postProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -99,7 +126,12 @@ func ProjectsPidCrossesCid(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidCrossesCid(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//token := r.Header.Get("Authorization")
+	c := entity.Cross{}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(c)
 }
 func putProjectsPidCrossesCid(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -117,7 +149,12 @@ func ProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//token := r.Header.Get("Authorization")
+	c := [10]entity.Candidate{}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(c)
 }
 func postProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -134,7 +171,12 @@ func ProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request)
 	}
 }
 func getProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//token := r.Header.Get("Authorization")
+	c := entity.Candidate{}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(c)
 }
 func putProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
