@@ -17,7 +17,7 @@ func VerifyPermissions(uid string, token string) bool {
 func searchToken(uid string, token string) (entity.UserLogin, error) {
 	output := entity.UserLogin{}
 	const qBase = "SELECT user_id,name,key FROM logins WHERE user_id = $1 AND key = $2"
-	b, err1 := base64.StdEncoding.DecodeString(token)
+	b, err1 := base64.URLEncoding.DecodeString(token)
 	if err1 != nil {
 		util.PrintError(err1)
 		util.PrintError("Base64 conversion to Bytea failed")
@@ -34,7 +34,7 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 		var id, dname sql.NullString
 		var b []byte
 		err = rows.Scan(&id, &dname, &b)
-		token := base64.StdEncoding.EncodeToString(b)
+		token := base64.URLEncoding.EncodeToString(b)
 		if id.Valid {
 			output.ID = id.String
 		}
@@ -44,15 +44,18 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 		output.Token = token
 		if err != nil {
 			util.PrintError(err)
+			util.PrintInfo("Failure to Find Matching Token")
 		}
 	}
 	return output, nil
 }
 
-func parseAuthorization(auth string) (string, string) {
+func parseAuthorization(authLine string) (string, string) {
+	auth := strings.Split(authLine," ")[1]
 	data, err := base64.URLEncoding.DecodeString(auth)
 	if err != nil {
 		util.PrintError(err)
+		util.PrintError("Fail to parse Authorization")
 		return "Guest", ""
 	}
 	s := string(data)
@@ -78,7 +81,7 @@ func createToken(uid string) (string, error) {
 		util.PrintError(err)
 		return "", err
 	}
-	token := base64.StdEncoding.EncodeToString(b)
+	token := base64.URLEncoding.EncodeToString(b)
 	return token, nil
 }
 
@@ -139,7 +142,7 @@ func CheckAuth(auth string) entity.UserLogin {
 func LogoutUser(auth string) error {
 	uid, token := parseAuthorization(auth)
 	const qBase = "DELETE FROM logins WHERE user_id = $1 and key = $2"
-	b, err1 := base64.StdEncoding.DecodeString(token)
+	b, err1 := base64.URLEncoding.DecodeString(token)
 	if err1 != nil {
 		util.PrintError(err1)
 		util.PrintError("Base64 conversion to Bytea failed")
