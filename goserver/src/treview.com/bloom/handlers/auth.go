@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"treview.com/bloom/entity"
 	"treview.com/bloom/util"
+	"database/sql"
 )
 
 func Auth(w http.ResponseWriter, r *http.Request) {
@@ -25,8 +26,14 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 
 func searchToken(uid string, token string) (entity.UserLogin, error) {
 	output := entity.UserLogin{}
-	const qBase = "SELECT user_id,name,token FROM logins WHERE user_id = $1 AND token = $2"
-	rows, err := util.Database.Query(qBase, uid, token)
+	const qBase = "SELECT user_id,name,key FROM logins WHERE user_id = $1 AND key = $2"
+	b,err1 := base64.StdEncoding.DecodeString(token)
+	if err1 != nil {
+		util.PrintError(err1)
+		util.PrintError("Base64 conversion to Bytea failed")
+		return output, err1
+	}
+	rows, err := util.Database.Query(qBase, uid, b)
 	if err != nil {
 		util.PrintError(err)
 		util.PrintError("Query Failed")
@@ -34,9 +41,19 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&output.ID,&output.DisplayName,&output.Token)
+		var id,dname sql.NullString
+		var b []byte
+		err = rows.Scan(&id,&dname,&b)
+		token := base64.StdEncoding.EncodeToString(b)
+		if id.Valid {
+			output.ID = id.String
+		}
+		if dname.Valid {
+			output.DisplayName = dname.String
+		}
+		output.Token = token
 		if err != nil {
-			util.PrintError(output)
+			util.PrintError(err)
 		}
 	}
 	return output, nil
@@ -66,12 +83,12 @@ func createToken(uid string) (string,error) {
 		util.PrintError(err)
 		return "", err
 	}
-	token := base64.StdEncoding.EncodeToString(b)
-	_,err = util.Database.Exec(qBase, uid, token)
+	_,err = util.Database.Exec(qBase, uid, b)
 	if err != nil {
 		util.PrintError(err)
 		return "", err
 	}
+	token := base64.StdEncoding.EncodeToString(b)
 	return token,nil
 }
 
@@ -81,7 +98,7 @@ func loginUser(user string, pass string) (entity.UserLogin,error) {
 		"Guest",
 		"",
 	}
-	const qBase = "SELECT name,hash,salt,algorithm FROM user WHERE id = $1"
+	const qBase = "SELECT name,hash,salt,algorithm FROM users WHERE id = $1"
 	var name,hash,salt,algorithm,checkHash string
 	rows, err := util.Database.Query(qBase,user)
 	if err != nil {
@@ -131,8 +148,14 @@ func checkAuth(auth string) entity.UserLogin {
 
 func logoutUser(auth string) error {
 	uid,token := parseAuthorization(auth)
-	const qBase = "DELETE FROM logins WHERE user_id = $1 and token = $2"
-	_,err := util.Database.Exec(qBase, uid, token)
+	const qBase = "DELETE FROM logins WHERE user_id = $1 and key = $2"
+	b,err1 := base64.StdEncoding.DecodeString(token)
+	if err1 != nil {
+		util.PrintError(err1)
+		util.PrintError("Base64 conversion to Bytea failed")
+		return err1
+	}
+	_,err := util.Database.Exec(qBase, uid, b)
 	if err != nil {
 		util.PrintError(err)
 		return err
