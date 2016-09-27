@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS cross (
+	id INTEGER,
+	project_id INTEGER,
+	name VARCHAR(255),
+	PRIMARY KEY(id)
+);
