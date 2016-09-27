@@ -10,8 +10,10 @@ import (
 	"treview.com/bloom/util"
 )
 
-func VerifyPermissions(uid string, token string) bool {
-	return false
+func VerifyPermissions(auth string) bool {
+	uid,token := parseAuthorization(auth)
+	u := CheckAuth(auth)
+	return u.ID == uid 
 }
 
 func searchToken(uid string, token string) (entity.UserLogin, error) {
