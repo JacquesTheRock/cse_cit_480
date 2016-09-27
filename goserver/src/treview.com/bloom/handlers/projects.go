@@ -1,9 +1,12 @@
 package handlers
 
 import (
+	"strconv"
 	"encoding/json"
 	"net/http"
 	"treview.com/bloom/entity"
+	"treview.com/bloom/util"
+	authlib "treview.com/bloom/auth"
 )
 
 func Projects(w http.ResponseWriter, r *http.Request) {
@@ -15,6 +18,7 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjects(w http.ResponseWriter, r *http.Request) {
+	//TODO: List all projects
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	//token := r.Header.Get("Authorization")
 	p := [10]entity.Project{}
@@ -23,7 +27,27 @@ func getProjects(w http.ResponseWriter, r *http.Request) {
 	encoder.Encode(p)
 }
 func postProjects(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	token := r.Header.Get("Authorization")
+	p := entity.Project{}
+	if authlib.VerifyPermissions(token) {
+		r.ParseForm()
+		name := r.FormValue("name")
+		desc := r.FormValue("description")
+		visible,err := strconv.ParseBool(r.FormValue("public"))
+		if err != nil{
+			util.PrintError(err)
+			w.WriteHeader(400)
+			return
+		}
+		p,err = entity.NewProject(name, desc, visible)
+	} else {
+		util.PrintInfo("User Access denied")
+	}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(p)
+	
 }
 
 func ProjectsPid(w http.ResponseWriter, r *http.Request) {

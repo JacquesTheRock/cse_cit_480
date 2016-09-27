@@ -11,7 +11,7 @@ import (
 )
 
 func VerifyPermissions(auth string) bool {
-	uid,token := parseAuthorization(auth)
+	uid,_ := parseAuthorization(auth)
 	u := CheckAuth(auth)
 	return u.ID == uid 
 }
