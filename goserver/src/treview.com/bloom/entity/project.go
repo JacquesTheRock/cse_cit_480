@@ -48,3 +48,25 @@ func GetProject(id int64) (Project,error) {
 	}
 	return output, nil
 }
+
+func GetAllProjects() ([]Project,error) {
+	const qBase = "SELECT id,name,description,visibility FROM project"
+	output := []Project{}
+	rows, err := util.Database.Query(qBase)
+	var p Project
+	defer rows.Close()
+	for rows.Next() {
+		p = Project{}
+		var desc sql.NullString
+		err = rows.Scan(&p.ID, &p.Name,&desc,&p.Visibility)
+		if desc.Valid {
+			p.Description = desc.String
+		}
+		if err != nil {
+			util.PrintError(err)
+			return output,err
+		}
+		output = append(output,p)
+	}
+	return output, nil
+}

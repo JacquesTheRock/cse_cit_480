@@ -19,10 +19,10 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjects(w http.ResponseWriter, r *http.Request) {
-	//TODO: List all projects
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//TODO: Confirm logged in
 	//token := r.Header.Get("Authorization")
-	p := [10]entity.Project{}
+	p,_ := entity.GetAllProjects()
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(p)
