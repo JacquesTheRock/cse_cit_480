@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS spawn (
+CREATE TABLE IF NOT EXISTS crosses (
 	id INTEGER,
 	project_id INTEGER,
 	name VARCHAR(255),
