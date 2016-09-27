@@ -1,6 +1,7 @@
 CREATE ROLE bloom_rw WITH PASSWORD '';
 ALTER ROLE bloom_rw WITH LOGIN;
-GRANT CONNECT ON DATABASE bloomdb TO bloom_rw; 
+GRANT CONNECT ON DATABASE bloomdb TO bloom_rw;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO bloom_rw;
 GRANT ALL ON users TO bloom_rw;
 GRANT ALL ON logins TO bloom_rw;
 GRANT ALL ON role_t TO bloom_rw;
