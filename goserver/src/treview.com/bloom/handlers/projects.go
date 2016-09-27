@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"encoding/json"
 	"net/http"
+	"github.com/gorilla/mux"
 	"treview.com/bloom/entity"
 	"treview.com/bloom/util"
 	authlib "treview.com/bloom/auth"
@@ -61,9 +62,15 @@ func ProjectsPid(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPid(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	pid,err := strconv.ParseInt(vars["pid"],10,64)
+	if err != nil {
+		w.WriteHeader(400)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	//token := r.Header.Get("Authorization")
-	p := entity.Project{}
+	p,_ := entity.GetProject(pid)
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(p)
