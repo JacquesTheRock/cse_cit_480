@@ -30,6 +30,7 @@ func getProjects(w http.ResponseWriter, r *http.Request) {
 func postProjects(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	token := r.Header.Get("Authorization")
+	uid,_ := authlib.ParseAuthorization(token)
 	p := entity.Project{}
 	if authlib.VerifyPermissions(token) {
 		r.ParseForm()
@@ -41,7 +42,7 @@ func postProjects(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(400)
 			return
 		}
-		p,err = entity.NewProject(name, desc, visible)
+		p,err = entity.NewProject(uid,name, desc, visible)
 	} else {
 		util.PrintInfo("User Access denied")
 	}
@@ -69,8 +70,9 @@ func getProjectsPid(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//token := r.Header.Get("Authorization")
-	p,_ := entity.GetProject(pid)
+	token := r.Header.Get("Authorization")
+	uid,_ := authlib.ParseAuthorization(token)
+	p,_ := entity.GetProject(uid,pid)
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(p)

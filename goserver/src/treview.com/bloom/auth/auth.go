@@ -11,7 +11,7 @@ import (
 )
 
 func VerifyPermissions(auth string) bool {
-	uid,_ := parseAuthorization(auth)
+	uid,_ := ParseAuthorization(auth)
 	u := CheckAuth(auth)
 	return u.ID == uid 
 }
@@ -52,7 +52,7 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 	return output, nil
 }
 
-func parseAuthorization(authLine string) (string, string) {
+func ParseAuthorization(authLine string) (string, string) {
 	auth := strings.Split(authLine," ")[1]
 	data, err := base64.URLEncoding.DecodeString(auth)
 	if err != nil {
@@ -132,7 +132,7 @@ func CheckAuth(auth string) entity.UserLogin {
 		"Guest",
 		"",
 	}
-	uid, token := parseAuthorization(auth)
+	uid, token := ParseAuthorization(auth)
 	result, err := searchToken(uid, token)
 	if err != nil {
 		util.PrintError("Failure to Auth Token for: " + uid)
@@ -142,7 +142,7 @@ func CheckAuth(auth string) entity.UserLogin {
 }
 
 func LogoutUser(auth string) error {
-	uid, token := parseAuthorization(auth)
+	uid, token := ParseAuthorization(auth)
 	const qBase = "DELETE FROM logins WHERE user_id = $1 and key = $2"
 	b, err1 := base64.URLEncoding.DecodeString(token)
 	if err1 != nil {
