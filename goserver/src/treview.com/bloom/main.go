@@ -3,8 +3,8 @@ package main
 import (
 	//"encoding/json"
 	"database/sql"
-	_ "github.com/lib/pq" //Required for Postgres
 	"fmt"
+	_ "github.com/lib/pq" //Required for Postgres
 	//"html/template"
 	"net/http"
 	"treview.com/bloom/util"

@@ -1,24 +1,23 @@
 package handlers
 
 import (
-	"strings"
-	"encoding/base64"
-	"crypto/sha512"
 	"crypto/rand"
+	"crypto/sha512"
+	"database/sql"
+	"encoding/base64"
+	"strings"
 	"treview.com/bloom/entity"
 	"treview.com/bloom/util"
-	"database/sql"
 )
 
-func VerifyPermissions(uid string, token string) bool{
+func VerifyPermissions(uid string, token string) bool {
 	return false
 }
-
 
 func searchToken(uid string, token string) (entity.UserLogin, error) {
 	output := entity.UserLogin{}
 	const qBase = "SELECT user_id,name,key FROM logins WHERE user_id = $1 AND key = $2"
-	b,err1 := base64.StdEncoding.DecodeString(token)
+	b, err1 := base64.StdEncoding.DecodeString(token)
 	if err1 != nil {
 		util.PrintError(err1)
 		util.PrintError("Base64 conversion to Bytea failed")
@@ -32,9 +31,9 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var id,dname sql.NullString
+		var id, dname sql.NullString
 		var b []byte
-		err = rows.Scan(&id,&dname,&b)
+		err = rows.Scan(&id, &dname, &b)
 		token := base64.StdEncoding.EncodeToString(b)
 		if id.Valid {
 			output.ID = id.String
@@ -50,48 +49,48 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 	return output, nil
 }
 
-func parseAuthorization(auth string) (string,string) {
+func parseAuthorization(auth string) (string, string) {
 	data, err := base64.URLEncoding.DecodeString(auth)
 	if err != nil {
 		util.PrintError(err)
-		return "Guest",""
+		return "Guest", ""
 	}
 	s := string(data)
-	out := strings.Split(s,":")
+	out := strings.Split(s, ":")
 	if len(out) == 2 {
-		return out[0],out[1]
+		return out[0], out[1]
 	} else {
 		util.PrintError(err)
-		return "Guest",""
+		return "Guest", ""
 	}
 }
 
-func createToken(uid string) (string,error) {
+func createToken(uid string) (string, error) {
 	const qBase = "INSERT INTO logins(user_id,key) VALUES ($1,$2)"
 	b := make([]byte, 32)
-	_,err := rand.Read(b) //Make the actual token
+	_, err := rand.Read(b) //Make the actual token
 	if err != nil {
 		util.PrintError(err)
 		return "", err
 	}
-	_,err = util.Database.Exec(qBase, uid, b)
+	_, err = util.Database.Exec(qBase, uid, b)
 	if err != nil {
 		util.PrintError(err)
 		return "", err
 	}
 	token := base64.StdEncoding.EncodeToString(b)
-	return token,nil
+	return token, nil
 }
 
-func LoginUser(user string, pass string) (entity.UserLogin,error) {
+func LoginUser(user string, pass string) (entity.UserLogin, error) {
 	u := entity.UserLogin{
 		"",
 		"Guest",
 		"",
 	}
 	const qBase = "SELECT name,hash,salt,algorithm FROM users WHERE id = $1"
-	var name,hash,salt,algorithm,checkHash string
-	rows, err := util.Database.Query(qBase,user)
+	var name, hash, salt, algorithm, checkHash string
+	rows, err := util.Database.Query(qBase, user)
 	if err != nil {
 		util.PrintError(err)
 		util.PrintError("User ID not found: " + user)
@@ -99,19 +98,19 @@ func LoginUser(user string, pass string) (entity.UserLogin,error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&name,&hash,&salt,&algorithm)
+		err = rows.Scan(&name, &hash, &salt, &algorithm)
 		if err != nil {
 			util.PrintError(err)
 		}
 	}
 	switch algorithm {
-		case "SHA512":
-			b := sha512.Sum512_256([]byte(pass + salt))
-			checkHash = base64.StdEncoding.EncodeToString(b[:])
-		case "PLAIN":
-			checkHash = pass + salt
+	case "SHA512":
+		b := sha512.Sum512_256([]byte(pass + salt))
+		checkHash = base64.StdEncoding.EncodeToString(b[:])
+	case "PLAIN":
+		checkHash = pass + salt
 	}
-	if strings.Compare(hash,checkHash) == 0 { //Hashes Check out
+	if strings.Compare(hash, checkHash) == 0 { //Hashes Check out
 		u.Token, err = createToken(user)
 		u.ID = user
 		u.DisplayName = name
@@ -128,8 +127,8 @@ func CheckAuth(auth string) entity.UserLogin {
 		"Guest",
 		"",
 	}
-	uid,token := parseAuthorization(auth)
-	result, err := searchToken(uid,token)
+	uid, token := parseAuthorization(auth)
+	result, err := searchToken(uid, token)
 	if err != nil {
 		util.PrintError("Failure to Auth Token for: " + uid)
 		return u
@@ -138,15 +137,15 @@ func CheckAuth(auth string) entity.UserLogin {
 }
 
 func LogoutUser(auth string) error {
-	uid,token := parseAuthorization(auth)
+	uid, token := parseAuthorization(auth)
 	const qBase = "DELETE FROM logins WHERE user_id = $1 and key = $2"
-	b,err1 := base64.StdEncoding.DecodeString(token)
+	b, err1 := base64.StdEncoding.DecodeString(token)
 	if err1 != nil {
 		util.PrintError(err1)
 		util.PrintError("Base64 conversion to Bytea failed")
 		return err1
 	}
-	_,err := util.Database.Exec(qBase, uid, b)
+	_, err := util.Database.Exec(qBase, uid, b)
 	if err != nil {
 		util.PrintError(err)
 		return err

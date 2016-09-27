@@ -2,10 +2,10 @@ package handlers
 
 import (
 	//"fmt"
-	"net/http"
 	"encoding/json"
-	"treview.com/bloom/util"
+	"net/http"
 	authlib "treview.com/bloom/auth"
+	"treview.com/bloom/util"
 )
 
 func Auth(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +30,7 @@ func getAuth(w http.ResponseWriter, r *http.Request) {
 func postAuth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	r.ParseForm()
-	u,err := authlib.LoginUser(r.FormValue("user"),r.FormValue("password"))
+	u, err := authlib.LoginUser(r.FormValue("user"), r.FormValue("password"))
 	if err != nil {
 		util.PrintError("Failure to Login User")
 	}
@@ -50,8 +50,8 @@ func deleteAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	authlib.LogoutUser(auth)//Delete the token
-	u = authlib.CheckAuth(auth)//Verify that the token is invalidated
+	authlib.LogoutUser(auth)    //Delete the token
+	u = authlib.CheckAuth(auth) //Verify that the token is invalidated
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(u)
