@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS trait_t (
 	id serial,
 	name VARCHAR(255),
-	weight FLOAT
+	weight FLOAT,
+	PRIMARY KEY(id)
 );
 
 CREATE TABLE IF NOT EXISTS trait (
@@ -9,5 +10,5 @@ CREATE TABLE IF NOT EXISTS trait (
 	project_id INTEGER,
 	name VARCHAR(255),
 	class INTEGER,
-	PRIMARY KEY(id,project_id)
+	PRIMARY KEY(id)
 );

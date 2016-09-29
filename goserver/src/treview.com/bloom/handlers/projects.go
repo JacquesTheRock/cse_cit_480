@@ -1,9 +1,13 @@
 package handlers
 
 import (
-	"net/http"
+	"strconv"
 	"encoding/json"
+	"net/http"
+	"github.com/gorilla/mux"
 	"treview.com/bloom/entity"
+	"treview.com/bloom/util"
+	authlib "treview.com/bloom/auth"
 )
 
 func Projects(w http.ResponseWriter, r *http.Request) {
@@ -16,14 +20,36 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 }
 func getProjects(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	//TODO: Confirm logged in
 	//token := r.Header.Get("Authorization")
-	p := [10]entity.Project{}
+	p,_ := entity.GetAllProjects()
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(p)
 }
 func postProjects(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	token := r.Header.Get("Authorization")
+	uid,_ := authlib.ParseAuthorization(token)
+	p := entity.Project{}
+	if authlib.VerifyPermissions(token) {
+		r.ParseForm()
+		name := r.FormValue("name")
+		desc := r.FormValue("description")
+		visible,err := strconv.ParseBool(r.FormValue("public"))
+		if err != nil{
+			util.PrintError(err)
+			w.WriteHeader(400)
+			return
+		}
+		p,err = entity.NewProject(uid,name, desc, visible)
+	} else {
+		util.PrintInfo("User Access denied")
+	}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(p)
+	
 }
 
 func ProjectsPid(w http.ResponseWriter, r *http.Request) {
@@ -37,9 +63,16 @@ func ProjectsPid(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPid(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	pid,err := strconv.ParseInt(vars["pid"],10,64)
+	if err != nil {
+		w.WriteHeader(400)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//token := r.Header.Get("Authorization")
-	p := entity.Project{}
+	token := r.Header.Get("Authorization")
+	uid,_ := authlib.ParseAuthorization(token)
+	p,_ := entity.GetProject(uid,pid)
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(p)

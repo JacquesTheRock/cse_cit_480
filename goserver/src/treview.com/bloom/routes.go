@@ -1,16 +1,16 @@
 package main
 
 import (
-	"net/http"
 	"github.com/gorilla/mux"
+	"net/http"
 	"treview.com/bloom/handlers"
 	"treview.com/bloom/util"
 )
 
 type Route struct {
-	Name string
-	Methods []string
-	Pattern string
+	Name        string
+	Methods     []string
+	Pattern     string
 	HandlerFunc http.HandlerFunc
 }
 
@@ -19,10 +19,10 @@ func Wrapper(inner http.Handler, name string) http.Handler {
 		func(w http.ResponseWriter, r *http.Request) {
 			util.PrintInfo(
 				r.Method + "\t" +
-				r.RequestURI + "\t" +
-				name + "\t")
-			inner.ServeHTTP(w,r)
-	})
+					r.RequestURI + "\t" +
+					name + "\t")
+			inner.ServeHTTP(w, r)
+		})
 }
 
 func NewRouter(root string) *mux.Router {
@@ -39,124 +39,125 @@ func NewRouter(root string) *mux.Router {
 }
 
 type Routes []Route
-var routes = Routes {
-	Route {
+
+var routes = Routes{
+	Route{
 		"users",
-		[]string{"GET","POST"},
+		[]string{"GET", "POST"},
 		"/users",
 		handlers.Users,
 	},
-	Route {
+	Route{
 		"users_uid",
-		[]string{"GET","PUT"},
+		[]string{"GET", "PUT"},
 		"/users/{uid}",
 		handlers.UsersUid,
 	},
-	Route {
+	Route{
 		"users_uid_projects",
 		[]string{"GET"},
 		"/users/{uid}/projects",
 		handlers.UsersUidProjects,
 	},
-	Route {
+	Route{
 		"users_uid_mail",
-		[]string{"GET","POST"},
+		[]string{"GET", "POST"},
 		"/users/{uid}/mail",
 		handlers.UsersUidMail,
 	},
-	Route {
+	Route{
 		"users_uid_mail_mid",
-		[]string{"GET","PUT","DELETE"},
+		[]string{"GET", "PUT", "DELETE"},
 		"/users/{uid}/mail/{mid}",
 		handlers.UsersUidMailMid,
 	},
-	Route {
+	Route{
 		"projects",
-		[]string{"GET","POST"},
+		[]string{"GET", "POST"},
 		"/projects",
 		handlers.Projects,
 	},
-	Route {
+	Route{
 		"projects_pid",
-		[]string{"GET","PUT","DELETE"},
+		[]string{"GET", "PUT", "DELETE"},
 		"/projects/{pid}",
 		handlers.ProjectsPid,
 	},
-	Route {
+	Route{
 		"projects_pid_traits",
-		[]string{"GET","POST"},
+		[]string{"GET", "POST"},
 		"/projects/{pid}/traits",
 		handlers.ProjectsPidTraits,
 	},
-	Route {
+	Route{
 		"projects_pid_traits_tid",
-		[]string{"GET","PUT","DELETE"},
+		[]string{"GET", "PUT", "DELETE"},
 		"/projects/{pid}/traits/{tid}",
 		handlers.ProjectsPidTraitsTid,
 	},
-	Route {
+	Route{
 		"projects_pid_crosses",
-		[]string{"GET","POST"},
+		[]string{"GET", "POST"},
 		"/projects/{pid}/crosses",
 		handlers.ProjectsPidCrosses,
 	},
-	Route {
+	Route{
 		"projects_pid_crosses_cid",
-		[]string{"GET","PUT","DELETE"},
+		[]string{"GET", "PUT", "DELETE"},
 		"/projects/{pid}/crosses/{cid}",
 		handlers.ProjectsPidCrossesCid,
 	},
-	Route {
+	Route{
 		"projects_pid_crosses_cid_candidates",
-		[]string{"GET","POST"},
+		[]string{"GET", "POST"},
 		"/projects/{pid}/crosses/{cid}/candidates",
 		handlers.ProjectsPidCrossesCidCandidates,
 	},
-	Route {
+	Route{
 		"projects_pid_crosses_cid_candidates_cnid",
-		[]string{"GET","PUT","DELETE"},
+		[]string{"GET", "PUT", "DELETE"},
 		"/projects/{pid}/crosses/{cid}/candidates/{cnid}",
 		handlers.ProjectsPidCrossesCidCandidatesCnid,
 	},
-	Route {
+	Route{
 		"projects_pid_treview",
 		[]string{"GET"},
 		"/projects/{pid}/treview",
 		handlers.ProjectsPidTreview,
 	},
-	Route {
+	Route{
 		"projects_pid_treview_cid",
 		[]string{"GET"},
 		"/projects/{pid}/treview/{cid}",
 		handlers.ProjectsPidTreviewCid,
 	},
-	Route {
+	Route{
 		"auth",
-		[]string{"GET","POST","DELETE"},
+		[]string{"GET", "POST", "DELETE"},
 		"/auth",
 		handlers.Auth,
 	},
-	Route {
+	Route{
 		"breeds",
-		[]string{"GET","POST"},
+		[]string{"GET", "POST"},
 		"/breeds",
 		handlers.Breeds,
 	},
-	Route {
+	Route{
 		"breeds_bid",
-		[]string{"GET","PUT"},
+		[]string{"GET", "PUT"},
 		"/breeds/{bid}",
 		handlers.BreedsBid,
 	},
-	Route {
+	Route{
 		"breeds_bid_traits",
-		[]string{"GET","POST"},
+		[]string{"GET", "POST"},
 		"/breeds/{bid}/traits",
 		handlers.BreedsBidTraits,
 	},
-	Route {
+	Route{
 		"breeds_bid_traits_tid",
-		[]string{"GET","PUT","DELETE"},
+		[]string{"GET", "PUT", "DELETE"},
 		"/breeds/{bid}/traits/{tid}",
 		handlers.BreedsBidTraitsTid,
 	},
