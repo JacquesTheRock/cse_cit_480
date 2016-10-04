@@ -1,22 +1,24 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 	"treview.com/bloom/entity"
 	"treview.com/bloom/auth"
+	"treview.com/bloom/util"
 )
 
-func createUser(uid string, email string, name string, location string, hash []byte, salt []byte) (string, error) {
+func createUser(uid string, email string, name string, location string, hash []byte, salt []byte) (entity.User, error) {
 	const qBase = "INSERT INTO Users(id,email,name,location,hash,salt,algorithm) VALUES ($1,$2,$3,$4,$5,$6,SHA512)"
 	user := entity.User{}
-	_, err = util.Database.Exec(qBase, uid, email,name,location,hash,salt)
+	_, err := util.Database.Exec(qBase, uid, email,name,location,hash,salt)
 	if err != nil {
 		util.PrintError(err)
 		return user, err
 	}
-	user.ID = id
+	user.ID = uid
 	user.Email = email
-	user.Name = name
+	user.DisplayName = name
 	user.Location = location
 	return user, nil
 }
@@ -33,10 +35,16 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 func postUsers(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
 	r.ParseForm()
-	auth.CreateHash(r.FormValue("password"),"SHA512")
-	u, err := createUser(r.FormValue("username"), r.FormValue("email"), r.FormValue("name"),r.FormValue("location"))
+	hash,salt := auth.CreateHash(r.FormValue("password"),"SHA512")
+	u, err := createUser(r.FormValue("username"), r.FormValue("email"), r.FormValue("name"),r.FormValue("location"),hash,salt)
+	if err != nil {
+		util.PrintError("Posting User Failed")
+		util.PrintError(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(u)
 }
 
 func UsersUid(w http.ResponseWriter, r *http.Request) {
