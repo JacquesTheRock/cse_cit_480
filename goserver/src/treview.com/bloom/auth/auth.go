@@ -126,6 +126,18 @@ func LoginUser(user string, pass string) (entity.UserLogin, error) {
 	return u, err
 }
 
+func CreateHash(password string, algorithm string) ([]byte,[]byte) {
+	var salt []byte
+	var hash []byte
+	switch algorithm {
+		case "SHA512":
+			c := append([]byte(password), salt...)
+			h := sha512.Sum512_256(c)
+			hash = h[:]
+	}
+	return hash, salt
+}
+
 func CheckAuth(auth string) entity.UserLogin {
 	u := entity.UserLogin{
 		"",
