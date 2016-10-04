@@ -53,7 +53,12 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 }
 
 func ParseAuthorization(authLine string) (string, string) {
-	auth := strings.Split(authLine," ")[1]
+	parts := strings.Split(authLine," ")
+	if len(parts) < 2 {
+		util.PrintError("Fail to parse Authorization")
+		return "",""
+	}
+	auth := parts[1]
 	data, err := base64.URLEncoding.DecodeString(auth)
 	if err != nil {
 		util.PrintError(err)
