@@ -9,10 +9,11 @@ import (
 )
 
 func createUser(uid string, email string, name string, location string, hash []byte, salt []byte) (entity.User, error) {
-	const qBase = "INSERT INTO Users(id,email,name,location,hash,salt,algorithm) VALUES ($1,$2,$3,$4,$5,$6,SHA512)"
+	const qBase = "INSERT INTO Users(id,email,name,location,hash,salt,algorithm) VALUES ($1,$2,$3,$4,$5,$6,'SHA512')"
 	user := entity.User{}
 	_, err := util.Database.Exec(qBase, uid, email,name,location,hash,salt)
 	if err != nil {
+		util.PrintError("createUser Function")
 		util.PrintError(err)
 		return user, err
 	}
@@ -36,8 +37,32 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 }
 func postUsers(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	hash,salt := auth.CreateHash(r.FormValue("password"),"SHA512")
-	u, err := createUser(r.FormValue("username"), r.FormValue("email"), r.FormValue("name"),r.FormValue("location"),hash,salt)
+	user := r.FormValue("username")
+	pass := r.FormValue("password")
+	email := r.FormValue("email")
+	name := r.FormValue("name")
+	location := r.FormValue("location")
+	if user == "" {
+		w.WriteHeader(http.StatusNotAcceptable)	
+		return
+	} else if pass == "" {
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	} else if email == "" {
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	} else if name == "" {
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	hash,salt,err := auth.CreateHash(pass,"SHA512")
+	if err != nil {
+		util.PrintError("Create Hash of password Failed")
+		util.PrintError(err)
+		w.WriteHeader(http.StatusNotAcceptable)
+		return
+	}
+	u, err := createUser(user,email,name,location,hash,salt)
 	if err != nil {
 		util.PrintError("Posting User Failed")
 		util.PrintError(err)

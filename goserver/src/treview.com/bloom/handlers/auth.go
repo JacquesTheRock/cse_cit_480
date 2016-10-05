@@ -33,6 +33,7 @@ func postAuth(w http.ResponseWriter, r *http.Request) {
 	u, err := authlib.LoginUser(r.FormValue("user"), r.FormValue("password"))
 	if err != nil {
 		util.PrintError("Failure to Login User")
+		util.PrintError(err)
 	}
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)

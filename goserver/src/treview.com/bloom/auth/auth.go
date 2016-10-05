@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"strings"
+	"errors"
 	"treview.com/bloom/entity"
 	"treview.com/bloom/util"
 )
@@ -98,8 +99,8 @@ func LoginUser(user string, pass string) (entity.UserLogin, error) {
 		"Guest",
 		"",
 	}
-	const qBase = "SELECT name,hash,salt,algorithm FROM users WHERE id = $1"
-	var name, hash, salt, algorithm, checkHash string
+	const qBase = "SELECT id,name,hash,salt,algorithm FROM users WHERE id = $1"
+	var id,name, hash, salt, algorithm, checkHash string
 	rows, err := util.Database.Query(qBase, user)
 	if err != nil {
 		util.PrintError(err)
@@ -108,17 +109,22 @@ func LoginUser(user string, pass string) (entity.UserLogin, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&name, &hash, &salt, &algorithm)
+		err = rows.Scan(&id,&name, &hash, &salt, &algorithm)
 		if err != nil {
 			util.PrintError(err)
 		}
 	}
+	if id == "" {
+		return u, errors.New("User does not exist: " + user);
+	}
 	switch algorithm {
 	case "SHA512":
 		b := sha512.Sum512_256([]byte(pass + salt))
-		checkHash = base64.StdEncoding.EncodeToString(b[:])
+		checkHash = string(b[:])
 	case "PLAIN":
 		checkHash = pass + salt
+	default:
+		return u, errors.New("Invalid password algorithm: " + algorithm);
 	}
 	if strings.Compare(hash, checkHash) == 0 { //Hashes Check out
 		u.Token, err = createToken(user)
@@ -131,16 +137,27 @@ func LoginUser(user string, pass string) (entity.UserLogin, error) {
 	return u, err
 }
 
-func CreateHash(password string, algorithm string) ([]byte,[]byte) {
+func CreateHash(password string, algorithm string) ([]byte,[]byte,error) {
 	var salt []byte
 	var hash []byte
+	if len(password) < 6 {
+		out := errors.New("Password too short")
+		util.PrintError(out)
+		return nil,nil,out
+	}
+	n, err := rand.Read(salt)
+	if err != nil || n != len(salt){
+		util.PrintError("Error getting random Salt")
+		util.PrintError(err)
+		return nil,nil,err
+	}
 	switch algorithm {
 		case "SHA512":
 			c := append([]byte(password), salt...)
 			h := sha512.Sum512_256(c)
 			hash = h[:]
 	}
-	return hash, salt
+	return hash, salt, nil
 }
 
 func CheckAuth(auth string) entity.UserLogin {

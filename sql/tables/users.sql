@@ -3,8 +3,8 @@ CREATE TABLE IF NOT EXISTS users (
 	email text,
 	name text,
 	location text,
-	hash VARCHAR(255),
-	salt VARCHAR(255),
+	hash bytea,
+	salt bytea,
 	ALGORITHM VARCHAR(10),
 	PRIMARY KEY(id)
 );
