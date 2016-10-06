@@ -2,14 +2,13 @@ package handlers
 
 import (
 	"encoding/json"
-	"net/http"
 	"github.com/gorilla/mux"
-	"treview.com/bloom/entity"
+	"net/http"
 	"treview.com/bloom/auth"
-	"treview.com/bloom/util"
+	"treview.com/bloom/entity"
 	"treview.com/bloom/user"
+	"treview.com/bloom/util"
 )
-
 
 func Users(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -20,11 +19,11 @@ func Users(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getUsers(w http.ResponseWriter, r *http.Request) {
-	users,_ := user.SearchUsers(entity.User{})
+	users, _ := user.SearchUsers(entity.User{})
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(users)
-	
+
 }
 func postUsers(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
@@ -51,14 +50,14 @@ func postUsers(w http.ResponseWriter, r *http.Request) {
 		encoder.Encode(u)
 		return
 	} else {
-		hash,salt,err := auth.CreateHash(pass,"SHA512")
+		hash, salt, err := auth.CreateHash(pass, "SHA512")
 		if err != nil {
 			util.PrintError("Create Hash of password Failed")
 			util.PrintError(err)
 			w.WriteHeader(http.StatusNotAcceptable)
 			return
 		}
-		u, err := user.CreateUser(uid,email,name,location,hash,salt)
+		u, err := user.CreateUser(uid, email, name, location, hash, salt)
 		if err != nil {
 			util.PrintError("Posting User Failed")
 			util.PrintError(err)
@@ -80,7 +79,7 @@ func UsersUid(w http.ResponseWriter, r *http.Request) {
 func getUsersUid(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	uid := vars["uid"]
-	user,_ := user.GetUser(entity.User{ID: uid})
+	user, _ := user.GetUser(entity.User{ID: uid})
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(user)
@@ -97,7 +96,7 @@ func putUsersUid(w http.ResponseWriter, r *http.Request) {
 		util.PrintError(err)
 	}
 	if u.ID == uid {
-		orig,_ := user.GetUser(u)
+		orig, _ := user.GetUser(u)
 		if u.DisplayName == "" {
 			u.DisplayName = orig.DisplayName
 		}
@@ -107,7 +106,7 @@ func putUsersUid(w http.ResponseWriter, r *http.Request) {
 		if u.Location == "" {
 			u.Location = orig.Location
 		}
-		out,err = user.UpdateUser(u)
+		out, err = user.UpdateUser(u)
 	}
 
 	w.WriteHeader(http.StatusOK)

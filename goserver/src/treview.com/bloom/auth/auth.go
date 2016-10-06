@@ -5,16 +5,16 @@ import (
 	"crypto/sha512"
 	"database/sql"
 	"encoding/base64"
-	"strings"
 	"errors"
+	"strings"
 	"treview.com/bloom/entity"
 	"treview.com/bloom/util"
 )
 
 func VerifyPermissions(auth string) bool {
-	uid,_ := ParseAuthorization(auth)
+	uid, _ := ParseAuthorization(auth)
 	u := CheckAuth(auth)
-	return u.ID == uid 
+	return u.ID == uid
 }
 
 func searchToken(uid string, token string) (entity.UserLogin, error) {
@@ -54,10 +54,10 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 }
 
 func ParseAuthorization(authLine string) (string, string) {
-	parts := strings.Split(authLine," ")
+	parts := strings.Split(authLine, " ")
 	if len(parts) < 2 {
 		util.PrintError("Fail to parse Authorization")
-		return "",""
+		return "", ""
 	}
 	auth := parts[1]
 	data, err := base64.URLEncoding.DecodeString(auth)
@@ -100,7 +100,7 @@ func LoginUser(user string, pass string) (entity.UserLogin, error) {
 		"",
 	}
 	const qBase = "SELECT id,name,hash,salt,algorithm FROM users WHERE id = $1"
-	var id,name, hash, salt, algorithm, checkHash string
+	var id, name, hash, salt, algorithm, checkHash string
 	rows, err := util.Database.Query(qBase, user)
 	if err != nil {
 		util.PrintError(err)
@@ -109,13 +109,13 @@ func LoginUser(user string, pass string) (entity.UserLogin, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&id,&name, &hash, &salt, &algorithm)
+		err = rows.Scan(&id, &name, &hash, &salt, &algorithm)
 		if err != nil {
 			util.PrintError(err)
 		}
 	}
 	if id == "" {
-		return u, errors.New("User does not exist: " + user);
+		return u, errors.New("User does not exist: " + user)
 	}
 	switch algorithm {
 	case "SHA512":
@@ -124,7 +124,7 @@ func LoginUser(user string, pass string) (entity.UserLogin, error) {
 	case "PLAIN":
 		checkHash = pass + salt
 	default:
-		return u, errors.New("Invalid password algorithm: " + algorithm);
+		return u, errors.New("Invalid password algorithm: " + algorithm)
 	}
 	if strings.Compare(hash, checkHash) == 0 { //Hashes Check out
 		u.Token, err = createToken(user)
@@ -137,25 +137,25 @@ func LoginUser(user string, pass string) (entity.UserLogin, error) {
 	return u, err
 }
 
-func CreateHash(password string, algorithm string) ([]byte,[]byte,error) {
+func CreateHash(password string, algorithm string) ([]byte, []byte, error) {
 	var salt []byte
 	var hash []byte
 	if len(password) < 6 {
 		out := errors.New("Password too short")
 		util.PrintError(out)
-		return nil,nil,out
+		return nil, nil, out
 	}
 	n, err := rand.Read(salt)
-	if err != nil || n != len(salt){
+	if err != nil || n != len(salt) {
 		util.PrintError("Error getting random Salt")
 		util.PrintError(err)
-		return nil,nil,err
+		return nil, nil, err
 	}
 	switch algorithm {
-		case "SHA512":
-			c := append([]byte(password), salt...)
-			h := sha512.Sum512_256(c)
-			hash = h[:]
+	case "SHA512":
+		c := append([]byte(password), salt...)
+		h := sha512.Sum512_256(c)
+		hash = h[:]
 	}
 	return hash, salt, nil
 }

@@ -18,13 +18,13 @@ func UpdateUser(u entity.User) (entity.User, error) {
 		return entity.User{}, err
 	}
 	return u, nil
-	
+
 }
 
 func CreateUser(uid string, email string, name string, location string, hash []byte, salt []byte) (entity.User, error) {
 	const qBase = "INSERT INTO users(id,email,name,location,hash,salt,algorithm) VALUES ($1,$2,$3,$4,$5,$6,'SHA512')"
 	user := entity.User{}
-	_, err := util.Database.Exec(qBase, uid, email,name,location,hash,salt)
+	_, err := util.Database.Exec(qBase, uid, email, name, location, hash, salt)
 	if err != nil {
 		util.PrintError("createUser Function")
 		util.PrintError(err)
