@@ -1,4 +1,4 @@
-CREATE ROLE bloom_rw WITH PASSWORD '';
+CREATE ROLE bloom_rw WITH PASSWORD 'bloom_rwpassword';
 ALTER ROLE bloom_rw WITH LOGIN;
 GRANT CONNECT ON DATABASE bloomdb TO bloom_rw;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO bloom_rw;
@@ -12,3 +12,4 @@ GRANT ALL ON specimen TO bloom_rw;
 GRANT ALL ON specimen_trait TO bloom_rw;
 GRANT ALL ON trait TO bloom_rw;
 GRANT ALL ON trait_t TO bloom_rw;
+GRANT ALL ON mail TO bloom_rw;

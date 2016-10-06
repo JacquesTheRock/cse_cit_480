@@ -43,3 +43,17 @@ ALTER TABLE specimen_trait
 	ADD CONSTRAINT specimen_fk
 	FOREIGN KEY(specimen_id)
 	REFERENCES specimen(id);
+
+
+ALTER TABLE mail
+	ADD CONSTRAINT src_fk
+	FOREIGN KEY(src)
+	REFERENCES users(id);
+ALTER TABLE mail
+	ADD CONSTRAINT dest_fk
+	FOREIGN KEY(dest)
+	REFERENCES users(id);
+ALTER TABLE mail
+	ADD CONSTRAINT prev_fk
+	FOREIGN KEY(prev)
+	REFERENCES mail(id);

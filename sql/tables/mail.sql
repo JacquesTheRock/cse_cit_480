@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS mail (
+	id INTEGER,
+	src VARCHAR(32) NOT NULL,
+	dest VARCHAR(32) NOT NULL,
+	prev INTEGER,
+	message text NOT NULL,
+	PRIMARY KEY(id)
+);
