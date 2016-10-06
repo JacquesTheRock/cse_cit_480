@@ -4,8 +4,8 @@ import (
 	//"fmt"
 	"encoding/json"
 	"net/http"
-	authlib "treview.com/bloom/auth"
-	"treview.com/bloom/util"
+	authlib "bloomgenetics.tech/bloom/auth"
+	"bloomgenetics.tech/bloom/util"
 )
 
 func Auth(w http.ResponseWriter, r *http.Request) {

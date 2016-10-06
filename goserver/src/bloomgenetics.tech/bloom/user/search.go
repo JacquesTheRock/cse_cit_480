@@ -1,8 +1,8 @@
 package user
 
 import (
-	"treview.com/bloom/entity"
-	"treview.com/bloom/util"
+	"bloomgenetics.tech/bloom/entity"
+	"bloomgenetics.tech/bloom/util"
 )
 
 func SearchUsers(u entity.User) ([]entity.User, error) {

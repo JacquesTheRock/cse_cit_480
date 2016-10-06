@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"net/http"
-	"treview.com/bloom/handlers"
-	"treview.com/bloom/util"
+	"bloomgenetics.tech/bloom/handlers"
+	"bloomgenetics.tech/bloom/util"
 )
 
 type Route struct {

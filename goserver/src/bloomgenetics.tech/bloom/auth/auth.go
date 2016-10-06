@@ -7,8 +7,8 @@ import (
 	"encoding/base64"
 	"errors"
 	"strings"
-	"treview.com/bloom/entity"
-	"treview.com/bloom/util"
+	"bloomgenetics.tech/bloom/entity"
+	"bloomgenetics.tech/bloom/util"
 )
 
 func VerifyPermissions(auth string) bool {

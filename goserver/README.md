@@ -13,12 +13,12 @@ go get github.com/gorilla/mux
 
 Then run the main program (assuming it isn't already compiled)
 cd goserver/src
-go run treview.com/bloom/main.go treview.com/bloom/routes.go
+go run bloomgenetics.tech/bloom/main.go bloomgenetics.tech/bloom/routes.go
 
 ## Compiling the project
 To compile the project, follow the rules to run the project
 the only change is that the last line you should run:
-go build treview.com/bloom/main.go treview.com/bloom/routes.go
+go build bloomgenetics.tech/bloom/main.go bloomgenetics.tech/bloom/routes.go
 
 Then to run the compiled exe, type:
 ./main

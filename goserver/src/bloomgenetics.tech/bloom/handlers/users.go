@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
-	"treview.com/bloom/auth"
-	"treview.com/bloom/entity"
-	"treview.com/bloom/user"
-	"treview.com/bloom/util"
+	"bloomgenetics.tech/bloom/auth"
+	"bloomgenetics.tech/bloom/entity"
+	"bloomgenetics.tech/bloom/user"
+	"bloomgenetics.tech/bloom/util"
 )
 
 func Users(w http.ResponseWriter, r *http.Request) {

@@ -5,9 +5,9 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
-	authlib "treview.com/bloom/auth"
-	"treview.com/bloom/entity"
-	"treview.com/bloom/util"
+	authlib "bloomgenetics.tech/bloom/auth"
+	"bloomgenetics.tech/bloom/entity"
+	"bloomgenetics.tech/bloom/util"
 )
 
 func Projects(w http.ResponseWriter, r *http.Request) {

@@ -2,7 +2,7 @@ package entity
 
 import (
 	"database/sql"
-	"treview.com/bloom/util"
+	"bloomgenetics.tech/bloom/util"
 )
 
 type Project struct {

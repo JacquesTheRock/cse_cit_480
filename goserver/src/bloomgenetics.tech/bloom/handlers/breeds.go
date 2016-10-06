@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"treview.com/bloom/entity"
+	"bloomgenetics.tech/bloom/entity"
 )
 
 func Breeds(w http.ResponseWriter, r *http.Request) {

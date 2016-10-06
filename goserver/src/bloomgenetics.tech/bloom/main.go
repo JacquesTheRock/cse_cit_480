@@ -7,7 +7,7 @@ import (
 	_ "github.com/lib/pq" //Required for Postgres
 	//"html/template"
 	"net/http"
-	"treview.com/bloom/util"
+	"bloomgenetics.tech/bloom/util"
 )
 
 var config *util.Configuration
