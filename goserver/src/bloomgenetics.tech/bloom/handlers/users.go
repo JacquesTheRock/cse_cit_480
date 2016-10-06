@@ -1,13 +1,14 @@
 package handlers
 
 import (
+	"strconv"
 	"encoding/json"
-	"github.com/gorilla/mux"
 	"net/http"
 	"bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/user"
 	"bloomgenetics.tech/bloom/util"
+	"github.com/gorilla/mux"
 )
 
 func Users(w http.ResponseWriter, r *http.Request) {
@@ -133,7 +134,12 @@ func UsersUidMail(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getUsersUidMail(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	uid := vars["uid"]
+	m, _ := user.GetMails(entity.Mail{Dest: uid})
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(m)
 }
 func postUsersUidMail(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
@@ -150,7 +156,16 @@ func UsersUidMailMid(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getUsersUidMailMid(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	uid := vars["uid"]
+	mid,err := strconv.ParseInt(vars["mid"],10,64)
+	if err != nil {
+		util.PrintError("Invalid Mail ID")
+	}
+	m, _ := user.GetMailByID(entity.Mail{ID:mid, Dest: uid})
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(m)
 }
 func putUsersUidMailMid(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
