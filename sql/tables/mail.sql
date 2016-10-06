@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS mail (
-	id INTEGER,
+	id bigserial,
 	src VARCHAR(32) NOT NULL,
 	dest VARCHAR(32) NOT NULL,
 	prev INTEGER,
