@@ -1,0 +1,2 @@
+DROP TABLE trait_t CASCADE;
+DROP TABLE trait CASCADE;
