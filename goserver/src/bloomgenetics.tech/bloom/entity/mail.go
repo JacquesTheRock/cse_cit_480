@@ -6,5 +6,6 @@ type Mail struct {
 	Dest    string `json:"dest"`
 	Prev    int64  `json:"prev_id"`
 	Date    string `json:"date"`
+	Subject string `json:"subject"`
 	Message string `json:"message"`
 }

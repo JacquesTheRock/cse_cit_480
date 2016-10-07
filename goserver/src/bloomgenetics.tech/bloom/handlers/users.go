@@ -208,6 +208,9 @@ func putUsersUidMailMid(w http.ResponseWriter, r *http.Request) {
 			util.PrintError("Bad request body, expected mail JSON")
 			util.PrintError(err)
 		}
+		if n.Subject == "" {
+			n.Subject = "Re:" + m.Subject
+		}
 		n.Prev = m.ID
 		n.Src = m.Dest
 		n.Dest = m.Src

@@ -7,7 +7,7 @@ import (
 )
 
 func GetMails(m entity.Mail) ([]entity.Mail, error) {
-	const qBase = "SELECT id,prev,dest,src,message,to_char(arrival,'YYYY MM DD HH12:MI:SS') FROM mail WHERE dest = $1"
+	const qBase = "SELECT id,prev,dest,src,subject,message,to_char(arrival,'YYYY MM DD HH12:MI:SS') FROM mail WHERE dest = $1"
 	out := make([]entity.Mail, 0)
 	rows, err := util.Database.Query(qBase, m.Dest)
 	if err != nil {
@@ -17,7 +17,7 @@ func GetMails(m entity.Mail) ([]entity.Mail, error) {
 	for rows.Next() {
 		var Prev sql.NullInt64
 		e := entity.Mail{}
-		err = rows.Scan(&e.ID, &Prev, &e.Dest, &e.Src, &e.Message, &e.Date)
+		err = rows.Scan(&e.ID, &Prev, &e.Dest, &e.Src, &e.Subject, &e.Message, &e.Date)
 		if err != nil {
 			util.PrintError("Unable to read Mail")
 			util.PrintError(err)
@@ -33,7 +33,7 @@ func GetMails(m entity.Mail) ([]entity.Mail, error) {
 }
 
 func GetMailByID(m entity.Mail) ([]entity.Mail, error) {
-	const qBase = "SELECT id,prev,dest,src,message,to_char(arrival,'YYYY MM DD HH12:MI:SS') FROM mail WHERE dest = $1 AND id = $2"
+	const qBase = "SELECT id,prev,dest,src,subject,message,to_char(arrival,'YYYY MM DD HH12:MI:SS') FROM mail WHERE dest = $1 AND id = $2"
 	out := make([]entity.Mail, 0)
 	rows, err := util.Database.Query(qBase, m.Dest, m.ID)
 	if err != nil {
@@ -43,7 +43,7 @@ func GetMailByID(m entity.Mail) ([]entity.Mail, error) {
 	for rows.Next() {
 		var Prev sql.NullInt64
 		e := entity.Mail{}
-		err = rows.Scan(&e.ID, &Prev, &e.Dest, &e.Src, &e.Message, &e.Date)
+		err = rows.Scan(&e.ID, &Prev, &e.Dest, &e.Src, &e.Subject, &e.Message, &e.Date)
 		if err != nil {
 			util.PrintError("Unable to read Mail")
 			util.PrintError(err)
@@ -59,8 +59,8 @@ func GetMailByID(m entity.Mail) ([]entity.Mail, error) {
 }
 
 func PostMail(m entity.Mail) (entity.Mail, error) {
-	const qBase = "INSERT INTO mail(dest,src,message) VALUES ($1,$2,$3)"
-	_, err := util.Database.Exec(qBase, m.Dest, m.Src, m.Message)
+	const qBase = "INSERT INTO mail(dest,src,subject,message) VALUES ($1,$2,$3,$4)"
+	_, err := util.Database.Exec(qBase, m.Dest, m.Src, m.Subject, m.Message)
 	if err != nil {
 		util.PrintError(err)
 		return entity.Mail{}, nil
@@ -70,8 +70,8 @@ func PostMail(m entity.Mail) (entity.Mail, error) {
 }
 
 func ReplyMail(m entity.Mail) (entity.Mail, error) {
-	const qBase = "INSERT INTO mail(dest,src,message,prev) VALUES ($1,$2,$3,$4)"
-	_, err := util.Database.Exec(qBase, m.Dest, m.Src, m.Message, m.Prev)
+	const qBase = "INSERT INTO mail(dest,src,subject,message,prev) VALUES ($1,$2,$3,$4,$5)"
+	_, err := util.Database.Exec(qBase, m.Dest, m.Src, m.Subject, m.Message, m.Prev)
 	if err != nil {
 		util.PrintError(err)
 		return entity.Mail{}, err
