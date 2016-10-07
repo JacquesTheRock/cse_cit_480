@@ -1,9 +1,9 @@
 package handlers
 
 import (
+	"bloomgenetics.tech/bloom/entity"
 	"encoding/json"
 	"net/http"
-	"bloomgenetics.tech/bloom/entity"
 )
 
 func Breeds(w http.ResponseWriter, r *http.Request) {

@@ -1,14 +1,14 @@
 package auth
 
 import (
+	"bloomgenetics.tech/bloom/entity"
+	"bloomgenetics.tech/bloom/util"
 	"crypto/rand"
 	"crypto/sha512"
 	"database/sql"
 	"encoding/base64"
 	"errors"
 	"strings"
-	"bloomgenetics.tech/bloom/entity"
-	"bloomgenetics.tech/bloom/util"
 )
 
 func VerifyPermissions(auth string) bool {

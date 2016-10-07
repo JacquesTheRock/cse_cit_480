@@ -6,8 +6,8 @@ import (
 	"fmt"
 	_ "github.com/lib/pq" //Required for Postgres
 	//"html/template"
-	"net/http"
 	"bloomgenetics.tech/bloom/util"
+	"net/http"
 )
 
 var config *util.Configuration

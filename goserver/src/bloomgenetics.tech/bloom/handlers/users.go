@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	"strconv"
-	"encoding/json"
-	"net/http"
 	"bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/user"
 	"bloomgenetics.tech/bloom/util"
+	"encoding/json"
 	"github.com/gorilla/mux"
+	"net/http"
+	"strconv"
 )
 
 func Users(w http.ResponseWriter, r *http.Request) {
@@ -142,7 +142,27 @@ func getUsersUidMail(w http.ResponseWriter, r *http.Request) {
 	encoder.Encode(m)
 }
 func postUsersUidMail(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	uid := vars["uid"]
+	decoder := json.NewDecoder(r.Body)
+	var m entity.Mail
+	err := decoder.Decode(&m)
+	out := entity.Mail{}
+	if err != nil {
+		util.PrintError("Bad request body, expected mail JSON")
+		util.PrintError(err)
+	}
+	if m.Dest == "" {
+		m.Dest = uid
+	}
+	if m.Dest == uid {
+		out, err = user.PostMail(m)
+	}
+
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
+
 }
 
 func UsersUidMailMid(w http.ResponseWriter, r *http.Request) {
@@ -158,18 +178,65 @@ func UsersUidMailMid(w http.ResponseWriter, r *http.Request) {
 func getUsersUidMailMid(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	uid := vars["uid"]
-	mid,err := strconv.ParseInt(vars["mid"],10,64)
+	mid, err := strconv.ParseInt(vars["mid"], 10, 64)
 	if err != nil {
 		util.PrintError("Invalid Mail ID")
 	}
-	m, _ := user.GetMailByID(entity.Mail{ID:mid, Dest: uid})
+	m, _ := user.GetMailByID(entity.Mail{ID: mid, Dest: uid})
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(m)
 }
 func putUsersUidMailMid(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	uid := vars["uid"]
+	mid, err := strconv.ParseInt(vars["mid"], 10, 64)
+	if err != nil {
+		util.PrintError("Invalid Mail ID")
+	}
+	mArray, _ := user.GetMailByID(entity.Mail{ID: mid, Dest: uid})
+	out := entity.Mail{}
+	if len(mArray) != 1 {
+		util.PrintError("Can't reply to many message")
+		out = entity.Mail{Message: "Couldn't reply to message"}
+	} else {
+		m := mArray[0]
+		decoder := json.NewDecoder(r.Body)
+		var n entity.Mail
+		err = decoder.Decode(&n)
+		if err != nil {
+			util.PrintError("Bad request body, expected mail JSON")
+			util.PrintError(err)
+		}
+		n.Prev = m.ID
+		n.Src = m.Dest
+		n.Dest = m.Src
+		if n.Src == uid {
+			out, err = user.ReplyMail(n)
+		}
+		if err != nil {
+			util.PrintError(err)
+		}
+	}
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
 func deleteUsersUidMailMid(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	uid := vars["uid"]
+	mid, err := strconv.ParseInt(vars["mid"], 10, 64)
+	if err != nil {
+		util.PrintError("Invalid Mail ID")
+	}
+	mArray, _ := user.GetMailByID(entity.Mail{ID: mid, Dest: uid})
+	out := entity.Mail{}
+	if len(mArray) != 1 {
+		util.PrintError("Can't reply to many message")
+		out = entity.Mail{Message: "Couldn't Delete message"}
+	}
+	user.DeleteMail(mArray[0])
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }

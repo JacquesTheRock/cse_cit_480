@@ -2,10 +2,10 @@ package handlers
 
 import (
 	//"fmt"
-	"encoding/json"
-	"net/http"
 	authlib "bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/util"
+	"encoding/json"
+	"net/http"
 )
 
 func Auth(w http.ResponseWriter, r *http.Request) {

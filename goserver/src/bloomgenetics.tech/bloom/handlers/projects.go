@@ -1,13 +1,13 @@
 package handlers
 
 import (
+	authlib "bloomgenetics.tech/bloom/auth"
+	"bloomgenetics.tech/bloom/entity"
+	"bloomgenetics.tech/bloom/util"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
-	authlib "bloomgenetics.tech/bloom/auth"
-	"bloomgenetics.tech/bloom/entity"
-	"bloomgenetics.tech/bloom/util"
 )
 
 func Projects(w http.ResponseWriter, r *http.Request) {
