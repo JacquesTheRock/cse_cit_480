@@ -3,8 +3,6 @@ package project
 import (
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/util"
-	"database/sql"
-	"strconv"
 )
 
 func NewProject(uid string, p entity.Project) (entity.Project, error) {

@@ -101,6 +101,13 @@ func putProjectsPid(w http.ResponseWriter, r *http.Request) {
 }
 func deleteProjectsPid(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		w.WriteHeader(400)
+	}
+	p := entity.Project{ID: pid}
+	project.DeleteProject(p)
 }
 
 func ProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
