@@ -10,5 +10,6 @@ CREATE TABLE IF NOT EXISTS trait (
 	project_id INTEGER,
 	name VARCHAR(255) NOT NULL,
 	class INTEGER,
+	pool INTEGER DEFAULT 0,
 	PRIMARY KEY(id)
 );

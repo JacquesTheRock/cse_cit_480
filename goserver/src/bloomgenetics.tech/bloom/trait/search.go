@@ -7,7 +7,7 @@ import (
 )
 
 func SearchTraits(t entity.Trait) ([]entity.Trait, error) {
-	const qBase = "SELECT a.id,a.project_id,a.name,b.weight,b.name,b.id FROM trait a, trait_t b WHERE a.class = b.id"
+	const qBase = "SELECT a.id,a.project_id,a.name,a.pool,b.weight,b.name,b.id FROM trait a, trait_t b WHERE a.class = b.id"
 	queryVars := make([]interface{}, 0)
 	out := make([]entity.Trait, 0)
 	query := " "
@@ -27,11 +27,12 @@ func SearchTraits(t entity.Trait) ([]entity.Trait, error) {
 	if len(queryVars) > 0 {
 		endQuery = qBase + query
 	}
+	util.PrintInfo(endQuery)
 	rows, err := util.Database.Query(endQuery, queryVars...)
 	defer rows.Close()
 	for rows.Next() {
 		e := entity.Trait{}
-		err = rows.Scan(&e.ID, &e.Project_ID, &e.Name, &e.Weight, &e.Type, &e.Type_ID)
+		err = rows.Scan(&e.ID, &e.Project_ID, &e.Name, &e.Pool, &e.Weight, &e.Type, &e.Type_ID)
 		if err != nil {
 			util.PrintError("Unable to read trait")
 			util.PrintError(err)

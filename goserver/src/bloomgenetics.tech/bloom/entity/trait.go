@@ -7,4 +7,5 @@ type Trait struct {
 	Weight     float64 `json:"weight"`
 	Type       string  `json:"type"`
 	Type_ID    int64   `json:"type_id"`
+	Pool       int64   `json:"pool"`
 }
