@@ -4,6 +4,7 @@ import (
 	authlib "bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/project"
+	"bloomgenetics.tech/bloom/trait"
 	"bloomgenetics.tech/bloom/util"
 	"encoding/json"
 	"github.com/gorilla/mux"
@@ -21,8 +22,6 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 }
 func getProjects(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//TODO: Confirm logged in
-	//token := r.Header.Get("Authorization")
 	p, _ := project.SearchProjects(entity.Project{})
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
@@ -162,37 +161,119 @@ func ProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		w.WriteHeader(400)
+	}
+	s := entity.Trait{Project_ID: pid}
+	t, err := trait.SearchTraits(s)
+
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//token := r.Header.Get("Authorization")
-	t := [10]entity.Trait{}
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(t)
 }
 func postProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		w.WriteHeader(400)
+	}
+	ctype := r.Header.Get("Content-type")
+	e := entity.Trait{}
+	switch ctype {
+	case "application/json":
+		decoder := json.NewDecoder(r.Body)
+		err = decoder.Decode(&e)
+		if err != nil {
+			e = entity.Trait{Name: "Invalid JSON Posted"}
+			util.PrintError("Unable to decode json")
+			util.PrintError(err)
+		} else {
+			e.Project_ID = pid
+		}
+	default:
+		r.ParseForm()
+		e.Name = r.FormValue("name")
+		e.Type_ID, err = strconv.ParseInt(r.FormValue("type_id"), 10, 64)
+		if err != nil {
+			e.Name = "Invalid type_id"
+		} else {
+			e.Project_ID = pid
+		}
+	}
+	if e.Project_ID == pid {
+		e, _ = trait.NewTrait(e)
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(e)
+
 }
 
 func ProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		getProjectsPidTraitsTid(w, r)
-	case "POST":
+	case "PUT":
 		putProjectsPidTraitsTid(w, r)
 	case "DELETE":
 		deleteProjectsPidTraitsTid(w, r)
 	}
 }
 func getProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		w.WriteHeader(400)
+	}
+	tid, err := strconv.ParseInt(vars["tid"], 10, 64)
+	if err != nil {
+		w.WriteHeader(400)
+	}
+	s := entity.Trait{Project_ID: pid, ID: tid}
+	t, err := trait.GetTrait(s)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//token := r.Header.Get("Authorization")
-	t := entity.Trait{}
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(t)
 }
 func putProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		w.WriteHeader(400)
+	}
+	tid, err := strconv.ParseInt(vars["tid"], 10, 64)
+	if err != nil {
+		w.WriteHeader(400)
+	}
+	e := entity.Trait{}
+	decoder := json.NewDecoder(r.Body)
+	err = decoder.Decode(&e)
+	if err != nil {
+		e = entity.Trait{Name: "Invalid JSON Posted"}
+		util.PrintError("Unable to decode json")
+		util.PrintError(err)
+	} else {
+		e.Project_ID = pid
+		e.ID = tid
+	}
+	o, _ := trait.GetTrait(entity.Trait{ID: tid})
+	if e.Name == "" {
+		e.Name = o.Name
+	}
+	if e.Type_ID == 0 {
+		e.Type_ID = o.Type_ID
+	}
+	t, _ := trait.UpdateTrait(e)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(t)
 }
 func deleteProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
