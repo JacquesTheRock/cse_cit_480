@@ -276,7 +276,21 @@ func putProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
 	encoder.Encode(t)
 }
 func deleteProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		w.WriteHeader(400)
+	}
+	tid, err := strconv.ParseInt(vars["tid"], 10, 64)
+	if err != nil {
+		w.WriteHeader(400)
+	}
+	e := entity.Trait{ID: tid, Project_ID: pid}
+	t, _ := trait.DeleteTrait(e)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(t)
 }
 func ProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {

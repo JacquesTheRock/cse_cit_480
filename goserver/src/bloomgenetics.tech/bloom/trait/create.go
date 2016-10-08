@@ -29,3 +29,15 @@ func UpdateTrait(t entity.Trait) (entity.Trait, error) {
 	output, err = GetTrait(t)
 	return output, err
 }
+
+func DeleteTrait(t entity.Trait) (entity.Trait, error) {
+	const qBase = "DELETE FROM trait WHERE project_id = $1 AND id = $2"
+	c, _ := GetTrait(t)
+	_, err := util.Database.Exec(qBase, t.Project_ID, t.ID)
+	if err != nil {
+		util.PrintError("Unable to delete trait")
+		util.PrintError(err)
+		return t, err
+	}
+	return c, nil
+}
