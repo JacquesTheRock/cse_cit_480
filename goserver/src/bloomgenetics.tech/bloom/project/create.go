@@ -32,3 +32,18 @@ func NewProject(uid string, p entity.Project) (entity.Project, error) {
 	}
 	return output, nil
 }
+
+func UpdateProject(p entity.Project) (entity.Project, error) {
+	const qBase = "UPDATE project SET name = $1, description = $2, visibility = $3 WHERE id = $4"
+	output := entity.Project{}
+	visible := 0
+	if p.Visibility {
+		visible = 1
+	}
+	_, err := util.Database.Exec(qBase, p.Name, p.Description, visible, p.ID)
+	if err != nil {
+		util.PrintError("Unable to update Project")
+		return output, err
+	}
+	return p, nil
+}

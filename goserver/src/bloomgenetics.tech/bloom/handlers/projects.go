@@ -97,10 +97,52 @@ func getProjectsPid(w http.ResponseWriter, r *http.Request) {
 	encoder.Encode(p)
 }
 func putProjectsPid(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		w.WriteHeader(400)
+	}
+	ctype := r.Header.Get("Content-type")
+	e := entity.Project{}
+	switch ctype {
+	case "application/json":
+		decoder := json.NewDecoder(r.Body)
+		err = decoder.Decode(&e)
+		if err != nil {
+			e = entity.Project{Description: "Invalid JSON Posted"}
+			util.PrintError("Unable to decode json")
+			util.PrintError(err)
+		}
+	default:
+		r.ParseForm()
+		e.Name = r.FormValue("name")
+		e.Description = r.FormValue("description")
+		e.Visibility, err = strconv.ParseBool(r.FormValue("public"))
+		if err != nil {
+			util.PrintError(err)
+			e.Visibility = false
+		}
+	}
+	pArray, _ := project.SearchProjects(entity.Project{ID: pid})
+	p := entity.Project{}
+	if len(pArray) == 1 {
+		o := pArray[0]
+		if e.Name == "" {
+			e.Name = o.Name
+		}
+		if e.Description == "" {
+			e.Description = o.Name
+		}
+		p, _ = project.UpdateProject(e)
+	} else {
+		p.Description = "ID mismatch"
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(p)
 }
 func deleteProjectsPid(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
 	vars := mux.Vars(r)
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
 	if err != nil {
@@ -108,6 +150,7 @@ func deleteProjectsPid(w http.ResponseWriter, r *http.Request) {
 	}
 	p := entity.Project{ID: pid}
 	project.DeleteProject(p)
+	w.WriteHeader(http.StatusOK)
 }
 
 func ProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
