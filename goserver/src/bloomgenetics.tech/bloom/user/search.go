@@ -19,9 +19,9 @@ func SearchUsers(u entity.User) ([]entity.User, error) {
 			queryVars = append(queryVars, u.DisplayName)
 			query = query + "name LIKE $" + string(len(queryVars)) + " "
 		}
-		if len(queryVars) > 0 {
-			endQuery = qBase + query
-		}
+	}
+	if len(queryVars) > 0 {
+		endQuery = qBase + query
 	}
 	rows, err := util.Database.Query(endQuery, queryVars...)
 	defer rows.Close()

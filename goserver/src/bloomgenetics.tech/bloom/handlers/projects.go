@@ -3,6 +3,7 @@ package handlers
 import (
 	authlib "bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/entity"
+	"bloomgenetics.tech/bloom/project"
 	"bloomgenetics.tech/bloom/util"
 	"encoding/json"
 	"github.com/gorilla/mux"
@@ -22,7 +23,7 @@ func getProjects(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	//TODO: Confirm logged in
 	//token := r.Header.Get("Authorization")
-	p, _ := entity.GetAllProjects()
+	p, _ := project.SearchProjects(entity.Project{})
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(p)
@@ -30,19 +31,33 @@ func getProjects(w http.ResponseWriter, r *http.Request) {
 func postProjects(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	token := r.Header.Get("Authorization")
+	ctype := r.Header.Get("Content-type")
 	uid, _ := authlib.ParseAuthorization(token)
 	p := entity.Project{}
 	if authlib.VerifyPermissions(token) {
-		r.ParseForm()
-		name := r.FormValue("name")
-		desc := r.FormValue("description")
-		visible, err := strconv.ParseBool(r.FormValue("public"))
-		if err != nil {
-			util.PrintError(err)
-			w.WriteHeader(400)
-			return
+		e := entity.Project{}
+		var err error
+		switch ctype {
+		case "application/json":
+			decoder := json.NewDecoder(r.Body)
+			err = decoder.Decode(&e)
+			if err != nil {
+				e = entity.Project{Description: "Invalid JSON Posted"}
+				util.PrintError("Unable to decode json")
+			}
+		default:
+			r.ParseForm()
+			e.Name = r.FormValue("name")
+			e.Description = r.FormValue("description")
+			e.Visibility, err = strconv.ParseBool(r.FormValue("public"))
+			if err != nil {
+				util.PrintError(err)
+				e.Visibility = false
+			}
 		}
-		p, err = entity.NewProject(uid, name, desc, visible)
+		if e.Name != "" {
+			p, err = project.NewProject(uid, e)
+		}
 	} else {
 		util.PrintInfo("User Access denied")
 	}
@@ -70,9 +85,13 @@ func getProjectsPid(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	token := r.Header.Get("Authorization")
-	uid, _ := authlib.ParseAuthorization(token)
-	p, _ := entity.GetProject(uid, pid)
+	pArray, _ := project.SearchProjects(entity.Project{ID: pid})
+	p := entity.Project{}
+	if len(pArray) != 1 {
+		p.Description = "Invalid Project Selected"
+	} else {
+		p = pArray[0]
+	}
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(p)
