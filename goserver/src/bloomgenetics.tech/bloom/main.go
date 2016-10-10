@@ -38,6 +38,6 @@ func init() {
 func main() {
 	fmt.Println(util.Config.Pretty())
 	router := NewRouter("/v1")
-	router.HandleFunc("/{file:[^v].*.[html|css|ico|js]}", handlers.RootHandler)
+	router.HandleFunc(`/{file:.*}.{ext:[[:alpha:]]{2,4}}`, handlers.RootHandler)
 	http.ListenAndServe(config.GetURL(), router)
 }
