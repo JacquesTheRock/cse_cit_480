@@ -16,9 +16,9 @@ type page struct {
 
 func initTemplates() {
 	templates = template.Must(template.ParseFiles(
-		util.Config.TemplateRoot+"/head.tmpl",
-		util.Config.TemplateRoot+"/navbar.tmpl",
-		util.Config.TemplateRoot+"/footer.tmpl"))
+		util.Config.TemplateRoot+"/generic/head.tmpl",
+		util.Config.TemplateRoot+"/generic/navbar.tmpl",
+		util.Config.TemplateRoot+"/generic/footer.tmpl"))
 }
 
 func RootHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +26,7 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 		initTemplates()
 	}
 	path := filepath.Clean("/" + r.URL.Path) //Root the path and clean
-	path = util.Config.TemplateRoot + path
+	path = util.Config.TemplateRoot + "/content" + path
 	t, err := template.ParseFiles(path)
 	if err != nil {
 		util.PrintError(path)
