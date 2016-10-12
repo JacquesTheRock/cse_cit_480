@@ -3,6 +3,7 @@ package handlers
 import (
 	"bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/entity"
+	"bloomgenetics.tech/bloom/project"
 	"bloomgenetics.tech/bloom/user"
 	"bloomgenetics.tech/bloom/util"
 	"encoding/json"
@@ -10,6 +11,12 @@ import (
 	"net/http"
 	"strconv"
 )
+
+type ApiData struct {
+	Code   int64
+	Status string
+	Data   interface{}
+}
 
 func Users(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -122,7 +129,23 @@ func UsersUidProjects(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getUsersUidProjects(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	out := ApiData{}
+	vars := mux.Vars(r)
+	uid := vars["uid"]
+	roles, _ := user.SearchProjects(user.QueryProjectRole{UID: uid})
+	pArray := make([]entity.Project, 0)
+	for _, role := range roles {
+		p, err := project.GetProject(entity.Project{ID: role.PID})
+		if err == nil {
+			pArray = append(pArray, p)
+		} else {
+			out.Status = "Could not find some projects"
+			out.Code = 100
+		}
+	}
+	out.Data = pArray
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
 
 func UsersUidMail(w http.ResponseWriter, r *http.Request) {

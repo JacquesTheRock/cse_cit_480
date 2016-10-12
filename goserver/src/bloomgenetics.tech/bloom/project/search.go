@@ -4,6 +4,7 @@ import (
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/util"
 	"database/sql"
+	"errors"
 	"strconv"
 )
 
@@ -75,4 +76,18 @@ func SearchProjects(p entity.Project) ([]entity.Project, error) {
 		out = append(out, e)
 	}
 	return out, nil
+}
+
+func GetProject(p entity.Project) (entity.Project, error) {
+	res, err := SearchProjects(p)
+	if err != nil {
+		return entity.Project{}, err
+	}
+	if len(res) > 1 {
+		return entity.Project{}, errors.New("Too many results")
+	}
+	if len(res) == 0 {
+		return entity.Project{}, errors.New("No results")
+	}
+	return res[0], nil
 }
