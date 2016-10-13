@@ -1,12 +1,11 @@
 package main
 
 import (
-	//"encoding/json"
+	"bloomgenetics.tech/bloom/handlers"
+	"bloomgenetics.tech/bloom/util"
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq" //Required for Postgres
-	//"html/template"
-	"bloomgenetics.tech/bloom/util"
 	"net/http"
 )
 
@@ -39,5 +38,6 @@ func init() {
 func main() {
 	fmt.Println(util.Config.Pretty())
 	router := NewRouter("/v1")
+	router.HandleFunc(`/{file:.*}.{ext:[[:alpha:]]{2,4}}`, handlers.RootHandler)
 	http.ListenAndServe(config.GetURL(), router)
 }
