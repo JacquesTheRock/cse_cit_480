@@ -407,7 +407,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
     /* Redirects user to Main_Page when login button is clicked */
     public void goMain() {
-        Intent intent = new Intent(this.getBaseContext(), TestPage.class);
+        Intent intent = new Intent(this.getBaseContext(), MainPage.class);
         startActivity(intent);
     }
 }
