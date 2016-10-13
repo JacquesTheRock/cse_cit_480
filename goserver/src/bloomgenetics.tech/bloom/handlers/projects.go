@@ -2,6 +2,7 @@ package handlers
 
 import (
 	authlib "bloomgenetics.tech/bloom/auth"
+	"bloomgenetics.tech/bloom/code"
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/project"
 	"bloomgenetics.tech/bloom/trait"
@@ -21,18 +22,21 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjects(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	p, _ := project.SearchProjects(entity.Project{})
+	out.Data = p
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(p)
+	encoder.Encode(out)
 }
 func postProjects(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	token := r.Header.Get("Authorization")
 	ctype := r.Header.Get("Content-type")
 	uid, _ := authlib.ParseAuthorization(token)
-	p := entity.Project{}
+	out.Data = entity.Project{}
 	if authlib.VerifyPermissions(token) {
 		e := entity.Project{}
 		var err error
@@ -42,6 +46,8 @@ func postProjects(w http.ResponseWriter, r *http.Request) {
 			err = decoder.Decode(&e)
 			if err != nil {
 				e = entity.Project{Description: "Invalid JSON Posted"}
+				out.Code = code.INVALIDFIELD
+				out.Status = "Unable to decode json"
 				util.PrintError("Unable to decode json")
 			}
 		default:
@@ -55,14 +61,19 @@ func postProjects(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if e.Name != "" {
-			p, err = project.NewProject(uid, e)
+			out.Data, err = project.NewProject(uid, e)
+		} else {
+			out.Code = code.MISSINGFIELD
+			out.Status = "Projects must have a name"
 		}
 	} else {
 		util.PrintInfo("User Access denied")
+		out.Code = code.ACCESSDENIED
+		out.Status = "You don't have permission"
 	}
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(p)
+	encoder.Encode(out)
 
 }
 
@@ -77,79 +88,96 @@ func ProjectsPid(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	p := entity.Project{}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	vars := mux.Vars(r)
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
 	if err != nil {
-		w.WriteHeader(400)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	pArray, _ := project.SearchProjects(entity.Project{ID: pid})
-	p := entity.Project{}
-	if len(pArray) != 1 {
-		p.Description = "Invalid Project Selected"
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
 	} else {
-		p = pArray[0]
+		pArray, _ := project.SearchProjects(entity.Project{ID: pid})
+		if len(pArray) != 1 {
+			out.Status = "Cannot View Project Selected"
+		} else {
+			p = pArray[0]
+		}
 	}
+	out.Data = p
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(p)
+	encoder.Encode(out)
 }
 func putProjectsPid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	e := entity.Project{}
+	p := entity.Project{}
 	vars := mux.Vars(r)
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
 	if err != nil {
-		w.WriteHeader(400)
-	}
-	ctype := r.Header.Get("Content-type")
-	e := entity.Project{}
-	switch ctype {
-	case "application/json":
-		decoder := json.NewDecoder(r.Body)
-		err = decoder.Decode(&e)
-		if err != nil {
-			e = entity.Project{Description: "Invalid JSON Posted"}
-			util.PrintError("Unable to decode json")
-			util.PrintError(err)
-		}
-	default:
-		r.ParseForm()
-		e.Name = r.FormValue("name")
-		e.Description = r.FormValue("description")
-		e.Visibility, err = strconv.ParseBool(r.FormValue("public"))
-		if err != nil {
-			util.PrintError(err)
-			e.Visibility = false
-		}
-	}
-	pArray, _ := project.SearchProjects(entity.Project{ID: pid})
-	p := entity.Project{}
-	if len(pArray) == 1 {
-		o := pArray[0]
-		if e.Name == "" {
-			e.Name = o.Name
-		}
-		if e.Description == "" {
-			e.Description = o.Name
-		}
-		p, _ = project.UpdateProject(e)
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
 	} else {
-		p.Description = "ID mismatch"
+		ctype := r.Header.Get("Content-type")
+		switch ctype {
+		case "application/json":
+			decoder := json.NewDecoder(r.Body)
+			err = decoder.Decode(&e)
+			if err != nil {
+				out.Code = code.UNDEFINED
+				out.Status = "Invalid JSON"
+				util.PrintError("Unable to decode json")
+				util.PrintError(err)
+			}
+		default:
+			r.ParseForm()
+			e.Name = r.FormValue("name")
+			e.Description = r.FormValue("description")
+			e.Visibility, err = strconv.ParseBool(r.FormValue("public"))
+			if err != nil {
+				util.PrintInfo(err)
+				e.Visibility = false
+			}
+		}
+		if out.Code != 0 {
+			pArray, _ := project.SearchProjects(entity.Project{ID: pid})
+			if len(pArray) == 1 {
+				o := pArray[0]
+				if e.Name == "" {
+					e.Name = o.Name
+				}
+				if e.Description == "" {
+					e.Description = o.Name
+				}
+				p, _ = project.UpdateProject(e)
+			} else {
+				out.Code = code.INVALIDFIELD
+				out.Status = "Could not Find Matching Project"
+			}
+		}
+		out.Data = p
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(p)
+	encoder.Encode(out)
 }
 func deleteProjectsPid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
 	vars := mux.Vars(r)
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
 	if err != nil {
-		w.WriteHeader(400)
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	} else {
+		p := entity.Project{ID: pid}
+		project.DeleteProject(p)
 	}
-	p := entity.Project{ID: pid}
-	project.DeleteProject(p)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
 
 func ProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
@@ -161,55 +189,65 @@ func ProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
 	vars := mux.Vars(r)
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
 	if err != nil {
-		w.WriteHeader(400)
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
 	}
 	s := entity.Trait{Project_ID: pid}
 	t, err := trait.SearchTraits(s)
 
+	out.Data = t
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(t)
+	encoder.Encode(out)
 }
 func postProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
 	vars := mux.Vars(r)
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
 	if err != nil {
-		w.WriteHeader(400)
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
 	}
-	ctype := r.Header.Get("Content-type")
-	e := entity.Trait{}
-	switch ctype {
-	case "application/json":
-		decoder := json.NewDecoder(r.Body)
-		err = decoder.Decode(&e)
-		if err != nil {
-			e = entity.Trait{Name: "Invalid JSON Posted"}
-			util.PrintError("Unable to decode json")
-			util.PrintError(err)
-		} else {
-			e.Project_ID = pid
+	if out.Code != 0 {
+		ctype := r.Header.Get("Content-type")
+		e := entity.Trait{}
+		switch ctype {
+		case "application/json":
+			decoder := json.NewDecoder(r.Body)
+			err = decoder.Decode(&e)
+			if err != nil {
+				out.Code = code.UNDEFINED
+				out.Status = "Invalid JSON Posted"
+				util.PrintError("Unable to decode json")
+				util.PrintError(err)
+			} else {
+				e.Project_ID = pid
+			}
+		default:
+			r.ParseForm()
+			e.Name = r.FormValue("name")
+			e.Type_ID, err = strconv.ParseInt(r.FormValue("type_id"), 10, 64)
+			if err != nil {
+				out.Code = code.INVALIDFIELD
+				out.Status = "Invalid type_id"
+			} else {
+				e.Project_ID = pid
+			}
 		}
-	default:
-		r.ParseForm()
-		e.Name = r.FormValue("name")
-		e.Type_ID, err = strconv.ParseInt(r.FormValue("type_id"), 10, 64)
-		if err != nil {
-			e.Name = "Invalid type_id"
-		} else {
-			e.Project_ID = pid
+		if e.Project_ID == pid {
+			e, _ = trait.NewTrait(e)
 		}
-	}
-	if e.Project_ID == pid {
-		e, _ = trait.NewTrait(e)
+		out.Data = e
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(e)
+	encoder.Encode(out)
 
 }
 
@@ -224,56 +262,69 @@ func ProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
-
+	out := entity.ApiData{}
+	t := entity.Trait{}
 	vars := mux.Vars(r)
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
 	if err != nil {
-		w.WriteHeader(400)
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	} else {
+		tid, err := strconv.ParseInt(vars["tid"], 10, 64)
+		if err != nil {
+			out.Code = code.INVALIDFIELD
+			out.Status = "Not a Numeric Trait ID"
+		} else {
+			s := entity.Trait{Project_ID: pid, ID: tid}
+			t, err := trait.GetTrait(s)
+		}
 	}
-	tid, err := strconv.ParseInt(vars["tid"], 10, 64)
-	if err != nil {
-		w.WriteHeader(400)
-	}
-	s := entity.Trait{Project_ID: pid, ID: tid}
-	t, err := trait.GetTrait(s)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(t)
+	encoder.Encode(out)
 }
 func putProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	t := entity.Trait{}
 	vars := mux.Vars(r)
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
 	if err != nil {
-		w.WriteHeader(400)
-	}
-	tid, err := strconv.ParseInt(vars["tid"], 10, 64)
-	if err != nil {
-		w.WriteHeader(400)
-	}
-	e := entity.Trait{}
-	decoder := json.NewDecoder(r.Body)
-	err = decoder.Decode(&e)
-	if err != nil {
-		e = entity.Trait{Name: "Invalid JSON Posted"}
-		util.PrintError("Unable to decode json")
-		util.PrintError(err)
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
 	} else {
-		e.Project_ID = pid
-		e.ID = tid
+		tid, err := strconv.ParseInt(vars["tid"], 10, 64)
+		if err != nil {
+			out.Code = code.INVALIDFIELD
+			out.Status = "Not a Numeric Project ID"
+		} else {
+			e := entity.Trait{}
+			decoder := json.NewDecoder(r.Body)
+			err = decoder.Decode(&e)
+			if err != nil {
+				out.Code = code.UNDEFINED
+				out.Status = "Invalid JSON Posted"
+				util.PrintError("Unable to decode json")
+				util.PrintError(err)
+			} else {
+				e.Project_ID = pid
+				e.ID = tid
+				o, _ := trait.GetTrait(entity.Trait{ID: tid})
+				if e.Name == "" {
+					e.Name = o.Name
+				}
+				if e.Type_ID == 0 {
+					e.Type_ID = o.Type_ID
+				}
+				t, _ = trait.UpdateTrait(e)
+			}
+		}
 	}
-	o, _ := trait.GetTrait(entity.Trait{ID: tid})
-	if e.Name == "" {
-		e.Name = o.Name
-	}
-	if e.Type_ID == 0 {
-		e.Type_ID = o.Type_ID
-	}
-	t, _ := trait.UpdateTrait(e)
+	out.Data = t
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(t)
+	encoder.Encode(out)
 }
 func deleteProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
