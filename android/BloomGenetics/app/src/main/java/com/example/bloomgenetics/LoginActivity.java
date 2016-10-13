@@ -33,18 +33,17 @@ import android.widget.TextView;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
+import android.content.Intent;
 
 /**
  * A login screen that offers login via email/password.
@@ -199,6 +198,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+            goMain();
+
         }
     }
 
@@ -401,6 +402,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+
+
+    }
+    /* Redirects user to Main_Page when login button is clicked */
+    public void goMain() {
+        Intent intent = new Intent(this.getBaseContext(), TestPage.class);
+        startActivity(intent);
     }
 }
 

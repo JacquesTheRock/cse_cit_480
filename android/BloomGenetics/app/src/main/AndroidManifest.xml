@@ -25,6 +25,42 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainPage"
+            android:label="@string/title_activity_main_page"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TestPage"
+            android:label="@string/title_activity_test_page"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".CurrentProjects"
+            android:label="@string/title_activity_current_projects"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CurrentCrosses"
+            android:label="@string/title_activity_current_crosses"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CrossInfo"
+            android:label="@string/title_activity_cross_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddCandidate"
+            android:label="@string/title_activity_add_candidate"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
