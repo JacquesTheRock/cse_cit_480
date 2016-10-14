@@ -1,0 +1,6 @@
+package code
+
+const MISSINGFIELD = 101
+const INVALIDFIELD = 102
+const INVALIDSTATE = 103
+const ACCESSDENIED = 104

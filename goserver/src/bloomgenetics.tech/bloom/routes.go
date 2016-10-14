@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	"net/http"
 	"bloomgenetics.tech/bloom/handlers"
 	"bloomgenetics.tech/bloom/util"
+	"github.com/gorilla/mux"
+	"net/http"
 )
 
 type Route struct {

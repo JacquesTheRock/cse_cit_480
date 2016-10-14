@@ -6,43 +6,43 @@ ALTER TABLE logins
 ALTER TABLE roles 
 	ADD CONSTRAINT user_fk
 	FOREIGN KEY(user_id)
-	REFERENCES users(id);
+	REFERENCES users(id) ON DELETE CASCADE;
 ALTER TABLE roles
 	ADD CONSTRAINT project_fk
 	FOREIGN KEY(project_id)
-	REFERENCES project(id);
+	REFERENCES project(id) ON DELETE CASCADE;
 ALTER TABLE roles
 	ADD CONSTRAINT role_type_fk
 	FOREIGN KEY(role_id)
-	REFERENCES role_t(id);
+	REFERENCES role_t(id) ON DELETE CASCADE;
 
 ALTER TABLE crosses
 	ADD CONSTRAINT project_fk
 	FOREIGN KEY(project_id)
-	REFERENCES project(id);
+	REFERENCES project(id) ON DELETE CASCADE;
 
 ALTER TABLE specimen
 	ADD CONSTRAINT crosses_fk
 	FOREIGN KEY(cross_id)
-	REFERENCES crosses(id);
+	REFERENCES crosses(id) ON DELETE CASCADE;
 
 ALTER TABLE trait
 	ADD CONSTRAINT project_fk
 	FOREIGN KEY(project_id)
-	REFERENCES project(id);
+	REFERENCES project(id) ON DELETE CASCADE;
 ALTER TABLE trait
 	ADD CONSTRAINT	traitt_fk
 	FOREIGN KEY(class)
-	REFERENCES trait_t(id);
+	REFERENCES trait_t(id) ON DELETE SET NULL;
 
 ALTER TABLE specimen_trait
 	ADD CONSTRAINT trait_fk
 	FOREIGN KEY(trait_id)
-	REFERENCES trait(id);
+	REFERENCES trait(id) ON DELETE CASCADE;
 ALTER TABLE specimen_trait
 	ADD CONSTRAINT specimen_fk
 	FOREIGN KEY(specimen_id)
-	REFERENCES specimen(id);
+	REFERENCES specimen(id) ON DELETE CASCADE;
 
 
 ALTER TABLE mail
@@ -56,4 +56,4 @@ ALTER TABLE mail
 ALTER TABLE mail
 	ADD CONSTRAINT prev_fk
 	FOREIGN KEY(prev)
-	REFERENCES mail(id);
+	REFERENCES mail(id) ON DELETE SET NULL;
