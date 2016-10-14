@@ -1,1 +1,2 @@
 DROP TABLE crosses CASCADE;
+DROP TABLE cross_parent CASCADE;

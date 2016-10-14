@@ -26,6 +26,16 @@ ALTER TABLE specimen
 	FOREIGN KEY(cross_id)
 	REFERENCES crosses(id) ON DELETE CASCADE;
 
+ALTER TABLE cross_parent
+	ADD CONSTRAINT crosses_fk
+	FOREIGN KEY(cross_id)
+	REFERENCES crosses(id) ON DELETE CASCADE;
+ALTER TABLE cross_parent
+	ADD CONSTRAINT specimen_fk
+	FOREIGN KEY(specimen_id)
+	REFERENCES specimen(id) ON DELETE CASCADE;
+
+
 ALTER TABLE trait
 	ADD CONSTRAINT project_fk
 	FOREIGN KEY(project_id)
