@@ -4,11 +4,13 @@ import (
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/util"
 	"database/sql"
+	"strconv"
 )
 
 type CrossQuery struct {
 	ID        sql.NullInt64
 	ProjectID sql.NullInt64
+	Name      sql.NullString
 }
 
 func SearchCrosses(q CrossQuery) ([]entity.Cross, error) {
@@ -25,6 +27,11 @@ func SearchCrosses(q CrossQuery) ([]entity.Cross, error) {
 		queryVars = append(queryVars, q.ProjectID.Int64)
 		query = query + "project_id = $" + strconv.Itoa(len(queryVars)) + " "
 	}
+	if q.Name.Valid {
+		queryVars = append(queryVars, q.Name.String)
+		query = query + "name LIKE $" + strconv.Itoa(len(queryVars)) + " "
+
+	}
 	if len(queryVars) > 0 {
 		endQuery = qBase + query
 	}
@@ -32,7 +39,7 @@ func SearchCrosses(q CrossQuery) ([]entity.Cross, error) {
 	if err != nil {
 		util.PrintError("Query Error")
 		util.PrintError(err)
-		return nil, err
+		return out, err
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -44,9 +51,42 @@ func SearchCrosses(q CrossQuery) ([]entity.Cross, error) {
 			util.PrintError(err)
 		}
 		if name.Valid {
-			e.Name = desc.String
+			e.Name = name.String
 		}
 		out = append(out, e)
 	}
 	return out, nil
+}
+
+func GetCross(q CrossQuery) (entity.Cross, error) {
+	const qBase = "SELECT c.id,c.project_id,c.name,p.specimen_id FROM crosses c LEFT JOIN cross_parent p ON c.id = p.cross_id WHERE c.id = $1 AND c.project_id = $2"
+	out := entity.Cross{}
+	rows, err := util.Database.Query(qBase, q.ID.Int64, q.ProjectID.Int64)
+	if err != nil {
+		util.PrintError("Query Error")
+		util.PrintError(err)
+		return out, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var name sql.NullString
+		var parent sql.NullInt64
+		err = rows.Scan(&out.ID, &out.ProjectID, &name, &parent)
+		if err != nil {
+			util.PrintError("Unable to read Cross")
+			util.PrintError(err)
+		}
+		if name.Valid {
+			out.Name = name.String
+		}
+		if parent.Valid {
+			if out.Parent1ID != 0 {
+				out.Parent2ID = parent.Int64
+			} else {
+				out.Parent1ID = parent.Int64
+			}
+		}
+	}
+	return out, nil
+
 }

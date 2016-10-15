@@ -3,6 +3,7 @@ package handlers
 import (
 	authlib "bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/code"
+	"bloomgenetics.tech/bloom/cross"
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/project"
 	"bloomgenetics.tech/bloom/trait"
@@ -23,16 +24,15 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 }
 func getProjects(w http.ResponseWriter, r *http.Request) {
 	out := entity.ApiData{}
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	p, _ := project.SearchProjects(entity.Project{})
 	out.Data = p
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(out)
 }
 func postProjects(w http.ResponseWriter, r *http.Request) {
 	out := entity.ApiData{}
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	token := r.Header.Get("Authorization")
 	ctype := r.Header.Get("Content-type")
 	uid, _ := authlib.ParseAuthorization(token)
@@ -71,6 +71,7 @@ func postProjects(w http.ResponseWriter, r *http.Request) {
 		out.Code = code.ACCESSDENIED
 		out.Status = "You don't have permission"
 	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(out)
@@ -90,7 +91,6 @@ func ProjectsPid(w http.ResponseWriter, r *http.Request) {
 func getProjectsPid(w http.ResponseWriter, r *http.Request) {
 	out := entity.ApiData{}
 	p := entity.Project{}
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	vars := mux.Vars(r)
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
 	if err != nil {
@@ -105,6 +105,7 @@ func getProjectsPid(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	out.Data = p
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(out)
@@ -276,9 +277,10 @@ func getProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
 			out.Status = "Not a Numeric Trait ID"
 		} else {
 			s := entity.Trait{Project_ID: pid, ID: tid}
-			t, err := trait.GetTrait(s)
+			t, err = trait.GetTrait(s)
 		}
 	}
+	out.Data = t
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
@@ -327,21 +329,28 @@ func putProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
 	encoder.Encode(out)
 }
 func deleteProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	t := entity.Trait{}
 	vars := mux.Vars(r)
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
 	if err != nil {
-		w.WriteHeader(400)
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	} else {
+		tid, err := strconv.ParseInt(vars["tid"], 10, 64)
+		if err != nil {
+			out.Code = code.INVALIDFIELD
+			out.Status = "Not a Numeric Trait ID"
+		} else {
+			e := entity.Trait{ID: tid, Project_ID: pid}
+			t, _ = trait.DeleteTrait(e)
+		}
 	}
-	tid, err := strconv.ParseInt(vars["tid"], 10, 64)
-	if err != nil {
-		w.WriteHeader(400)
-	}
-	e := entity.Trait{ID: tid, Project_ID: pid}
-	t, _ := trait.DeleteTrait(e)
+	out.Data = t
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(t)
+	encoder.Encode(out)
 }
 func ProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -352,15 +361,81 @@ func ProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	} else {
+		q := cross.CrossQuery{}
+		q.ProjectID.Valid = true
+		q.ProjectID.Int64 = pid
+		out.Data, _ = cross.SearchCrosses(q)
+	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//token := r.Header.Get("Authorization")
-	c := [10]entity.Cross{}
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(c)
+	encoder.Encode(out)
 }
 func postProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	} else {
+		ctype := r.Header.Get("Content-type")
+		e := entity.Cross{}
+		switch ctype {
+		case "application/json":
+			decoder := json.NewDecoder(r.Body)
+			err = decoder.Decode(&e)
+			if err != nil {
+				out.Code = code.UNDEFINED
+				out.Status = "Invalid JSON Posted"
+				util.PrintError("Unable to decode json")
+				util.PrintError(err)
+			} else {
+				e.ProjectID = pid
+			}
+		default:
+			r.ParseForm()
+			e.Name = r.FormValue("name")
+			e.Parent1ID, err = strconv.ParseInt(r.FormValue("parent1"), 10, 64)
+			if err != nil {
+				out.Code = code.INVALIDFIELD
+				out.Status = "Invalid parent1 field"
+			}
+			e.Parent2ID, err = strconv.ParseInt(r.FormValue("parent2"), 10, 64)
+			if err != nil {
+				out.Code = code.INVALIDFIELD
+				out.Status = "Invalid parent2 field"
+			}
+			e.ProjectID = pid
+		}
+		if out.Code == 0 && e.Name == "" {
+			q := cross.CrossQuery{}
+			q.ProjectID.Valid = true
+			q.ProjectID.Int64 = pid
+			curCrosses, _ := cross.SearchCrosses(q)
+			count := len(curCrosses)
+			e.Name = "PROJECT" + strconv.FormatInt(pid, 10) + "CROSS" + strconv.Itoa(count)
+		}
+		if out.Code == 0 {
+			out.Data, err = cross.CreateCross(e)
+			if err != nil {
+				out.Status = "Fail to add cross"
+				out.Code = code.UNDEFINED
+				out.Data = entity.Cross{}
+			}
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
 
 func ProjectsPidCrossesCid(w http.ResponseWriter, r *http.Request) {
@@ -374,18 +449,145 @@ func ProjectsPidCrossesCid(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidCrossesCid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	} else {
+
+		cid, err := strconv.ParseInt(vars["cid"], 10, 64)
+		if err != nil {
+			out.Code = code.INVALIDFIELD
+			out.Status = "Not a Numeric Cross ID"
+		} else {
+			q := cross.CrossQuery{}
+			q.ProjectID.Int64 = pid
+			q.ProjectID.Valid = true
+			q.ID.Int64 = cid
+			q.ID.Valid = true
+			out.Data, err = cross.GetCross(q)
+			if err != nil {
+				util.PrintInfo(err)
+			}
+		}
+	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	//token := r.Header.Get("Authorization")
-	c := entity.Cross{}
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(c)
+	encoder.Encode(out)
 }
 func putProjectsPidCrossesCid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	cid, err := strconv.ParseInt(vars["cid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numberic Cross ID"
+	}
+	if out.Code == 0 {
+		ctype := r.Header.Get("Content-type")
+		e := entity.Cross{}
+		switch ctype {
+		case "application/json":
+			decoder := json.NewDecoder(r.Body)
+			err = decoder.Decode(&e)
+			if err != nil {
+				out.Code = code.UNDEFINED
+				out.Status = "Invalid JSON Posted"
+				util.PrintError("Unable to decode json")
+				util.PrintError(err)
+			}
+		default:
+			r.ParseForm()
+			e.Name = r.FormValue("name")
+			e.Parent1ID, err = strconv.ParseInt(r.FormValue("parent1"), 10, 64)
+			if err != nil {
+				out.Code = code.INVALIDFIELD
+				out.Status = "Invalid parent1 field"
+			}
+			e.Parent2ID, err = strconv.ParseInt(r.FormValue("parent2"), 10, 64)
+			if err != nil {
+				out.Code = code.INVALIDFIELD
+				out.Status = "Invalid parent2 field"
+			}
+			e.ProjectID = pid
+		}
+		if out.Code == 0 {
+			if e.ID == 0 {
+				e.ID = cid
+			} else if e.ID != cid {
+				out.Code = code.INVALIDFIELD
+				out.Status = "Cross ID Mismatch"
+			}
+		}
+		if out.Code == 0 {
+			if e.ProjectID == 0 {
+				e.ProjectID = pid
+			} else if e.ProjectID != pid {
+				out.Code = code.INVALIDFIELD
+				out.Status = "Project ID Mismatch"
+			}
+		}
+		if out.Code == 0 && e.Name == "" {
+			q := cross.CrossQuery{}
+			q.ID.Valid = true
+			q.ID.Int64 = e.ID
+			q.ProjectID.Valid = true
+			q.ProjectID.Int64 = e.ProjectID
+			c, _ := cross.GetCross(q)
+			e.Name = c.Name
+		}
+		if out.Code == 0 {
+			_, err = cross.UpdateCross(e)
+			if err != nil {
+				out.Status = "Fail to update cross"
+				out.Code = code.UNDEFINED
+				out.Data = entity.Cross{}
+			}
+		}
+	}
+	q := cross.CrossQuery{}
+	q.ID.Valid = true
+	q.ID.Int64 = cid
+	q.ProjectID.Valid = true
+	q.ProjectID.Int64 = pid
+	out.Data, _ = cross.GetCross(q)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
 func deleteProjectsPidCrossesCid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	e := entity.Cross{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	cid, err := strconv.ParseInt(vars["cid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Cross ID"
+	}
+	if out.Code == 0 {
+		e.ID = cid
+		e.ProjectID = pid
+		cross.Delete(e)
+	}
+	out.Data = e
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
 
 func ProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request) {
@@ -397,9 +599,9 @@ func ProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	//token := r.Header.Get("Authorization")
 	c := [10]entity.Candidate{}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(c)
@@ -419,9 +621,9 @@ func ProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request)
 	}
 }
 func getProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	//token := r.Header.Get("Authorization")
 	c := entity.Candidate{}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(c)
