@@ -37,7 +37,12 @@ func init() {
 
 func main() {
 	fmt.Println(util.Config.Pretty())
-	router := NewRouter("/v1")
-	router.HandleFunc(`/{file:.*}.{ext:[[:alpha:]]{2,4}}`, handlers.RootHandler)
-	http.ListenAndServe(config.GetURL(), router)
+	apiRouter := NewRouter("/v1")
+	webPagesMux := http.NewServeMux()
+	webPagesMux.HandleFunc("/", handlers.RootHandler)
+	go func() {
+		http.ListenAndServe(config.GetURL(), webPagesMux)
+	}()
+
+	http.ListenAndServe(config.GetApiURL(), apiRouter)
 }

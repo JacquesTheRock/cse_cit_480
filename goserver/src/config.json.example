@@ -3,6 +3,7 @@
 	"TemplateRoot" : "templates",
 	"DefaultPage" : "index.html",
 	"IP" : "",
+	"ApiPort": 8081,
 	"Port" : 8080,
 	"TimeFmt" : "2006 Jan 2 15:04:05",
 	"ErrorFmt": "${level} ${time}:\t${msg}",

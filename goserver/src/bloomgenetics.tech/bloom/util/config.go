@@ -14,6 +14,7 @@ type Configuration struct {
 	TemplateRoot       string
 	DefaultPage        string
 	IP                 string
+	ApiPort            int64
 	Port               int64
 	TimeFmt            string
 	ErrorFmt           string
@@ -25,12 +26,17 @@ func (c *Configuration) GetURL() string {
 	return c.IP + ":" + strconv.FormatInt(c.Port, 10)
 }
 
+func (c *Configuration) GetApiURL() string {
+	return c.IP + ":" + strconv.FormatInt(c.ApiPort, 10)
+}
+
 func (c Configuration) Pretty() string {
 	return "Config:" +
 		"\n\tHTMLRoot = " + c.HTMLRoot +
 		"\n\tTemplateRoot = " + c.TemplateRoot +
 		"\n\tDefaultPage = " + c.DefaultPage +
 		"\n\tIP = " + c.IP +
+		"\n\tApiPort = " + strconv.FormatInt(c.ApiPort, 10) +
 		"\n\tPort = " + strconv.FormatInt(c.Port, 10) +
 		"\n\tTimeFmt = " + c.TimeFmt +
 		"\n\tErrorFmt = " + c.ErrorFmt +
@@ -89,6 +95,7 @@ func initConfig() {
 	Config = Configuration{HTMLRoot: "html",
 		TemplateRoot:   "templates",
 		Port:           8080,
+		ApiPort:        8081,
 		DefaultPage:    "index.html",
 		IP:             "",
 		TimeFmt:        "2006 Jan 2 15:04:05",
