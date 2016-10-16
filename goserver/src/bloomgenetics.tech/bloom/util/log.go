@@ -13,6 +13,12 @@ func PrintError(a ...interface{}) {
 	fmtString = strings.Replace(fmtString, "${msg}", "%s\n", 1)
 	fmt.Fprintf(os.Stderr, fmtString, a...)
 }
+func PrintDebug(a ...interface{}) {
+	fmtString := strings.Replace(Config.ErrorFmt, "${time}", (time.Now()).Format(Config.TimeFmt), 1)
+	fmtString = strings.Replace(fmtString, "${level}", "DEBUG", 1)
+	fmtString = strings.Replace(fmtString, "${msg}", "%s\n", 1)
+	fmt.Fprintf(os.Stderr, fmtString, a...)
+}
 func PrintWarn(a ...interface{}) {
 	fmtString := strings.Replace(Config.ErrorFmt, "${time}", (time.Now()).Format(Config.TimeFmt), 1)
 	fmtString = strings.Replace(fmtString, "${level}", "WARN", 1)
