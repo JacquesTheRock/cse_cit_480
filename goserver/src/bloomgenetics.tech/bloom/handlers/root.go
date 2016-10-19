@@ -3,6 +3,7 @@ package handlers
 import (
 	"bloomgenetics.tech/bloom/util"
 	"html/template"
+	"io/ioutil"
 	"net/http"
 	"path/filepath"
 )
@@ -41,4 +42,21 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 	templates.ExecuteTemplate(w, "navbar.tmpl", nil)
 	t.Execute(w, nil)
 	templates.ExecuteTemplate(w, "footer.tmpl", nil)
+}
+
+func StaticHandler(w http.ResponseWriter, r *http.Request) {
+	path := filepath.Clean("/" + r.URL.Path) //Root the path and clean
+	util.PrintInfo(filepath.SplitList(path))
+	path = filepath.Join(filepath.SplitList(path)[1:]...)
+	path = util.Config.HTMLRoot + path
+	body, err := ioutil.ReadFile(path)
+	if err != nil {
+		util.PrintError(path)
+		util.PrintDebug(err)
+		if err != nil {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+	}
+	w.Write(body)
 }

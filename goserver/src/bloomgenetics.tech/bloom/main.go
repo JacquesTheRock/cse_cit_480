@@ -40,6 +40,7 @@ func main() {
 	apiRouter := NewRouter("/v1")
 	webPagesMux := http.NewServeMux()
 	webPagesMux.HandleFunc("/", handlers.RootHandler)
+	webPagesMux.HandleFunc("/static/", handlers.StaticHandler)
 	go func() {
 		http.ListenAndServe(config.GetURL(), webPagesMux)
 	}()
