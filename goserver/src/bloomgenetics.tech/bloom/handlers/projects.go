@@ -720,7 +720,11 @@ func getProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Reque
 		q.CrossID.Int64 = cid
 		q.ID.Valid = true
 		q.ID.Int64 = cnid
-		cn, _ := candidate.SearchCandidates(q)
+		cn, err := candidate.SearchCandidates(q)
+		if err != nil {
+			out.Code = code.UNDEFINED
+			out.Status = "Error Searching for Candidate"
+		}
 		if len(cn) == 1 {
 			out.Data = cn[0]
 		} else {
@@ -733,10 +737,106 @@ func getProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Reque
 	encoder.Encode(out)
 }
 func putProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	cid, err := strconv.ParseInt(vars["cid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Cross ID"
+	}
+	cnid, err := strconv.ParseInt(vars["cnid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Candidate ID"
+	}
+
+	if out.Code == 0 {
+		ctype := r.Header.Get("Content-type")
+		e := entity.Candidate{}
+		switch ctype {
+		case "application/json":
+			decoder := json.NewDecoder(r.Body)
+			err = decoder.Decode(&e)
+			if err != nil {
+				out.Code = code.UNDEFINED
+				out.Status = "Invalid JSON Posted"
+				util.PrintError("Unable to decode json")
+				util.PrintDebug(err)
+			}
+		default:
+			r.ParseForm()
+			traitIDStrings := strings.Split(r.FormValue("traits"), ",")
+			for _, s := range traitIDStrings {
+				var tid int64
+				tid, err = strconv.ParseInt(s, 10, 64)
+				if err != nil {
+					out.Status = "Error Converting Trait ID: " + s
+					out.Code = code.INVALIDFIELD
+					break
+				} else {
+					t := entity.Trait{}
+					t.ID = tid
+					e.Traits = append(e.Traits, t)
+				}
+			}
+		}
+		if out.Code == 0 {
+			e.ID = cnid
+			e.ProjectID = pid
+			e.CrossID = cid
+			out.Data, err = candidate.UpdateCandidate(e)
+			if err != nil {
+				out.Code = code.UNDEFINED
+				out.Status = "Error when Updating Candidate"
+			}
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
+
 func deleteProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	cid, err := strconv.ParseInt(vars["cid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Cross ID"
+	}
+	cnid, err := strconv.ParseInt(vars["cnid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Candidate ID"
+	}
+
+	if out.Code == 0 {
+		q := entity.Candidate{}
+		q.ProjectID = pid
+		q.CrossID = cid
+		q.ID = cnid
+		out.Data, err = candidate.DeleteCandidate(q)
+		if err != nil {
+			out.Code = code.UNDEFINED
+			out.Status = "Error Deleting Candidate"
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
 
 func ProjectsPidTreview(w http.ResponseWriter, r *http.Request) {
