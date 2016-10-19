@@ -10,7 +10,7 @@ func DeleteProject(p entity.Project) (entity.Project, error) {
 	output := entity.Project{}
 	_, err := util.Database.Exec(qBase, p.ID)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		util.PrintError("Delete Project Method error")
 		return output, err
 	}

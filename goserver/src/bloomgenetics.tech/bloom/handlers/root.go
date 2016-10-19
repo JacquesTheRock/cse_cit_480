@@ -30,7 +30,7 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(path)
 	if err != nil {
 		util.PrintError(path)
-		util.PrintError(err)
+		util.PrintDebug(err)
 		t, err = template.ParseFiles(util.Config.TemplateRoot + "/404.html")
 		if err != nil {
 			w.WriteHeader(http.StatusNotFound)

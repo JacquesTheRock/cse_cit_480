@@ -58,13 +58,13 @@ func postUsers(w http.ResponseWriter, r *http.Request) {
 		hash, salt, err := auth.CreateHash(pass, "SHA512")
 		if err != nil {
 			util.PrintError("Create Hash of password Failed")
-			util.PrintError(err)
+			util.PrintDebug(err)
 			out.Code = code.INVALIDFIELD
 		} else {
 			u, err = user.CreateUser(uid, email, name, location, hash, salt)
 			if err != nil {
 				util.PrintError("Posting User Failed")
-				util.PrintError(err)
+				util.PrintDebug(err)
 				out.Code = code.UNDEFINED
 			}
 		}
@@ -103,7 +103,7 @@ func putUsersUid(w http.ResponseWriter, r *http.Request) {
 	out.Data = entity.User{}
 	if err != nil {
 		util.PrintError("Bad request body, expected user JSON")
-		util.PrintError(err)
+		util.PrintDebug(err)
 	}
 	if u.ID == uid {
 		orig, _ := user.GetUser(u)
@@ -178,7 +178,7 @@ func postUsersUidMail(w http.ResponseWriter, r *http.Request) {
 	out.Data = entity.Mail{}
 	if err != nil {
 		util.PrintError("Bad request body, expected mail JSON")
-		util.PrintError(err)
+		util.PrintDebug(err)
 	}
 	if m.Dest == "" {
 		m.Dest = uid
@@ -242,7 +242,7 @@ func putUsersUidMailMid(w http.ResponseWriter, r *http.Request) {
 			err = decoder.Decode(&n)
 			if err != nil {
 				util.PrintError("Bad request body, expected mail JSON")
-				util.PrintError(err)
+				util.PrintDebug(err)
 			}
 			if n.Subject == "" {
 				n.Subject = "Re:" + m.Subject
@@ -254,7 +254,7 @@ func putUsersUidMailMid(w http.ResponseWriter, r *http.Request) {
 				out.Data, err = user.ReplyMail(n)
 			}
 			if err != nil {
-				util.PrintError(err)
+				util.PrintDebug(err)
 				out.Code = code.UNDEFINED
 			}
 		}

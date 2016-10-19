@@ -22,13 +22,13 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 	const qBase = "SELECT user_id,name,key FROM logins WHERE user_id = $1 AND key = $2"
 	b, err1 := base64.URLEncoding.DecodeString(token)
 	if err1 != nil {
-		util.PrintError(err1)
+		util.PrintDebug(err1)
 		util.PrintError("Base64 conversion to Bytea failed")
 		return output, err1
 	}
 	rows, err := util.Database.Query(qBase, uid, b)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		util.PrintError("Query Failed")
 		return output, err
 	}
@@ -46,7 +46,7 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 		}
 		output.Token = token
 		if err != nil {
-			util.PrintError(err)
+			util.PrintDebug(err)
 			util.PrintInfo("Failure to Find Matching Token")
 		}
 	}
@@ -62,7 +62,7 @@ func ParseAuthorization(authLine string) (string, string) {
 	auth := parts[1]
 	data, err := base64.URLEncoding.DecodeString(auth)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		util.PrintError("Fail to parse Authorization")
 		return "Guest", ""
 	}
@@ -71,7 +71,7 @@ func ParseAuthorization(authLine string) (string, string) {
 	if len(out) == 2 {
 		return out[0], out[1]
 	} else {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return "Guest", ""
 	}
 }
@@ -81,12 +81,12 @@ func createToken(uid string) (string, error) {
 	b := make([]byte, 32)
 	_, err := rand.Read(b) //Make the actual token
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return "", err
 	}
 	_, err = util.Database.Exec(qBase, uid, b)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return "", err
 	}
 	token := base64.URLEncoding.EncodeToString(b)
@@ -103,7 +103,7 @@ func LoginUser(user string, pass string) (entity.UserLogin, error) {
 	var id, name, hash, salt, algorithm, checkHash string
 	rows, err := util.Database.Query(qBase, user)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		util.PrintError("User ID not found: " + user)
 		return u, err
 	}
@@ -111,7 +111,7 @@ func LoginUser(user string, pass string) (entity.UserLogin, error) {
 	for rows.Next() {
 		err = rows.Scan(&id, &name, &hash, &salt, &algorithm)
 		if err != nil {
-			util.PrintError(err)
+			util.PrintDebug(err)
 		}
 	}
 	if id == "" {
@@ -148,7 +148,7 @@ func CreateHash(password string, algorithm string) ([]byte, []byte, error) {
 	n, err := rand.Read(salt)
 	if err != nil || n != len(salt) {
 		util.PrintError("Error getting random Salt")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return nil, nil, err
 	}
 	switch algorithm {
@@ -180,13 +180,13 @@ func LogoutUser(auth string) error {
 	const qBase = "DELETE FROM logins WHERE user_id = $1 and key = $2"
 	b, err1 := base64.URLEncoding.DecodeString(token)
 	if err1 != nil {
-		util.PrintError(err1)
+		util.PrintDebug(err1)
 		util.PrintError("Base64 conversion to Bytea failed")
 		return err1
 	}
 	_, err := util.Database.Exec(qBase, uid, b)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return err
 	}
 	return nil

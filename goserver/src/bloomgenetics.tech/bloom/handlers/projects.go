@@ -2,6 +2,7 @@ package handlers
 
 import (
 	authlib "bloomgenetics.tech/bloom/auth"
+	"bloomgenetics.tech/bloom/candidate"
 	"bloomgenetics.tech/bloom/code"
 	"bloomgenetics.tech/bloom/cross"
 	"bloomgenetics.tech/bloom/entity"
@@ -12,6 +13,7 @@ import (
 	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func Projects(w http.ResponseWriter, r *http.Request) {
@@ -56,7 +58,7 @@ func postProjects(w http.ResponseWriter, r *http.Request) {
 			e.Description = r.FormValue("description")
 			e.Visibility, err = strconv.ParseBool(r.FormValue("public"))
 			if err != nil {
-				util.PrintError(err)
+				util.PrintDebug(err)
 				e.Visibility = false
 			}
 		}
@@ -129,7 +131,7 @@ func putProjectsPid(w http.ResponseWriter, r *http.Request) {
 				out.Code = code.UNDEFINED
 				out.Status = "Invalid JSON"
 				util.PrintError("Unable to decode json")
-				util.PrintError(err)
+				util.PrintDebug(err)
 			}
 		default:
 			r.ParseForm()
@@ -225,7 +227,7 @@ func postProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
 				out.Code = code.UNDEFINED
 				out.Status = "Invalid JSON Posted"
 				util.PrintError("Unable to decode json")
-				util.PrintError(err)
+				util.PrintDebug(err)
 			} else {
 				e.Project_ID = pid
 			}
@@ -307,7 +309,7 @@ func putProjectsPidTraitsTid(w http.ResponseWriter, r *http.Request) {
 				out.Code = code.UNDEFINED
 				out.Status = "Invalid JSON Posted"
 				util.PrintError("Unable to decode json")
-				util.PrintError(err)
+				util.PrintDebug(err)
 			} else {
 				e.Project_ID = pid
 				e.ID = tid
@@ -396,7 +398,7 @@ func postProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
 				out.Code = code.UNDEFINED
 				out.Status = "Invalid JSON Posted"
 				util.PrintError("Unable to decode json")
-				util.PrintError(err)
+				util.PrintDebug(err)
 			} else {
 				e.ProjectID = pid
 			}
@@ -502,7 +504,7 @@ func putProjectsPidCrossesCid(w http.ResponseWriter, r *http.Request) {
 				out.Code = code.UNDEFINED
 				out.Status = "Invalid JSON Posted"
 				util.PrintError("Unable to decode json")
-				util.PrintError(err)
+				util.PrintDebug(err)
 			}
 		default:
 			r.ParseForm()
@@ -599,15 +601,86 @@ func ProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request) {
-	//token := r.Header.Get("Authorization")
-	c := [10]entity.Candidate{}
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	cid, err := strconv.ParseInt(vars["cid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Cross ID"
+	}
+	if out.Code == 0 {
+		q := candidate.CandidateQuery{}
+		q.ProjectID.Valid = true
+		q.ProjectID.Int64 = pid
+		q.CrossID.Valid = true
+		q.CrossID.Int64 = cid
+		out.Data, _ = candidate.SearchCandidates(q)
+	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(c)
+	encoder.Encode(out)
 }
+
 func postProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	cid, err := strconv.ParseInt(vars["cid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Cross ID"
+	}
+
+	if out.Code == 0 {
+		ctype := r.Header.Get("Content-type")
+		e := entity.Candidate{}
+		switch ctype {
+		case "application/json":
+			decoder := json.NewDecoder(r.Body)
+			err = decoder.Decode(&e)
+			if err != nil {
+				out.Code = code.UNDEFINED
+				out.Status = "Invalid JSON Posted"
+				util.PrintError("Unable to decode json")
+				util.PrintDebug(err)
+			}
+		default:
+			r.ParseForm()
+			traitIDStrings := strings.Split(r.FormValue("traits"), ",")
+			for _, s := range traitIDStrings {
+				var tid int64
+				tid, err = strconv.ParseInt(s, 10, 64)
+				if err != nil {
+					out.Status = "Error Converting Trait ID: " + s
+					out.Code = code.INVALIDFIELD
+					break
+				} else {
+					t := entity.Trait{}
+					t.ID = tid
+					e.Traits = append(e.Traits, t)
+				}
+			}
+		}
+		if out.Code == 0 {
+			e.ProjectID = pid
+			e.CrossID = cid
+			out.Data, _ = candidate.CreateCandidate(e)
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
 
 func ProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
@@ -622,11 +695,42 @@ func ProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request)
 }
 func getProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
 	//token := r.Header.Get("Authorization")
-	c := entity.Candidate{}
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	cid, err := strconv.ParseInt(vars["cid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Cross ID"
+	}
+	cnid, err := strconv.ParseInt(vars["cnid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Candidate ID"
+	}
+	if out.Code == 0 {
+		q := candidate.CandidateQuery{}
+		q.ProjectID.Valid = true
+		q.ProjectID.Int64 = pid
+		q.CrossID.Valid = true
+		q.CrossID.Int64 = cid
+		q.ID.Valid = true
+		q.ID.Int64 = cnid
+		cn, _ := candidate.SearchCandidates(q)
+		if len(cn) == 1 {
+			out.Data = cn[0]
+		} else {
+			out.Data = entity.Candidate{}
+		}
+	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
-	encoder.Encode(c)
+	encoder.Encode(out)
 }
 func putProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)

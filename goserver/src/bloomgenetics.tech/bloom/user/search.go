@@ -30,7 +30,7 @@ func SearchUsers(u entity.User) ([]entity.User, error) {
 		err = rows.Scan(&e.ID, &e.Email, &e.DisplayName, &e.Location)
 		if err != nil {
 			util.PrintError("Unable to read user")
-			util.PrintError(err)
+			util.PrintDebug(err)
 		}
 		out = append(out, e)
 	}
@@ -48,7 +48,7 @@ func GetUser(u entity.User) (entity.User, error) {
 		err = rows.Scan(&e.ID, &e.Email, &e.DisplayName, &e.Location)
 		if err != nil {
 			util.PrintError("Unable to read user")
-			util.PrintError(err)
+			util.PrintDebug(err)
 		}
 		out = e
 	}

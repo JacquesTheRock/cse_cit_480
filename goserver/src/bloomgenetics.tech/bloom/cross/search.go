@@ -38,7 +38,7 @@ func SearchCrosses(q CrossQuery) ([]entity.Cross, error) {
 	rows, err := util.Database.Query(endQuery, queryVars...)
 	if err != nil {
 		util.PrintError("Query Error")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return out, err
 	}
 	defer rows.Close()
@@ -48,7 +48,7 @@ func SearchCrosses(q CrossQuery) ([]entity.Cross, error) {
 		err = rows.Scan(&e.ID, &e.ProjectID, &name)
 		if err != nil {
 			util.PrintError("Unable to read Cross")
-			util.PrintError(err)
+			util.PrintDebug(err)
 		}
 		if name.Valid {
 			e.Name = name.String
@@ -64,7 +64,7 @@ func GetCross(q CrossQuery) (entity.Cross, error) {
 	rows, err := util.Database.Query(qBase, q.ID.Int64, q.ProjectID.Int64)
 	if err != nil {
 		util.PrintError("Query Error")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return out, err
 	}
 	defer rows.Close()
@@ -74,7 +74,7 @@ func GetCross(q CrossQuery) (entity.Cross, error) {
 		err = rows.Scan(&out.ID, &out.ProjectID, &name, &parent)
 		if err != nil {
 			util.PrintError("Unable to read Cross")
-			util.PrintError(err)
+			util.PrintDebug(err)
 		}
 		if name.Valid {
 			out.Name = name.String

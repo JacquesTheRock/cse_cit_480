@@ -45,7 +45,7 @@ func postAuth(w http.ResponseWriter, r *http.Request) {
 		u, err = authlib.LoginUser(uid, pass)
 		if err != nil {
 			util.PrintError("Failure to Login User")
-			util.PrintError(err)
+			util.PrintDebug(err)
 			out.Status = "Failure to log-in"
 		}
 	}

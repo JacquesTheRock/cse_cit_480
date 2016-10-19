@@ -55,7 +55,7 @@ type DatabaseConnection struct {
 func GetDatabaseConnectionInfo(filename string) (DatabaseConnection, error) {
 	file, err := os.Open(filename)
 	if err != nil {
-		PrintError(err.Error())
+		PrintDebug(err.Error())
 		return DatabaseConnection{}, err
 	}
 
@@ -63,7 +63,7 @@ func GetDatabaseConnectionInfo(filename string) (DatabaseConnection, error) {
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&dbConfig)
 	if err != nil {
-		PrintError(err.Error())
+		PrintDebug(err.Error())
 		return DatabaseConnection{}, err
 	}
 	return dbConfig, nil
@@ -76,13 +76,13 @@ func ReadConfigurationInfo(filenames []string) (Configuration, error) {
 		prechange := out
 		file, err := os.Open(filenames[i])
 		if err != nil {
-			PrintError(err.Error())
+			PrintDebug(err.Error())
 			continue
 		}
 		decoder := json.NewDecoder(file)
 		err = decoder.Decode(&out)
 		if err != nil {
-			PrintError(err.Error())
+			PrintDebug(err.Error())
 			out = prechange
 		}
 	}

@@ -42,7 +42,7 @@ func SearchProjects(p QueryProjectRole) ([]ProjectRole, error) {
 	rows, err := util.Database.Query(endQuery, queryVars...)
 	if err != nil {
 		util.PrintError("Query Error")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -51,7 +51,7 @@ func SearchProjects(p QueryProjectRole) ([]ProjectRole, error) {
 		err = rows.Scan(&e.UID, &e.PID, &e.RID)
 		if err != nil {
 			util.PrintError("Unable to read project")
-			util.PrintError(err)
+			util.PrintDebug(err)
 		}
 		out = append(out, e)
 	}

@@ -10,7 +10,7 @@ func DeleteAllParents(e entity.Cross) error {
 	_, err := util.Database.Exec(qBase, e.ID)
 	if err != nil {
 		util.PrintError("Failure to delete parents")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return err
 	}
 	return nil
@@ -22,7 +22,7 @@ func Delete(e entity.Cross) error {
 	_, err := util.Database.Exec(qBase, e.ID, e.ProjectID)
 	if err != nil {
 		util.PrintError("Failure to delete Cross")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return err
 	}
 	return nil

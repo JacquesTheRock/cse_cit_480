@@ -22,7 +22,7 @@ func UpdateTrait(t entity.Trait) (entity.Trait, error) {
 	_, err := util.Database.Exec(qBase, t.Name, t.Type_ID, t.Pool, t.Project_ID, t.ID)
 	if err != nil {
 		util.PrintError("Unable to update trait")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return t, err
 	}
 	var output entity.Trait
@@ -36,7 +36,7 @@ func DeleteTrait(t entity.Trait) (entity.Trait, error) {
 	_, err := util.Database.Exec(qBase, t.Project_ID, t.ID)
 	if err != nil {
 		util.PrintError("Unable to delete trait")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return t, err
 	}
 	return c, nil

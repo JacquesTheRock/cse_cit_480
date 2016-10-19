@@ -14,7 +14,7 @@ func NewProject(uid string, p entity.Project) (entity.Project, error) {
 	}
 	err := util.Database.QueryRow(qBase, p.Name, p.Description, visible).Scan(&output.ID)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		util.PrintError("New Project Method error")
 		return output, err
 	}
@@ -26,7 +26,7 @@ func NewProject(uid string, p entity.Project) (entity.Project, error) {
 	const rBase = "INSERT INTO roles VALUES($1,$2,1)"
 	_, err = util.Database.Exec(rBase, uid, output.ID)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		util.PrintError("Unable to associate Project")
 		return output, err
 	}

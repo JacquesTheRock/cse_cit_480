@@ -35,7 +35,7 @@ func SearchTraits(t entity.Trait) ([]entity.Trait, error) {
 		err = rows.Scan(&e.ID, &e.Project_ID, &e.Name, &e.Pool, &e.Weight, &e.Type, &e.Type_ID)
 		if err != nil {
 			util.PrintError("Unable to read trait")
-			util.PrintError(err)
+			util.PrintDebug(err)
 		}
 		out = append(out, e)
 	}

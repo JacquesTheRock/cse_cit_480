@@ -20,14 +20,14 @@ func AssignParents(e entity.Cross) (entity.Cross, error) {
 		_, err = util.Database.Exec(qBase, e.ID, e.Parent1ID)
 		if err != nil {
 			util.PrintError("Insert Error")
-			util.PrintError(err)
+			util.PrintDebug(err)
 			e.Parent1ID = 0
 		}
 		if e.Parent2ID != 0 {
 			_, err = util.Database.Exec(qBase, e.ID, e.Parent2ID)
 			if err != nil {
 				util.PrintError("Insert Error")
-				util.PrintError(err)
+				util.PrintDebug(err)
 				e.Parent2ID = 0
 			}
 
@@ -41,7 +41,7 @@ func CreateCross(e entity.Cross) (entity.Cross, error) {
 	err := util.Database.QueryRow(qBase, e.ProjectID, e.Name).Scan(&e.ID)
 	if err != nil {
 		util.PrintError("Insert Error")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return entity.Cross{}, err
 	}
 	e, err = AssignParents(e)
@@ -53,7 +53,7 @@ func UpdateCross(e entity.Cross) (entity.Cross, error) {
 	_, err := util.Database.Exec(qBase, e.Name, e.ID, e.ProjectID)
 	if err != nil {
 		util.PrintError("Unable to Update cross")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return entity.Cross{}, err
 	}
 	e, err = AssignParents(e)

@@ -27,7 +27,7 @@ func CreateUser(uid string, email string, name string, location string, hash []b
 	_, err := util.Database.Exec(qBase, uid, email, name, location, hash, salt)
 	if err != nil {
 		util.PrintError("createUser Function")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return user, err
 	}
 	user.ID = uid

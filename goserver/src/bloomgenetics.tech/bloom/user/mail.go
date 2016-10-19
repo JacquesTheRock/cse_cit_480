@@ -11,7 +11,7 @@ func GetMails(m entity.Mail) ([]entity.Mail, error) {
 	out := make([]entity.Mail, 0)
 	rows, err := util.Database.Query(qBase, m.Dest)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -20,7 +20,7 @@ func GetMails(m entity.Mail) ([]entity.Mail, error) {
 		err = rows.Scan(&e.ID, &Prev, &e.Dest, &e.Src, &e.Subject, &e.Message, &e.Date)
 		if err != nil {
 			util.PrintError("Unable to read Mail")
-			util.PrintError(err)
+			util.PrintDebug(err)
 		}
 		if Prev.Valid {
 			e.Prev = Prev.Int64
@@ -37,7 +37,7 @@ func GetMailByID(m entity.Mail) ([]entity.Mail, error) {
 	out := make([]entity.Mail, 0)
 	rows, err := util.Database.Query(qBase, m.Dest, m.ID)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 	}
 	defer rows.Close()
 	for rows.Next() {
@@ -46,7 +46,7 @@ func GetMailByID(m entity.Mail) ([]entity.Mail, error) {
 		err = rows.Scan(&e.ID, &Prev, &e.Dest, &e.Src, &e.Subject, &e.Message, &e.Date)
 		if err != nil {
 			util.PrintError("Unable to read Mail")
-			util.PrintError(err)
+			util.PrintDebug(err)
 		}
 		if Prev.Valid {
 			e.Prev = Prev.Int64
@@ -62,7 +62,7 @@ func PostMail(m entity.Mail) (entity.Mail, error) {
 	const qBase = "INSERT INTO mail(dest,src,subject,message) VALUES ($1,$2,$3,$4)"
 	_, err := util.Database.Exec(qBase, m.Dest, m.Src, m.Subject, m.Message)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return entity.Mail{}, nil
 	}
 	m = entity.Mail{Dest: m.Dest, Src: m.Src}
@@ -73,7 +73,7 @@ func ReplyMail(m entity.Mail) (entity.Mail, error) {
 	const qBase = "INSERT INTO mail(dest,src,subject,message,prev) VALUES ($1,$2,$3,$4,$5)"
 	_, err := util.Database.Exec(qBase, m.Dest, m.Src, m.Subject, m.Message, m.Prev)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return entity.Mail{}, err
 	}
 	m = entity.Mail{Dest: m.Dest, Src: m.Src, Message: "Message Replied successfully"}
@@ -84,7 +84,7 @@ func DeleteMail(m entity.Mail) (entity.Mail, error) {
 	const qBase = "DELETE FROM mail WHERE src = $1 AND id = $2"
 	_, err := util.Database.Exec(qBase, m.Src, m.ID)
 	if err != nil {
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return entity.Mail{}, nil
 	}
 	m = entity.Mail{ID: m.ID, Src: m.Src}

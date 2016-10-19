@@ -22,7 +22,7 @@ func GetAllProjects() ([]entity.Project, error) {
 			p.Description = desc.String
 		}
 		if err != nil {
-			util.PrintError(err)
+			util.PrintDebug(err)
 			return output, err
 		}
 		output = append(output, p)
@@ -58,7 +58,7 @@ func SearchProjects(p entity.Project) ([]entity.Project, error) {
 	rows, err := util.Database.Query(endQuery, queryVars...)
 	if err != nil {
 		util.PrintError("Query Error")
-		util.PrintError(err)
+		util.PrintDebug(err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -68,7 +68,7 @@ func SearchProjects(p entity.Project) ([]entity.Project, error) {
 		err = rows.Scan(&e.ID, &e.Name, &desc, &e.Visibility)
 		if err != nil {
 			util.PrintError("Unable to read project")
-			util.PrintError(err)
+			util.PrintDebug(err)
 		}
 		if desc.Valid {
 			e.Description = desc.String
