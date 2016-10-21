@@ -8,6 +8,7 @@ import (
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/project"
 	"bloomgenetics.tech/bloom/trait"
+	"bloomgenetics.tech/bloom/treview"
 	"bloomgenetics.tech/bloom/util"
 	"encoding/json"
 	"github.com/gorilla/mux"
@@ -846,7 +847,25 @@ func ProjectsPidTreview(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsTreview(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	if out.Code == 0 {
+		var err error
+		out.Data, err = treview.GenerateForest(pid)
+		if err != nil {
+			out.Code = code.UNDEFINED
+			out.Status = "Error Generating Treenode objects"
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
 
 func ProjectsPidTreviewCid(w http.ResponseWriter, r *http.Request) {
@@ -856,5 +875,28 @@ func ProjectsPidTreviewCid(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getProjectsTreviewCid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	cid, err := strconv.ParseInt(vars["cid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Cross ID"
+	}
+	if out.Code == 0 {
+		var err error
+		out.Data, err = treview.Generate(pid, cid)
+		if err != nil {
+			out.Code = code.UNDEFINED
+			out.Status = "Error Generating Treenode objects"
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
 }
