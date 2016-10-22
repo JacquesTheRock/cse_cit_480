@@ -20,6 +20,7 @@ type Configuration struct {
 	ErrorFmt           string
 	DatasourceFile     string
 	DatabaseConnection DatabaseConnection
+	LogLevel           string
 }
 
 func (c *Configuration) GetURL() string {
@@ -28,6 +29,24 @@ func (c *Configuration) GetURL() string {
 
 func (c *Configuration) GetApiURL() string {
 	return c.IP + ":" + strconv.FormatInt(c.ApiPort, 10)
+}
+
+func (c Configuration) GetLogLevel() uint {
+	return ConvertToLevelID(c.LogLevel)
+}
+
+func ConvertToLevelID(level string) uint {
+	switch level {
+	case "ERROR":
+		return 7
+	case "WARN":
+		return 6
+	case "INFO":
+		return 5
+	case "DEBUG":
+		return 4
+	}
+	return 0
 }
 
 func (c Configuration) Pretty() string {
@@ -40,7 +59,8 @@ func (c Configuration) Pretty() string {
 		"\n\tPort = " + strconv.FormatInt(c.Port, 10) +
 		"\n\tTimeFmt = " + c.TimeFmt +
 		"\n\tErrorFmt = " + c.ErrorFmt +
-		"\n\tDatasourceFile = " + c.DatasourceFile
+		"\n\tDatasourceFile = " + c.DatasourceFile +
+		"\n\tLogLevel = " + c.LogLevel
 }
 
 type DatabaseConnection struct {
