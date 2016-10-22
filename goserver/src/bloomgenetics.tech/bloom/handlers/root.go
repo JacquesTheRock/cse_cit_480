@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
+	"strings"
 )
 
 var templates *template.Template
@@ -47,8 +48,8 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	path := filepath.Clean("/" + r.URL.Path) //Root the path and clean
 	util.PrintInfo(filepath.SplitList(path))
-	path = filepath.Join(filepath.SplitList(path)[1:]...)
-	path = util.Config.HTMLRoot + path
+	path = filepath.Join(strings.Split(path, "/")[1:]...)
+	path = util.Config.HTMLRoot + "/" + path
 	body, err := ioutil.ReadFile(path)
 	if err != nil {
 		util.PrintError(path)
