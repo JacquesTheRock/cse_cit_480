@@ -46,10 +46,8 @@ func postUsers(w http.ResponseWriter, r *http.Request) {
 		status = "Required field: password"
 	} else if email == "" {
 		status = "Required field: email"
-	} else if name == "" {
-		status = "Required field: name"
 	}
-	if uid == "" || pass == "" || email == "" || name == "" {
+	if uid == "" || pass == "" || email == "" {
 		util.PrintInfo(status)
 		out.Status = status
 		out.Code = code.MISSINGFIELD
@@ -60,12 +58,14 @@ func postUsers(w http.ResponseWriter, r *http.Request) {
 			util.PrintError("Create Hash of password Failed")
 			util.PrintDebug(err)
 			out.Code = code.INVALIDFIELD
+			out.Status = "Bad password"
 		} else {
 			u, err = user.CreateUser(uid, email, name, location, hash, salt)
 			if err != nil {
 				util.PrintError("Posting User Failed")
 				util.PrintDebug(err)
 				out.Code = code.UNDEFINED
+				out.Status = "Unable to create that user"
 			}
 		}
 		out.Data = u
