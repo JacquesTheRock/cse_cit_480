@@ -1,0 +1,45 @@
+	<script>
+function messageServer() {
+	var URL = "http://bloomgenetics.tech/api/v1";
+	var URI = document.getElementById("path").value;
+	var METHOD = document.getElementById("method").value;
+	var DATA = document.getElementById("data").value;
+	var CTYPE = document.getElementById("content-type").value;
+	var U = document.getElementById("user").value;
+	var T = document.getElementById("token").value;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = getData;
+	xhttp.open(METHOD,URL + URI, true);
+	xhttp.setRequestHeader("Content-type",CTYPE);
+	if (U && U != "" && T && T != "") {
+		xhttp.setRequestHeader("Authorization","Basic " + btoa(U + ":" + T));
+	}
+	xhttp.send(DATA);
+}
+
+function getData() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = document.getElementById("output");
+		out.innerHTML = this.responseText;
+	}
+}
+	</script>
+	<div>
+		Path: <input type="text" name="path" id="path" size="100"/><br>
+		Method: <select id="method">
+			<option value="GET">GET</option>
+			<option value="POST">POST</option>
+			<option value="PUT">PUT</option>
+			<option value="DELETE">DELETE</option>
+		</select><br>
+		Username: <input type="text" name="user" id="user"/><br>
+		Token: <input type="text" name="token" id="token"/><br>
+		Content-Type: 
+		<select id="content-type">
+			<option value="application/x-www-form-urlencoded">FORM</option>
+			<option value="application/json">JSON</option>
+		</select><br>
+		Data: <textarea rows="10" cols="72" name="data" id="data"></textarea>
+		<button type="button" onclick="messageServer()">Send</button>
+	</div><br>
+	Output:	<div style="color:#AAAAAA" id="output" rows="10" cols="72" disabled></div>
