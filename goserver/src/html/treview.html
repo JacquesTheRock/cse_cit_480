@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<script>
+
+function getData() {
+	if(this.readyState == 4 && this.status == 200) {
+		var resp = JSON.parse(this.responseText)
+		if (resp.data == null)
+			return
+		for (r of resp.data) {
+			trees[trees.length] = new Tree(r);
+		}
+		draw();
+	}
+}
+
+var trees = [];
+var canvas = null;
+var ctx = null;
+var camera_pos = {x:300,y:300}
+function Tree(r, l = 0) {
+	this.el = {
+		id: r.data.id,
+		project: r.data.projectId,
+		name: r.data.name,
+		children: [],
+		layer: l
+	};
+	this.drawNode = drawNode
+	if (!r.children) 
+		return;
+	for( c of r.children) {
+		this.el.children[this.el.children.length] = new Tree(c,l+1);
+	}
+}
+
+function drawNode(pos) {
+	r = 15
+	ctx.beginPath();
+	ctx.arc(pos.x, pos.y, r, 0,  2 * Math.PI);
+	ctx.stroke();
+	ctx.strokeText(this.el.id,pos.x - 4,pos.y+4)
+	if (!this.el.children)
+		return;
+	var offset = { x: pos.x, y: pos.y }
+	offset.x -= (this.el.children.length * 15);
+	offset.y = pos.y - 50;
+	for (c of this.el.children) {
+		c.drawNode(offset);
+		ctx.moveTo(pos.x,pos.y - r);
+		ctx.lineTo(offset.x,offset.y + r);
+		ctx.stroke();
+		offset.x += 60;
+	}
+}
+
+prevMouse = {x:0,y:0}
+var clicked = false
+function mouseDrag(e) {
+	var rect = canvas.getBoundingClientRect();
+	var mousePos = {
+		x: e.clientX - rect.left,
+		y: e.clientY - rect.top
+	}
+	if (clicked) {
+		delta = {
+			x: mousePos.x - prevMouse.x,
+			y: mousePos.y - prevMouse.y
+		}
+		camera_pos.x += delta.x * 0.7
+		camera_pos.y += delta.y * 0.7
+		ctx.clearRect(0,0,canvas.width,canvas.height);
+		draw();
+	}
+	prevMouse.x = mousePos.x
+	prevMouse.y = mousePos.y
+	
+}
+
+function begin() {
+	canvas = document.getElementById("tree");	
+	canvas.addEventListener('mousemove', mouseDrag, false);
+	canvas.addEventListener('mousedown', function(e) {clicked = true}, false);
+	canvas.addEventListener('mouseup', function(e) {clicked = false}, false);
+	ctx = canvas.getContext("2d");
+	var URL = "http://bloomgenetics.tech/api/v1";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = getData;
+	xhttp.open("GET", URL + "/projects/1/treview", true);
+	xhttp.send(null);
+}
+
+function draw() {
+	if (trees.length == 0)
+		return
+	offset = {
+		x: camera_pos.x,
+		y: camera_pos.y
+		}
+	for (r of trees) {
+		r.drawNode(offset)
+		offset.x += 100
+	}
+}
+</script>
+<body onload="begin();">
+<canvas id="tree" width="600" height="600" border="1"></canvas>
+</body>
+</html>
