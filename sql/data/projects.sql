@@ -15,12 +15,20 @@ INSERT INTO trait(project_id,name,class) VALUES
 
 INSERT INTO crosses(project_id,name) VALUES 
 (1,'Cross1')
-,(1,'Cross2');
+,(1,'Cross2')
+,(1,'Cross3')
+,(1,'Cross4');
 
 INSERT INTO specimen(cross_id) VALUES
 (1)
 ,(1)
-,(2);
+,(1)
+,(2)
+,(2)
+,(2)
+,(3)
+,(3)
+,(3);
 
 INSERT INTO specimen_trait(trait_id,specimen_id) VALUES
 (1,1)
@@ -30,5 +38,7 @@ INSERT INTO specimen_trait(trait_id,specimen_id) VALUES
 
 INSERT INTO cross_parent(cross_id,specimen_id) VALUES
 (2,1)
-,(2,2);
+,(3,4)
+,(3,5)
+,(4,2);
 
