@@ -13,6 +13,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -63,11 +64,16 @@ func postProjects(w http.ResponseWriter, r *http.Request) {
 				e.Visibility = false
 			}
 		}
-		if e.Name != "" {
-			out.Data, err = project.NewProject(uid, e)
-		} else {
+		okName, _ := regexp.Match("[a-zA-Z1-9]+", []byte(e.Name))
+		if e.Name == "" {
 			out.Code = code.MISSINGFIELD
 			out.Status = "Projects must have a name"
+		}
+		if okName {
+			out.Data, err = project.NewProject(uid, e)
+		} else {
+			out.Code = code.INVALIDDATA
+			out.Status = "Project name invalid characters"
 		}
 	} else {
 		util.PrintInfo("User Access denied")
@@ -672,6 +678,7 @@ func postProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request)
 				}
 			}
 		}
+
 		if out.Code == 0 {
 			e.ProjectID = pid
 			e.CrossID = cid
