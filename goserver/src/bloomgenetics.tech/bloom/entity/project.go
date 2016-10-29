@@ -5,4 +5,5 @@ type Project struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Visibility  bool   `json:"public"`
+	Role        string `json:"role"`
 }
