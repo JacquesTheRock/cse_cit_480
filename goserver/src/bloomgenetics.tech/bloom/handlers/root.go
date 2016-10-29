@@ -51,6 +51,7 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 	path = filepath.Join(strings.Split(path, "/")[1:]...)
 	path = util.Config.HTMLRoot + "/" + path
 	body, err := ioutil.ReadFile(path)
+	ext := filepath.Ext(path)
 	if err != nil {
 		util.PrintError(path)
 		util.PrintDebug(err)
@@ -58,6 +59,9 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
+	}
+	if ext == ".css" {
+		w.Header().Set("Content-Type", "text/css")
 	}
 	w.Write(body)
 }
