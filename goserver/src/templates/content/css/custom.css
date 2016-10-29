@@ -1,0 +1,175 @@
+/*navbar start*/
+.navbar-nav> li> a:hover{
+  background-color: black !important;
+  color: #D4AD62 !important;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /*box-shadow: 0 0 1px rgba(0, 0, 0, 0);*/
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  -webkit-transition-property: color;
+  transition-property: color;
+  -webkit-transition-duration: 0.7s;
+  transition-duration: 0.7s;
+
+}
+
+.navbar-nav> li> a{
+	color:  #ffffff !important;
+}
+
+.navbar-inverse{
+	background-color: #6B6B6B;
+}
+
+.navbar{
+border-radius: 0 !important;
+}
+
+.navbar-nav > li > .dropdown-menu{
+  color: white;
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background-color: #333333;
+}
+.dropdown-menu > li > a:hover{
+  background-color: #102444! important;
+    color: #C49671 !important;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  -webkit-transition-property: color;
+  transition-property: color;
+  -webkit-transition-duration: 0.7s;
+  transition-duration: 0.7s;
+}
+
+.navbar-inverse .navbar-nav > li > .dropdown-menu > li > a {
+  color: #ffffff;
+}
+
+.imp{
+	background-color: #5F5F5F!important;
+    border-style: solid !important;
+	border-color: #333333;
+    border-width: 0px !important;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #ffffff!important;
+}
+
+.navbar-nav >li {
+  font-size: 18px;
+  color: #ffffff;
+}
+
+.glyphicon {		
+float: left;		
+margin-top: -2px;		
+margin-right: 5px;		
+}
+
+
+/*navbar stop*/
+
+/*background css start*/
+	html, body {
+		height: 100%;
+		margin: 0;
+		background-color: #F7DCB4;
+	}
+
+#gradient
+{
+  width: 100%;
+  min-height: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+/*backgroundcss stop*/
+
+/*main start*/
+.wideBackground{
+/*
+  background: #F7DCB4;
+  
+  background: #000000;
+  opacity: 0.6;
+*/
+  z-index: 1;
+}
+
+.jumbotron{
+  background-color: #F7DCB4;
+  color: black !important;
+  z-index: 1;
+}
+
+.logo{
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+	max-width:100%;
+	height:auto;
+}
+ /*main stop*/
+ 
+ 
+ /*buttons start*/
+ .btn-shutterOut {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  background: #6B6B6B;
+  color: white;
+  -webkit-transition-property: color;
+  transition-property: color;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: .3s;
+
+}
+.btn-shutterOut:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #5C755E;
+  color: snow;
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-transform-origin: 50%;
+  transform-origin: 50%;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.6s;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+  border-radius: 3px;
+}
+.btn-shutterOut:hover, .btn-shutterOut:focus, .btn-shutterOut:active {
+  color: black;
+}
+.btn-shutterOut:hover:before, .btn-shutterOut:focus:before, .btn-shutterOut:active:before {
+  -webkit-transform: scaleX(1);
+  transform: scaleX(1);
+}
+
+ /*buttons stop*/
