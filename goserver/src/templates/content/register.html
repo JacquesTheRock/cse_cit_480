@@ -2,8 +2,8 @@
   <h2>Register</h2>
   <form>
     <div class="form-group">
-      <label for="email">Email:</label>
-      <input type="email" class="form-control" id="email" placeholder="Email">
+      <label for="uname">Username:</label>
+      <input type="text" class="form-control" id="uname" placeholder="Username">
     </div>
     <div class="form-group">
       <label for="pwd">Password:</label>
@@ -17,9 +17,47 @@
       <label for="email">Email:</label>
       <input type="email" class="form-control" id="email" placeholder="Enter email">
     </div>
+	<div class="form-group">
+      <label for="address">Address:</label>
+      <input type="text" class="form-control" id="address" placeholder="Address">
+    </div>
+	<div class="form-group">
+      <label for="gzone">Growzone:</label>
+      <input type="text" class="form-control" id="gzone" placeholder="Growzone">
+    </div>
+	<div class="form-group">
+      <label for="seasons">Seasons:</label>
+      <input type="text" class="form-control" id="seasons" placeholder="Seasons">
+    </div>
+	<div class="form-group">
+      <label for="specialty">Specialty:</label>
+      <input type="text" class="form-control" id="specialty" placeholder="Specialty">
+    </div>
     <div class="checkbox">
-      <label><input type="checkbox"> Remember me</label>
+      <label><input type="checkbox">Remember me</label>
     </div>
     <button type="submit" class="btn btn-default">Submit</button>
   </form>
 </div>
+
+
+<script>
+function CreateUser(){
+	var url = "http://bloomgenetics.tech/api/v1/users";
+	if (document.getElementById("pass") == document.getElementById("cpass")){
+		var data = "name="+document.getElementById("uname")+"&email="+document.getElementById("email")+"&pwd="+document.getElementById("pwd")
+			"&location="+document.getElementById("address")+"&growzone="+document.getElementById("gzone")
+			"&seasons="+document.getElementById("seasons")+"&specialty="+document.getElementById("specialty");
+		xhttp.onreadystatechange = getData;
+		xhttp.open("POST", url, true);
+		xhttp.send(data);
+	}
+}
+{"id":"test","email":"test@test.com","name":"ergys\n\n","location":"","growzone":""}
+function getData(){
+	if(this.readyState == 4 && this.status == 200) {
+		var out = document.getElementById("result");
+		out.innerHTML = this.responseText;
+	}
+}
+</script>
