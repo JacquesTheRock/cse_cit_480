@@ -1,13 +1,40 @@
+	<script>
+function messageServer() {
+	var URL = "http://bloomgenetics.tech/api/v1/auth";
+	var USERNAME = document.getElementById("username").value;
+	var PASSWORD = document.getElementById("password").value;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = getData;
+	xhttp.open("POST",URL, true);
+	var DATA = "username="+USERNAME+"&password="+PASSWORD
+	xhttp.send(DATA);
+}
+
+function getData() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = document.getElementById("error");
+		var obj = JSON.parse(this.responseText);
+		out.innerHTML =  obj.status;
+		if (obj.data.token != "") {
+		//do a redirect
+			localstorage.setItem("auth","Basic " + base64(obj.id + ":" + obj.token));
+			window.location = "http://bloomgenetics.tech/index.html";
+		}
+	}
+}
+	</script>
+
 <div class="container">
+<div id="error"></div>
   <h2>Login</h2>
   <form>
     <div class="form-group">
-      <label for="email">Email:</label>
-      <input type="email" class="form-control" id="email" placeholder="Email">
+      <label for="username">Username</label>
+      <input type="text" class="form-control" id="username" placeholder="Username">
     </div>
     <div class="form-group">
-      <label for="pwd">Password:</label>
-      <input type="password" class="form-control" id="pwd" placeholder="Enter password">
+      <label for="password">Password:</label>
+      <input type="password" class="form-control" id="password" placeholder="Enter password">
     </div>
     <div class="checkbox">
       <label><input type="checkbox"> Remember me</label>
