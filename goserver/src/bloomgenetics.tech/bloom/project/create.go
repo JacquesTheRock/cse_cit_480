@@ -27,7 +27,8 @@ func NewProject(uid string, p entity.Project) (entity.Project, error) {
 	_, err = util.Database.Exec(rBase, uid, output.ID)
 	if err != nil {
 		util.PrintDebug(err)
-		util.PrintError("Unable to associate Project")
+		util.PrintError("Unable to associate Project ")
+		util.PrintDebug(uid + " to " + string(output.ID))
 		return output, err
 	}
 	return output, nil
