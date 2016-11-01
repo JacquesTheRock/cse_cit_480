@@ -6,4 +6,6 @@ type User struct {
 	DisplayName string `json:"name"`
 	Location    string `json:"location"`
 	Growzone    string `json:"growzone"`
+	Season      string `json:"season"`
+	Specialty   string `json:"specialty"`
 }
