@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS specimen (
 	id serial,
 	cross_id INTEGER,
-	img bytea,
+	img_id INTEGER,
 	PRIMARY KEY(id)
 );
 

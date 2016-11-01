@@ -3,6 +3,11 @@ ALTER TABLE logins
 	FOREIGN KEY(user_id)
 	REFERENCES users(id);
 
+ALTER TABLE users
+	ADD CONSTRAINT img_fk
+	FOREIGN KEY(img_id)
+	REFERENCES img(id) ON DELETE SET NULL;
+
 ALTER TABLE roles 
 	ADD CONSTRAINT user_fk
 	FOREIGN KEY(user_id)
@@ -25,6 +30,10 @@ ALTER TABLE specimen
 	ADD CONSTRAINT crosses_fk
 	FOREIGN KEY(cross_id)
 	REFERENCES crosses(id) ON DELETE CASCADE;
+ALTER TABLE specimen
+	ADD CONSTRAINT img_fk
+	FOREIGN KEY(img_id)
+	REFERENCES img(id) ON DELETE SET NULL;
 
 ALTER TABLE cross_parent
 	ADD CONSTRAINT crosses_fk

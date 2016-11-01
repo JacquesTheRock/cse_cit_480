@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS users (
 	id VARCHAR(32),
 	email text,
 	name text,
-	img bytea,
+	img_id INTEGER,
 	location text DEFAULT 'Nowhere',
 	season text DEFAULT 'All',
 	growzone VARCHAR(32),
