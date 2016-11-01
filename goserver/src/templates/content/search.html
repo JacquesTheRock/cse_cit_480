@@ -20,3 +20,25 @@
 
 
   </div>
+<text id="result">Result</text>
+  
+  <script>
+	  
+	function Search(){
+		var url = "http://bloomgenetics.tech/api/v1/auth";
+		var uidData = "uid="+document.getElementById("terms")+"&name="+document.getElementById("terms");
+		var pidData = "id="+document.getElementById("terms")+"&name="+document.getElementById("terms");
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = getData;
+		xhttp.open("GET", url, true);
+		xhttp.send(data);
+	}
+
+
+	function getData() {
+		if(this.readyState == 4 && this.status == 200) {
+			var out = document.getElementById("result");
+			out.innerHTML = this.responseText;
+		}
+	}
+  </script>
