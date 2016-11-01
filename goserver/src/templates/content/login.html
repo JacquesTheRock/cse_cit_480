@@ -6,7 +6,7 @@ function messageServer() {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = getData;
 	xhttp.open("POST",URL, true);
-	var DATA = "username="+USERNAME+"&password="+PASSWORD
+	var DATA = "user="+USERNAME+"&password="+PASSWORD
 	xhttp.send(DATA);
 }
 
