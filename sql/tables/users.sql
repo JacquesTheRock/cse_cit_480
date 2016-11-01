@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS users (
 	id VARCHAR(32),
 	email text,
 	name text,
+	img bytea,
 	location text,
 	hash bytea,
 	salt bytea,
