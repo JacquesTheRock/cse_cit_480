@@ -18,7 +18,7 @@ function getData() {
 		out.innerHTML =  obj.status;
 		if (obj.code == 0) {
 		//do a redirect
-			localStorage.setItem("auth","Basic " + btoa(obj.id + ":" + obj.token));
+			localStorage.setItem("auth","Basic " + btoa(obj.data.id + ":" + obj.data.token));
 			window.location = "http://bloomgenetics.tech/index.html";
 		}
 	}
