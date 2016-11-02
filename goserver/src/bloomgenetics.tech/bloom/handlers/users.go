@@ -32,27 +32,39 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 }
 func postUsers(w http.ResponseWriter, r *http.Request) {
 	out := entity.ApiData{}
+	nU := entity.User{}
 	r.ParseForm()
-	uid := r.FormValue("username")
+	nU.ID = r.FormValue("username")
+	nU.Email = r.FormValue("email")
+	nU.DisplayName = r.FormValue("name")
+	nU.Location = r.FormValue("location")
+	nU.Growzone = r.FormValue("growzone")
+	nU.Season = r.FormValue("season")
+	nU.Specialty = r.FormValue("specialty")
 	pass := r.FormValue("password")
-	email := r.FormValue("email")
-	name := r.FormValue("name")
-	location := r.FormValue("location")
 	status := "OK"
 	u := entity.User{}
-	if uid == "" {
-		status = "Required field: username"
+	if nU.ID == "" {
+		out.Status = "Required field: username"
 	} else if pass == "" {
-		status = "Required field: password"
-	} else if email == "" {
-		status = "Required field: email"
+		out.Status = "Required field: password"
+	} else if nU.Email == "" {
+		out.Status = "Required field: email"
 	}
-	if uid == "" || pass == "" || email == "" {
+	if nU.ID == "" || pass == "" || nU.Email == "" {
 		util.PrintInfo(status)
-		out.Status = status
 		out.Code = code.MISSINGFIELD
 		out.Data = u
-	} else {
+	}
+	if out.Code == 0 {
+		err := nU.Validate()
+		if err != nil {
+			out.Status = err.Error()
+			out.Code = code.INVALIDFIELD
+			out.Data = u
+		}
+	}
+	if out.Code == 0 {
 		hash, salt, err := auth.CreateHash(pass, "SHA512")
 		if err != nil {
 			util.PrintError("Create Hash of password Failed")
@@ -60,7 +72,7 @@ func postUsers(w http.ResponseWriter, r *http.Request) {
 			out.Code = code.INVALIDFIELD
 			out.Status = "Bad password"
 		} else {
-			u, err = user.CreateUser(uid, email, name, location, hash, salt)
+			u, err = user.CreateUser(nU, hash, salt)
 			if err != nil {
 				util.PrintError("Posting User Failed")
 				util.PrintDebug(err)
@@ -104,8 +116,15 @@ func putUsersUid(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		util.PrintError("Bad request body, expected user JSON")
 		util.PrintDebug(err)
+		out.Code = code.INVALIDFIELD
+		out.Status = "Invalid JSON body in request"
 	}
-	if u.ID == uid {
+	err = u.Validate()
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = err.Error()
+	}
+	if out.Code == 0 && u.ID == uid {
 		orig, _ := user.GetUser(u)
 		if u.DisplayName == "" {
 			u.DisplayName = orig.DisplayName

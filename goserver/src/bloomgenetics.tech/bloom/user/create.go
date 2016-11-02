@@ -6,8 +6,8 @@ import (
 )
 
 func UpdateUser(u entity.User) (entity.User, error) {
-	const qBase = "UPDATE users SET name = $1, email = $2, location = $3 WHERE id = $4"
-	_, err := util.Database.Exec(qBase, u.DisplayName, u.Email, u.Location, u.ID)
+	const qBase = "UPDATE users SET name = $2, email = $3, location = $4, growzone = $5, season = $6, specialty = $7 WHERE id = $1"
+	_, err := util.Database.Exec(qBase, u.ID, u.DisplayName, u.Email, u.Location, u.Growzone, u.Season, u.Specialty)
 	if err != nil {
 		util.PrintError("Failure to Update User")
 		return entity.User{}, err
@@ -21,18 +21,15 @@ func UpdateUser(u entity.User) (entity.User, error) {
 
 }
 
-func CreateUser(uid string, email string, name string, location string, hash []byte, salt []byte) (entity.User, error) {
-	const qBase = "INSERT INTO users(id,email,name,location,hash,salt,algorithm) VALUES ($1,$2,$3,$4,$5,$6,'SHA512')"
+func CreateUser(u entity.User, hash []byte, salt []byte) (entity.User, error) {
+	const qBase = "INSERT INTO users(id,email,name,location,growzone,season,specialty,hash,salt,algorithm) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,'SHA512')"
 	user := entity.User{}
-	_, err := util.Database.Exec(qBase, uid, email, name, location, hash, salt)
+	_, err := util.Database.Exec(qBase, u.ID, u.Email, u.DisplayName, u.Location, u.Growzone, u.Season, u.Specialty, hash, salt)
 	if err != nil {
 		util.PrintError("createUser Function")
 		util.PrintDebug(err)
 		return user, err
 	}
-	user.ID = uid
-	user.Email = email
-	user.DisplayName = name
-	user.Location = location
+	user, _ = GetUser(u)
 	return user, nil
 }
