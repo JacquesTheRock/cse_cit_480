@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
 	img_id INTEGER,
 	location text DEFAULT 'Nowhere',
 	season text DEFAULT 'All',
-	growzone VARCHAR(32),
+	growzone VARCHAR(32) DEFAULT 'undisclosed',
 	specialty text DEFAULT 'None',
 	hash bytea,
 	salt bytea,
