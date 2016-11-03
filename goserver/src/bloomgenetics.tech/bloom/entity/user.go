@@ -17,10 +17,11 @@ type User struct {
 }
 
 func (u User) validateID() bool {
-	const idRXP = `[a-z]+[a-z0-9@.]*`
+	const idRXP = `[a-z]+[a-z0-9@._]+`
 	resp, err := regexp.Match(idRXP, []byte(u.ID))
 	if err != nil {
 		util.PrintDebug(err)
+		return false
 	}
 	return resp
 }
@@ -30,6 +31,7 @@ func (u User) validateEmail() bool {
 	resp, err := regexp.Match(emRXP, []byte(u.Email))
 	if err != nil {
 		util.PrintDebug(err)
+		return false
 	}
 	return resp
 }
