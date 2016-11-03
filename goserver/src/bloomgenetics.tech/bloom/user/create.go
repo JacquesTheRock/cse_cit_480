@@ -1,6 +1,7 @@
 package user
 
 import (
+	"bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/util"
 )
@@ -31,5 +32,6 @@ func CreateUser(u entity.User, hash []byte, salt []byte) (entity.User, error) {
 		return user, err
 	}
 	user, _ = GetUser(u)
+	auth.SetRole(user, 0, 2)
 	return user, nil
 }

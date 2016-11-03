@@ -158,6 +158,7 @@ func getUsersUidProjects(w http.ResponseWriter, r *http.Request) {
 	for _, role := range roles {
 		p, err := project.GetProject(entity.Project{ID: role.PID})
 		if err == nil {
+			_, p.Role = auth.GetRole(uid, role.PID)
 			pArray = append(pArray, p)
 		} else {
 			out.Status = "Could not find some projects"

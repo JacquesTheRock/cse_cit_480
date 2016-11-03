@@ -24,7 +24,7 @@ func getAuth(w http.ResponseWriter, r *http.Request) {
 	out := entity.ApiData{}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	auth := r.Header.Get("Authorization")
-	u := authlib.CheckAuth(auth)
+	u := authlib.GetLogin(auth)
 	out.Data = u
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
@@ -57,7 +57,7 @@ func postAuth(w http.ResponseWriter, r *http.Request) {
 func deleteAuth(w http.ResponseWriter, r *http.Request) {
 	out := entity.ApiData{}
 	auth := r.Header.Get("Authorization")
-	u := authlib.CheckAuth(auth)
+	u := authlib.GetLogin(auth)
 	out.Data = u
 	if u.ID == "" { //Not logged in as a user
 		w.Header().Set("WWW-Authenticate", "Basic realm=\"User\"")
@@ -68,8 +68,8 @@ func deleteAuth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	authlib.LogoutUser(auth)    //Delete the token
-	u = authlib.CheckAuth(auth) //Verify that the token is invalidated
+	authlib.LogoutUser(auth)   //Delete the token
+	u = authlib.GetLogin(auth) //Verify that the token is invalidated
 	out.Data = u
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
