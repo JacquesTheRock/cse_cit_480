@@ -1,3 +1,6 @@
+INSERT INTO project(id,name,description,visibility) VALUES
+(0,'Default','This project is the root of all things', 1);
+
 INSERT INTO project(name,description,visibility) VALUES
 ('Example', 'This is just an example project', 1)
 ,('Test', 'This is a project for testing', 1);
