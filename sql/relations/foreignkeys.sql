@@ -21,6 +21,16 @@ ALTER TABLE roles
 	FOREIGN KEY(role_id)
 	REFERENCES role_t(id) ON DELETE CASCADE;
 
+ALTER TABLE role_perm
+	ADD CONSTRAINT role_id_fk
+	FOREIGN KEY(role_id)
+	REFERENCES role_t(id) ON DELETE CASCADE;
+
+ALTER TABLE role_perm
+	ADD CONSTRAINT perm_id_fk
+	FOREIGN KEY(perm_id)
+	REFERENCES perm(id) ON DELETE CASCADE;
+
 ALTER TABLE crosses
 	ADD CONSTRAINT project_fk
 	FOREIGN KEY(project_id)
