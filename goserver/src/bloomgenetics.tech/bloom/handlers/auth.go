@@ -75,3 +75,23 @@ func deleteAuth(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.Encode(out)
 }
+
+type failedAuth struct {
+	URL    string `json:"url"`
+	Method string `json:"method"`
+	Query  string `json:"query"`
+}
+
+func UnAuthorized(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	out.Code = 400
+	out.Status = "You are forbidden from taking that action"
+	f := failedAuth{}
+	f.URL = r.URL.Path
+	f.Method = r.Method
+	f.Query = r.URL.RawQuery
+	out.Data = f
+	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
+}

@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/handlers"
 	"bloomgenetics.tech/bloom/util"
 	"github.com/gorilla/mux"
 	"net/http"
+	"strconv"
 )
 
 type Route struct {
@@ -21,7 +23,33 @@ func Wrapper(inner http.Handler, name string) http.Handler {
 				r.Method + "\t" +
 					r.RequestURI + "\t" +
 					name + "\t")
-			inner.ServeHTTP(w, r)
+
+			vars := mux.Vars(r)
+			var err error
+			var pid int64
+			pid = 0
+			if vars["pid"] != "" {
+				pid, err = strconv.ParseInt(vars["pid"], 10, 64)
+			}
+			if err != nil {
+				util.PrintDebug(err)
+				util.PrintInfo("Failed to parse pid in Wrapper")
+				pid = 0
+			}
+			token := r.Header.Get("Authorization")
+			uid, _ := auth.ParseAuthorization(token)
+			if uid == "" {
+				uid = "guest"
+			}
+			res, err := auth.CheckAuth(uid, pid, name, r.Method)
+			util.PrintDebug("Auth against: " + r.Method + " " + name + " result: " + strconv.FormatBool(res))
+			if res {
+				inner.ServeHTTP(w, r)
+			} else {
+				var unAuth http.HandlerFunc
+				unAuth = handlers.UnAuthorized
+				unAuth.ServeHTTP(w, r)
+			}
 		})
 }
 

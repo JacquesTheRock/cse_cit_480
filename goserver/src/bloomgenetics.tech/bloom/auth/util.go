@@ -50,7 +50,11 @@ func searchToken(uid string, token string) (entity.UserLogin, error) {
 func ParseAuthorization(authLine string) (string, string) {
 	parts := strings.Split(authLine, " ")
 	if len(parts) < 2 {
-		util.PrintError("Fail to parse Authorization")
+		if authLine != "" {
+			util.PrintError("Fail to parse Authorization")
+		} else {
+			util.PrintDebug("Anonymous User")
+		}
 		return "", ""
 	}
 	auth := parts[1]
