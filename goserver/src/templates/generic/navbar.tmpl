@@ -37,9 +37,26 @@
 			  </ul>
 			</li>
 			
-			<li class="imp"><a href="\register.html">Create Account<span class="sr-only"></span></a></li>
-			<li class="imp"><a href="\login.html">Login<span class="sr-only"></span></a></li>
+			<li class="imp"><a id="navRegister" href="\register.html">Create Account<span class="sr-only"></span></a></li>
+			<li class="imp"><a id="navLogin" href="\login.html">Login<span class="sr-only"></span></a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+<script>
+function fixNavbar() {
+	if (localStorage["Authorization"]) {
+		token = localStorage["Authorization"].split(" ")[1];
+		user = atob(token).split(":")[0];
+		registerEl = document.getElementById("navRegister");
+		registerEl.parentElement.innerHTML = "";
+		/*registerEl.parentElement.innerHTML = "<p>Hello " + user +
+			 '</p><span class="sr-only"></span>';*/
+		loginEl = document.getElementById("navLogin");
+		loginEl.innerHTML = "Logout";
+		loginEl.href = "/logout.html";
+	}
+}
+fixNavbar()
+</script>
+

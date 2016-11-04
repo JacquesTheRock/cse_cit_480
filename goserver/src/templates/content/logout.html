@@ -1,0 +1,26 @@
+<script>
+function messageServer() {
+	var URL = "http://bloomgenetics.tech/api/v1/auth";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = getData;
+	xhttp.open("DELETE",URL, true);
+	xhttp.setRequestHeader("Authorization",localStorage["Authorization"]);
+	xhttp.send(null);
+}
+
+function getData() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = document.getElementById("output");
+		var resp = JSON.parse(this.responseText)
+		if (resp.code != 0 && resp.code != 103)
+			out.innerHTML = resp.code + ": " +resp.status;
+		else {
+			localStorage.removeItem("Authorization");
+			out.innerHTML = "You have successfully logged out";
+			window.location = "/index.html"
+		}
+	}
+}
+messageServer()
+</script>
+<div id="output"></div>
