@@ -63,6 +63,7 @@ func deleteAuth(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("WWW-Authenticate", "Basic realm=\"User\"")
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		out.Code = code.INVALIDSTATE
+		out.Status = "Not logged in so can't logout"
 		encoder := json.NewEncoder(w)
 		encoder.Encode(out)
 		return
