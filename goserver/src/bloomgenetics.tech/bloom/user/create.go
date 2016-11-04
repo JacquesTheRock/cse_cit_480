@@ -32,6 +32,6 @@ func CreateUser(u entity.User, hash []byte, salt []byte) (entity.User, error) {
 		return user, err
 	}
 	user, _ = GetUser(u)
-	auth.SetRole(user, 0, 2)
+	auth.SetRole(auth.Role{UserID: user.ID, ProjectID: 0, RoleID: 2})
 	return user, nil
 }

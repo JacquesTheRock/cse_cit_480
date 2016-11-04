@@ -138,27 +138,15 @@ var routes = Routes{
 		handlers.Auth,
 	},
 	Route{
-		"breeds",
+		"projects_pid_roles",
 		[]string{"GET", "POST"},
-		"/breeds",
-		handlers.Breeds,
+		"/projects/{pid}/roles",
+		handlers.ProjectsPidRoles,
 	},
 	Route{
-		"breeds_bid",
-		[]string{"GET", "PUT"},
-		"/breeds/{bid}",
-		handlers.BreedsBid,
-	},
-	Route{
-		"breeds_bid_traits",
-		[]string{"GET", "POST"},
-		"/breeds/{bid}/traits",
-		handlers.BreedsBidTraits,
-	},
-	Route{
-		"breeds_bid_traits_tid",
+		"projects_pid_roles_uid",
 		[]string{"GET", "PUT", "DELETE"},
-		"/breeds/{bid}/traits/{tid}",
-		handlers.BreedsBidTraitsTid,
+		"/projects/{pid}/roles/{uid}",
+		handlers.ProjectsPidRolesUid,
 	},
 }
