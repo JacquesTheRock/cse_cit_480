@@ -60,6 +60,12 @@ var routes = Routes{
 		handlers.UsersUidProjects,
 	},
 	Route{
+		"users_uid_projects_pid",
+		[]string{"GET", "DELETE"},
+		"/users/{uid}/projects/{pid}",
+		handlers.UsersUidProjectsPid,
+	},
+	Route{
 		"users_uid_mail",
 		[]string{"GET", "POST"},
 		"/users/{uid}/mail",

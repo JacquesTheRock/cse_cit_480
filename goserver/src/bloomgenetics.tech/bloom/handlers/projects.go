@@ -27,7 +27,7 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 }
 func getProjects(w http.ResponseWriter, r *http.Request) {
 	out := entity.ApiData{}
-	p, _ := project.SearchProjects(entity.Project{})
+	p, _ := project.SearchProjects(project.QueryProject{})
 	out.Data = p
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
@@ -113,7 +113,10 @@ func getProjectsPid(w http.ResponseWriter, r *http.Request) {
 		out.Code = code.INVALIDFIELD
 		out.Status = "Not a Numeric Project ID"
 	} else {
-		pArray, _ := project.SearchProjects(entity.Project{ID: pid})
+		q := project.QueryProject{}
+		q.ID.Valid = true
+		q.ID.Int64 = pid
+		pArray, _ := project.SearchProjects(q)
 		if len(pArray) != 1 {
 			out.Status = "Cannot View Project Selected"
 		} else {
@@ -161,7 +164,10 @@ func putProjectsPid(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if out.Code != 0 {
-			pArray, _ := project.SearchProjects(entity.Project{ID: pid})
+			q := project.QueryProject{}
+			q.ID.Valid = true
+			q.ID.Int64 = pid
+			pArray, _ := project.SearchProjects(q)
 			if len(pArray) == 1 {
 				o := pArray[0]
 				if e.Name == "" {
@@ -216,7 +222,13 @@ func getProjectsPidRoles(w http.ResponseWriter, r *http.Request) {
 		out.Code = code.INVALIDFIELD
 		out.Status = "Not a Numeric Project ID"
 	}
-	out.Data = authlib.GetProjectRoles(pid)
+	if pid == 0 {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not allowed on Project 0 "
+	}
+	if out.Code == 0 {
+		out.Data = authlib.GetProjectRoles(pid)
+	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
@@ -229,6 +241,14 @@ func postProjectsPidRoles(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	role := authlib.Role{}
 	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	if pid == 0 {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not allowed on Project 0 "
+	}
 	ctype := r.Header.Get("Content-type")
 	switch ctype {
 	case "application/json":
@@ -246,16 +266,14 @@ func postProjectsPidRoles(w http.ResponseWriter, r *http.Request) {
 	}
 	role.ProjectID = pid
 
-	if err != nil {
-		out.Code = code.INVALIDFIELD
-		out.Status = "Not a Numeric Project ID"
-	}
-	out.Data = role
-	err = authlib.SetRole(role)
-	if err != nil {
-		out.Status = "Failure to assign role"
-		out.Code = code.UNDEFINED
-		out.Data = authlib.Role{}
+	if out.Code == 0 {
+		out.Data = role
+		err = authlib.SetRole(role)
+		if err != nil {
+			out.Status = "Failure to assign role"
+			out.Code = code.UNDEFINED
+			out.Data = authlib.Role{}
+		}
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
@@ -284,6 +302,10 @@ func getProjectsPidRolesUid(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		out.Code = code.INVALIDFIELD
 		out.Status = "Project ID must be numeric"
+	}
+	if pid == 0 {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not allowed on Project 0 "
 	}
 	if out.Code == 0 {
 		if uid == "" {
@@ -334,8 +356,8 @@ func putProjectsPidRolesUid(w http.ResponseWriter, r *http.Request) {
 			out.Code = code.UNDEFINED
 			out.Status = "Error when updating role"
 		}
+		out.Data = authlib.GetRole(role.UserID, role.ProjectID)
 	}
-	out.Data = authlib.GetRole(role.UserID, role.ProjectID)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)

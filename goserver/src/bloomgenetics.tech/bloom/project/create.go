@@ -18,7 +18,10 @@ func NewProject(uid string, p entity.Project) (entity.Project, error) {
 		util.PrintError("New Project Method error")
 		return output, err
 	}
-	pArray, _ := SearchProjects(output)
+	q := QueryProject{}
+	q.ID.Valid = true
+	q.ID.Int64 = output.ID
+	pArray, _ := SearchProjects(q)
 	if len(pArray) != 1 {
 		return output, nil
 	}
