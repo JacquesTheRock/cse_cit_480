@@ -52,6 +52,7 @@ function CreateUser(){
 				"&specialty=" + document.getElementById("specialty").value;
 		xhttp.onreadystatechange = getData;
 		xhttp.open("POST", url, true);
+		xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		xhttp.send(data);
 	}
 }
