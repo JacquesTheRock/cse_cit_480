@@ -13,8 +13,18 @@
         <div class="col-sm-12">
           <button onclick="Search()" class="btn btn-shutterOut col-sm-12" name="submit" id="button-submit">Search</button>
         </div>
-		
-		
+		<!--
+		<script>
+			function generate(var input){
+				var a = 3;
+				var result = document.getElementById("result");
+				for (i = 0; i < a; i++) {
+					var input = document.createElement("input");
+					result.appendChild(input);
+				}
+			}
+		</script>
+		-->
 		<text id="result">Result</text>
 		
       </div>
@@ -23,9 +33,9 @@
   <script>
 	  
 	function Search(){
-		if (document.getElementById("b1"))
+		if (document.getElementById("b1").checked)
 			SearchProjects();
-		if (document.getElementById("b2"))
+		if (document.getElementById("b2").checked)
 			SearchUsers();
 	}
 	
@@ -57,4 +67,15 @@
 			out.innerHTML = this.responseText;
 		}
 	}
+	
+	function searchResults(data){
+		var t1 = JSON.parse(data);
+		for (e in t1.data){
+			
+		}
+	}
+	
+	
+	
+	
   </script>

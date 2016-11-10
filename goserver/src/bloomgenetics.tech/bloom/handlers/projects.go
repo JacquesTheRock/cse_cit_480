@@ -57,6 +57,9 @@ func postProjects(w http.ResponseWriter, r *http.Request) {
 			r.ParseForm()
 			e.Name = r.FormValue("name")
 			e.Description = r.FormValue("description")
+			e.Location = r.FormValue("location")
+			e.Species = r.FormValue("species")
+			e.Type = r.FormValue("type")
 			e.Visibility, err = strconv.ParseBool(r.FormValue("public"))
 			if err != nil {
 				util.PrintDebug(err)
