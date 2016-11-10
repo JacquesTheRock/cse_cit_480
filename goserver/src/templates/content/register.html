@@ -41,6 +41,7 @@
 <script>
 function CreateUser(){
 	var url = "http://bloomgenetics.tech/api/v1/users";
+	var xhttp = new XMLHttpRequest()
 	if (document.getElementById("pass") == document.getElementById("cpass")){
 		var data = "name="+document.getElementById("uname")+"&email="+document.getElementById("email")+"&pwd="+document.getElementById("pwd")
 			"&location="+document.getElementById("address")+"&growzone="+document.getElementById("gzone")
