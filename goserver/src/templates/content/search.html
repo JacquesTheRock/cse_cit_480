@@ -29,11 +29,13 @@
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
 		xhttp.open("GET", url, true);
-		//if ()
-		xhttp.send(data);
+		if (document.getElementById("b1"))
+			xhttp.send(uidData);
+		if (document.getElementById("b2"))
+			xhttp.send(pidData);
+		
 	}
-
-
+	
 	function getData() {
 		if(this.readyState == 4 && this.status == 200) {
 			var out = document.getElementById("result");
