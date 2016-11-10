@@ -1,6 +1,7 @@
 package user
 
 import (
+	"bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/util"
 	"database/sql"
 	"strconv"
@@ -12,16 +13,10 @@ type QueryProjectRole struct {
 	RID sql.NullInt64
 }
 
-type ProjectRole struct {
-	UID string `json:"uid"`
-	PID int64  `json:"pid"`
-	RID int64  `json:"rid"`
-}
-
-func SearchProjects(p QueryProjectRole) ([]ProjectRole, error) {
+func SearchProjects(p QueryProjectRole) ([]auth.Role, error) {
 	const qBase = " SELECT user_id,project_id,role_id FROM roles"
 	queryVars := make([]interface{}, 0)
-	out := make([]ProjectRole, 0)
+	out := make([]auth.Role, 0)
 	query := " WHERE "
 	endQuery := qBase
 	if p.UID != "" {
@@ -29,10 +24,16 @@ func SearchProjects(p QueryProjectRole) ([]ProjectRole, error) {
 		query = query + "user_id = $" + strconv.Itoa(len(queryVars)) + " "
 	}
 	if p.PID.Valid {
+		if len(queryVars) > 0 {
+			query += "AND "
+		}
 		queryVars = append(queryVars, p.PID.Int64)
 		query = query + "project_id = $" + strconv.Itoa(len(queryVars)) + " "
 	}
 	if p.RID.Valid {
+		if len(queryVars) > 0 {
+			query += "AND "
+		}
 		queryVars = append(queryVars, p.RID.Int64)
 		query = query + "role_id = $" + strconv.Itoa(len(queryVars)) + " "
 	}
@@ -47,8 +48,8 @@ func SearchProjects(p QueryProjectRole) ([]ProjectRole, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		e := ProjectRole{}
-		err = rows.Scan(&e.UID, &e.PID, &e.RID)
+		e := auth.Role{}
+		err = rows.Scan(&e.UserID, &e.ProjectID, &e.RoleID)
 		if err != nil {
 			util.PrintError("Unable to read project")
 			util.PrintDebug(err)

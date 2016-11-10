@@ -29,6 +29,10 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	path := filepath.Clean("/" + r.URL.Path) //Root the path and clean
 	path = util.Config.TemplateRoot + "/content" + path
+	ext := filepath.Ext(path)
+	if ext == "" {
+		path += "/index.html"
+	}
 	t, err := template.ParseFiles(path)
 	if err != nil {
 		util.PrintError(path)

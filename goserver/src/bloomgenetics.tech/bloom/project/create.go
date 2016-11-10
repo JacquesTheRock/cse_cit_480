@@ -1,6 +1,7 @@
 package project
 
 import (
+	"bloomgenetics.tech/bloom/auth"
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/util"
 )
@@ -18,13 +19,15 @@ func NewProject(uid string, p entity.Project) (entity.Project, error) {
 		util.PrintError("New Project Method error")
 		return output, err
 	}
-	pArray, _ := SearchProjects(output)
+	q := QueryProject{}
+	q.ID.Valid = true
+	q.ID.Int64 = output.ID
+	pArray, _ := SearchProjects(q)
 	if len(pArray) != 1 {
 		return output, nil
 	}
 	output = pArray[0]
-	const rBase = "INSERT INTO roles VALUES($1,$2,1)"
-	_, err = util.Database.Exec(rBase, uid, output.ID)
+	err = auth.SetRole(auth.Role{UserID: uid, ProjectID: output.ID, RoleID: 5})
 	if err != nil {
 		util.PrintDebug(err)
 		util.PrintError("Unable to associate Project ")

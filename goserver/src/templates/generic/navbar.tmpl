@@ -25,21 +25,80 @@
 
 		  </form>
 			<li><a href="\search.html"> <span class="glyphicon glyphicon-search"  aria-hidden="true"></span> Search </a> </li> 
-			<li><a href="\profile.html">My Profile</a></li>
+
+			<li><a id="profile" href="\profile">guest</a></li>
 			<li class="dropdown">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Projects<span class="caret"></span></a>
-			  <ul class="dropdown-menu">
+			  <ul id="projects" class="dropdown-menu">
 				<li><a href="\project.html">Project 1</a></li>
 				<li><a href="\project.html">Project 2</a></li>
 				<li><a href="\project.html">Project 3</a></li>
-				<li role="separator" class="divider"></li>
-				<li><a href="\newproject.html">New Project</a></li>
+				<li id="projectsSep" role="separator" class="divider"></li>
+				<li id ="newProject"><a href="\newproject.html">New Project</a></li>
 			  </ul>
 			</li>
 			
-			<li class="imp"><a href="\register.html">Create Account<span class="sr-only"></span></a></li>
-			<li class="imp"><a href="\login.html">Login<span class="sr-only"></span></a></li>
+			<li class="imp"><a id="navRegister" href="\register.html">Create Account<span class="sr-only"></span></a></li>
+			<li class="imp"><a id="navLogin" href="\login.html">Login<span class="sr-only"></span></a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+<script>
+function fixNavbar() {
+	if (localStorage["Authorization"]) {
+		token = localStorage["Authorization"].split(" ")[1];
+		user = atob(token).split(":")[0];
+		registerEl = document.getElementById("navRegister");
+		registerEl.parentElement.innerHTML = "";
+		profileEl = document.getElementById("profile");
+		profileEl.innerHTML = user;
+		/*registerEl.parentElement.innerHTML = "<p>Hello " + user +
+			 '</p><span class="sr-only"></span>';*/
+		loginEl = document.getElementById("navLogin");
+		loginEl.innerHTML = "Logout";
+		loginEl.href = "/logout.html";
+	}
+}
+
+function queryProjects() {
+	user = "guest"
+	if(localStorage["Authorization"]) {
+		token = localStorage["Authorization"].split(" ")[1];
+		user = atob(token).split(":")[0]; 
+	} else {
+		return
+	}
+
+	var URL = "http://bloomgenetics.tech/api/v1/users/" + user + "/projects"
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = listProjects;
+	xhttp.open("GET",URL,true);
+	xhttp.setRequestHeader("Authorization",localStorage["Authorization"]);
+	xhttp.send(null);
+}
+
+function listProjects() {
+	if(this.readyState == 4 && this.status == 200) {
+		listEl = document.getElementById("projects");
+		sepEl = document.getElementById("projectsSep");
+		newEl = document.getElementById("newProject");
+		var obj = JSON.parse(this.responseText);
+		if(obj.code == 0) {
+			listEl.innerHTML = ""
+			for(var i=0; i < obj.data.length; i++) {
+					var p = obj.data[i]
+					if (p.id == 0)
+						continue;
+					listEl.innerHTML += '<li><a href="/projects?id=' +
+						p.id + '">'+ p.name + "</a></li>";
+			}
+			listEl.innerHTML += sepEl.outerHTML
+			listEl.innerHTML += newEl.outerHTML
+		}
+	}
+}
+fixNavbar()
+queryProjects()
+</script>
+

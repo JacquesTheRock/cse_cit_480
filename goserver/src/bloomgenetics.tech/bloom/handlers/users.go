@@ -156,8 +156,12 @@ func getUsersUidProjects(w http.ResponseWriter, r *http.Request) {
 	roles, _ := user.SearchProjects(user.QueryProjectRole{UID: uid})
 	pArray := make([]entity.Project, 0)
 	for _, role := range roles {
-		p, err := project.GetProject(entity.Project{ID: role.PID})
+		q := project.QueryProject{}
+		q.ID.Valid = true
+		q.ID.Int64 = role.ProjectID
+		p, err := project.GetProject(q)
 		if err == nil {
+			p.Role = auth.GetRole(uid, role.ProjectID).Name
 			pArray = append(pArray, p)
 		} else {
 			out.Status = "Could not find some projects"
@@ -165,6 +169,93 @@ func getUsersUidProjects(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	out.Data = pArray
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
+}
+
+func UsersUidProjectsPid(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		getUsersUidProjectsPid(w, r)
+	case "DELETE":
+		deleteUsersUidProjectsPid(w, r)
+	}
+}
+
+func getUsersUidProjectsPid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	uid := vars["uid"]
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Project ID must be numeric"
+	}
+	if pid == 0 {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Cannot delete root project"
+	}
+	p := entity.Project{}
+	if out.Code == 0 {
+		q := user.QueryProjectRole{UID: uid}
+		q.PID.Int64 = pid
+		q.PID.Valid = true
+		roles, _ := user.SearchProjects(q)
+		if len(roles) > 1 {
+			out.Code = code.UNDEFINED
+			out.Status = "Project ID returned multiple projects, aborting"
+		} else if len(roles) == 0 {
+			out.Code = code.UNDEFINED
+			out.Status = "Project ID not found"
+		}
+		if out.Code == 0 {
+			role := roles[0]
+			q := project.QueryProject{}
+			q.ID.Valid = true
+			q.ID.Int64 = role.ProjectID
+			p, err = project.GetProject(q)
+			if err != nil {
+				out.Status = "Could not get Project Data"
+				out.Code = 100
+			}
+			p.Role = auth.GetRole(uid, p.ID).Name
+			out.Data = p
+		}
+	}
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
+}
+
+func deleteUsersUidProjectsPid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	uid := vars["uid"]
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Project ID must be numeric"
+	}
+	if out.Code == 0 {
+		q := user.QueryProjectRole{UID: uid}
+		q.PID.Int64 = pid
+		q.PID.Valid = true
+		roles, _ := user.SearchProjects(q)
+		if len(roles) > 1 {
+			out.Code = code.UNDEFINED
+			out.Status = "Project ID returned multiple projects, aborting"
+		} else if len(roles) == 0 {
+			out.Code = code.UNDEFINED
+			out.Status = "Project ID not found"
+		}
+		if out.Code == 0 {
+			role := roles[0]
+			err = auth.DeleteRole(role)
+			if err != nil {
+				out.Status = "Could not remove from project"
+				out.Code = 100
+			}
+		}
+	}
 	encoder := json.NewEncoder(w)
 	encoder.Encode(out)
 }

@@ -9,6 +9,9 @@ import (
 type Project struct {
 	ID          int64  `json:"id"`
 	Name        string `json:"name"`
+	Location    string `json:"location"`
+	Type        string `json:"type"`
+	Species     string `json:"species"`
 	Description string `json:"description"`
 	Visibility  bool   `json:"public"`
 	Role        string `json:"role"`
