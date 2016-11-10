@@ -18,7 +18,7 @@ type QueryProject struct {
 }
 
 func GetAllProjects() ([]entity.Project, error) {
-	const qBase = "SELECT id,name,description,visibility FROM project"
+	const qBase = "SELECT id,name,description,visibility,location, species, ptype FROM project"
 	output := []entity.Project{}
 	rows, err := util.Database.Query(qBase)
 	var p entity.Project
@@ -26,7 +26,7 @@ func GetAllProjects() ([]entity.Project, error) {
 	for rows.Next() {
 		p = entity.Project{}
 		var desc sql.NullString
-		err = rows.Scan(&p.ID, &p.Name, &desc, &p.Visibility)
+		err = rows.Scan(&p.ID, &p.Name, &desc, &p.Visibility, &p.Location, &p.Species, &p.Type)
 		if desc.Valid {
 			p.Description = desc.String
 		}
@@ -40,7 +40,7 @@ func GetAllProjects() ([]entity.Project, error) {
 }
 
 func SearchProjects(q QueryProject) ([]entity.Project, error) {
-	const qBase = "SELECT id,name,description,visibility FROM project"
+	const qBase = "SELECT id,name,description,visibility,location,species,ptype FROM project"
 	queryVars := make([]interface{}, 0)
 	out := make([]entity.Project, 0)
 	query := " WHERE "
@@ -70,7 +70,7 @@ func SearchProjects(q QueryProject) ([]entity.Project, error) {
 	for rows.Next() {
 		e := entity.Project{}
 		var desc sql.NullString
-		err = rows.Scan(&e.ID, &e.Name, &desc, &e.Visibility)
+		err = rows.Scan(&e.ID, &e.Name, &desc, &e.Visibility, &e.Location, &e.Species, &e.Type)
 		if err != nil {
 			util.PrintError("Unable to read project")
 			util.PrintDebug(err)
