@@ -31,7 +31,7 @@
 	
 	function SearchProjects(){
 		var url = "http://bloomgenetics.tech/api/v1/projects";
-		var uidData = "pid="+document.getElementById("terms")+"&name="+document.getElementById("terms");
+		var data = "pid="+document.getElementById("terms")+"&name="+document.getElementById("terms");
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
 		xhttp.open("GET", url, true);
