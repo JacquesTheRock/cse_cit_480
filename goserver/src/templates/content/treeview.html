@@ -32,17 +32,22 @@ function getData() {
 }
 
 var trees = [];
+var nodes = [];
 var canvas = null;
 var ctx = null;
 var camera_pos = {x:300,y:300}
 function Tree(r, l = 0) {
 	this.el = {
+		pos: {x: 0, y: 0},
 		id: r.data.id,
+		r: 15,
 		project: r.data.projectId,
 		name: r.data.name,
 		children: [],
 		layer: l
 	};
+	nodes[nodes.length] = this.el
+	this.el.onclick = clickNode
 	this.drawNode = drawNode
 	if (!r.children) 
 		return;
@@ -51,10 +56,16 @@ function Tree(r, l = 0) {
 	}
 }
 
+function clickNode() {
+	window.location = "/cross.html?id=" + this.id
+}
+
+
 function drawNode(pos) {
-	r = 15
 	ctx.beginPath();
-	ctx.arc(pos.x, pos.y, r, 0,  2 * Math.PI);
+	this.el.pos.x = pos.x;
+	this.el.pos.y = pos.y;
+	ctx.arc(this.el.pos.x, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
 	ctx.stroke();
 	ctx.strokeText(this.el.id,pos.x - 4,pos.y+4)
 	if (!this.el.children)
@@ -64,8 +75,8 @@ function drawNode(pos) {
 	offset.y = pos.y - 50;
 	for (c of this.el.children) {
 		c.drawNode(offset);
-		ctx.moveTo(pos.x,pos.y - r);
-		ctx.lineTo(offset.x,offset.y + r);
+		ctx.moveTo(this.el.pos.x,this.el.pos.y - this.el.r);
+		ctx.lineTo(offset.x,offset.y + this.el.r);
 		ctx.stroke();
 		offset.x += 60;
 	}
@@ -73,6 +84,7 @@ function drawNode(pos) {
 
 prevMouse = {x:0,y:0}
 var clicked = false
+var dragged = false
 function mouseDrag(e) {
 	var rect = canvas.getBoundingClientRect();
 	var mousePos = {
@@ -80,6 +92,7 @@ function mouseDrag(e) {
 		y: e.clientY - rect.top
 	}
 	if (clicked) {
+		dragged = true;
 		delta = {
 			x: mousePos.x - prevMouse.x,
 			y: mousePos.y - prevMouse.y
@@ -94,11 +107,39 @@ function mouseDrag(e) {
 	
 }
 
+function mouseClick(e) {
+	var rect = canvas.getBoundingClientRect();
+	var mousePos = {
+		x: e.clientX - rect.left,
+		y: e.clientY - rect.top
+	}
+	var clickPos = {
+		x: mousePos.x,// - camera_pos.x,
+		y: mousePos.y// - camera_pos.y
+	}
+	for(var i = 0; i < nodes.length; i++) {
+		var node = nodes[i]
+		var xSq = (clickPos.x - node.pos.x)
+		xSq *= xSq
+		var ySq = (clickPos.y - node.pos.y)
+		ySq *= ySq
+		if(xSq + ySq < node.r * node.r)
+			node.onclick()
+		
+	}
+}
+
+
 function begin() {
 	canvas = document.getElementById("tree");	
 	canvas.addEventListener('mousemove', mouseDrag, false);
-	canvas.addEventListener('mousedown', function(e) {clicked = true}, false);
-	canvas.addEventListener('mouseup', function(e) {clicked = false}, false);
+	canvas.addEventListener('mousedown', function(e) {clicked = true;dragged=false;}, false);
+	canvas.addEventListener('mouseup', function(e) {
+			clicked = false;
+			if (!dragged)
+				mouseClick(e)
+			dragged=false;
+		}, false);
 	ctx = canvas.getContext("2d");
 	var URL = "http://bloomgenetics.tech/api/v1";
 	var xhttp = new XMLHttpRequest();
