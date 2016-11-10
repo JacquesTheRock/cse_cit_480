@@ -31,24 +31,24 @@
 	
 	function SearchProjects(){
 		var url = "http://bloomgenetics.tech/api/v1/projects";
-		var data = "pid="+document.getElementById("terms")+"&name="+document.getElementById("terms");
+		var data = "?pid="+document.getElementById("terms")+"&name="+document.getElementById("terms");
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
-		xhttp.open("GET", url, true);
+		xhttp.open("GET", url + data, true);
 		if (localStorage["Authorization"])
 			xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
-		xhttp.send(data);
+		xhttp.send(null);
 	}
 	
 	function SearchUsers(){
 		var url = "http://bloomgenetics.tech/api/v1/users";
-		var data = "id="+document.getElementById("terms")+"&name="+document.getElementById("terms");
+		var data = "?id="+document.getElementById("terms")+"&name="+document.getElementById("terms");
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
-		xhttp.open("GET", url, true);
+		xhttp.open("GET", url + data, true);
 		if (localStorage["Authorization"])
 			xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
-		xhttp.send(data);
+		xhttp.send(null);
 	}
 	
 	function getData() {
