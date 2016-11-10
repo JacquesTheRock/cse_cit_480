@@ -7,20 +7,18 @@
         <input type="text" class="form-control" name="search" placeholder="Search here">
         </div>
 		
-		<label class="checkbox-inline"><input type="checkbox" value="">Projects</label>
-		<label class="checkbox-inline"><input type="checkbox" value="">People</label>
+		<label class="checkbox-inline" id="b1"><input type="checkbox" value="">Projects</label>
+		<label class="checkbox-inline" id="b2"><input type="checkbox" value="">People</label>
 
         <div class="col-sm-12">
           <button type="submit" class="btn btn-shutterOut col-sm-12" name="submit" id="button-submit">Search</button>
         </div>
+		
+		
+		<text id="result">Result</text>
+		
       </div>
-
-  
-
-
-
   </div>
-<text id="result">Result</text>
   
   <script>
 	  
@@ -31,6 +29,7 @@
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
 		xhttp.open("GET", url, true);
+		//if ()
 		xhttp.send(data);
 	}
 
