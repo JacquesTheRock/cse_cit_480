@@ -2,15 +2,15 @@
   <h2>Register</h2>
   <div id="result"></div>
     <div class="form-group">
-      <label for="uname">Username:</label>
+      <label for="username">Username:</label>
       <input type="text" class="form-control" id="username" placeholder="Username">
     </div>
     <div class="form-group">
-      <label for="pwd">Password:</label>
+      <label for="password">Password:</label>
       <input type="password" class="form-control" id="password" placeholder="Enter password">
     </div>
     <div class="form-group">
-      <label for="confirmpwd">Confirm Password:</label>
+      <label for="confirmpassword">Confirm Password:</label>
       <input type="password" class="form-control" id="confirmpassword" placeholder="Confirm Password">
     </div>
 	<div class="form-group">
@@ -42,10 +42,10 @@
 function CreateUser(){
 	var url = "http://bloomgenetics.tech/api/v1/users";
 	var xhttp = new XMLHttpRequest()
-	if (document.getElementById("pass") == document.getElementById("cpass")){
-		var data = "name="+document.getElementById("uname")+"&email="+document.getElementById("email")+"&pwd="+document.getElementById("pwd")
-			"&location="+document.getElementById("address")+"&growzone="+document.getElementById("gzone")
-			"&seasons="+document.getElementById("seasons")+"&specialty="+document.getElementById("specialty");
+	if (document.getElementById("password").value == document.getElementById("confirmpassword").value){
+		var data = "username="+document.getElementById("username").value+"&email="+document.getElementById("email").value+"&password="+document.getElementById("password").value +
+			"&location="+document.getElementById("address").value+"&growzone="+document.getElementById("gzone").value +
+			"&seasons="+document.getElementById("seasons").value+"&specialty="+document.getElementById("specialty").value;
 		xhttp.onreadystatechange = getData;
 		xhttp.open("POST", url, true);
 		xhttp.send(data);
