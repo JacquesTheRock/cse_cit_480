@@ -35,6 +35,8 @@
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
 		xhttp.open("GET", url, true);
+		if (localStorage["Authorization"])
+			xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
 		xhttp.send(data);
 	}
 	
@@ -44,6 +46,8 @@
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
 		xhttp.open("GET", url, true);
+		if (localStorage["Authorization"])
+			xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
 		xhttp.send(data);
 	}
 	
