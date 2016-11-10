@@ -1,36 +1,3 @@
-<script>
-function messageServer() {
-	var URL = "http://bloomgenetics.tech/api/v1/users";
-	var USERNAME = document.getElementById("username").value;
-	var PASSWORD = document.getElementById("password").value;
-	var CONFIRMPASSWORD = document.getElementById("confirmpassword").value;
-	var EMAIL = document.getElementById("email").value;
-	var ADDRESS = document.getElementById("address").value;
-	var GZONE = document.getElementById("gzone").value;
-	var SEASONS = document.getElementById("seasons").value;
-	var SPECIALTY = document.getElementById("specialty").value;
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = getData;
-	xhttp.open("POST",URL, true);
-	xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	var DATA = "user="+USERNAME+"&password="+PASSWORD
-	xhttp.send(DATA);
-}
-
-function getData() {
-	if(this.readyState == 4 && this.status == 200) {
-		var out = document.getElementById("error");
-		var obj = JSON.parse(this.responseText);
-		out.innerHTML =  obj.status;
-		if (obj.code == 0) {
-		//do a redirect
-			localStorage.setItem("Authorization","Basic " + btoa(obj.data.id + ":" + obj.data.token));
-			window.location = "http://bloomgenetics.tech/index.html";
-		}
-	}
-}
-</script>
-
 <div class="container">
   <h2>Register</h2>
   <div id="result"></div>
@@ -89,6 +56,7 @@ function getData(){
 		var out = document.getElementById("result");
 		var resp = JSON.parse(this.responseText);
 		if(resp.code == 0) {
+			window.location="/index.html"
 		} else {
 			out.innerHTML = resp.status;
 		}
