@@ -7,8 +7,8 @@
         <input type="text" class="form-control" name="search" placeholder="Search here">
         </div>
 		
-		<label class="checkbox-inline" id="b1"><input type="checkbox" value="">Projects</label>
-		<label class="checkbox-inline" id="b2"><input type="checkbox" value="">People</label>
+		<label class="checkbox-inline"><input id="b1" type="checkbox" value="">Projects</label>
+		<label class="checkbox-inline"><input id="b2" type="checkbox" value="">People</label>
 
         <div class="col-sm-12">
           <button onclick="Search()" class="btn btn-shutterOut col-sm-12" name="submit" id="button-submit">Search</button>
@@ -23,17 +23,32 @@
   <script>
 	  
 	function Search(){
-		var url = "http://bloomgenetics.tech/api/v1/auth";
-		var uidData = "uid="+document.getElementById("terms")+"&name="+document.getElementById("terms");
-		var pidData = "id="+document.getElementById("terms")+"&name="+document.getElementById("terms");
+		if (document.getElementById("b1"))
+			SearchProjects();
+		if (document.getElementById("b2"))
+			SearchUsers();
+	}
+	
+	function SearchProjects(){
+		var url = "http://bloomgenetics.tech/api/v1/projects";
+		var data = "?pid="+document.getElementById("terms")+"&name="+document.getElementById("terms");
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
-		xhttp.open("GET", url, true);
-		if (document.getElementById("b1"))
-			xhttp.send(uidData);
-		if (document.getElementById("b2"))
-			xhttp.send(pidData);
-		
+		xhttp.open("GET", url + data, true);
+		if (localStorage["Authorization"])
+			xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+		xhttp.send(null);
+	}
+	
+	function SearchUsers(){
+		var url = "http://bloomgenetics.tech/api/v1/users";
+		var data = "?id="+document.getElementById("terms")+"&name="+document.getElementById("terms");
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = getData;
+		xhttp.open("GET", url + data, true);
+		if (localStorage["Authorization"])
+			xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+		xhttp.send(null);
 	}
 	
 	function getData() {
