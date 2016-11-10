@@ -43,9 +43,13 @@ function CreateUser(){
 	var url = "http://bloomgenetics.tech/api/v1/users";
 	var xhttp = new XMLHttpRequest()
 	if (document.getElementById("password").value == document.getElementById("confirmpassword").value){
-		var data = "username="+document.getElementById("username").value+"&email="+document.getElementById("email").value+"&password="+document.getElementById("password").value +
-			"&location="+document.getElementById("address").value+"&growzone="+document.getElementById("gzone").value +
-			"&seasons="+document.getElementById("seasons").value+"&specialty="+document.getElementById("specialty").value;
+		var data = "username=" + document.getElementById("username").value +
+				"&email=" + document.getElementById("email").value +
+				"&password=" + document.getElementById("password").value +
+				"&location=" + document.getElementById("address").value +
+				"&growzone=" + document.getElementById("gzone").value +
+				"&season=" + document.getElementById("seasons").value +
+				"&specialty=" + document.getElementById("specialty").value;
 		xhttp.onreadystatechange = getData;
 		xhttp.open("POST", url, true);
 		xhttp.send(data);
