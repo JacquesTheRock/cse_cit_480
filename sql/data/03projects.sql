@@ -45,3 +45,8 @@ INSERT INTO cross_parent(cross_id,specimen_id) VALUES
 ,(3,5)
 ,(4,2);
 
+INSERT INTO roles (user_id,project_id,role_id) VALUES
+('guest',0,1)
+,('admin',0,4)
+,('guest',1,3)
+,('guest',2,3);
