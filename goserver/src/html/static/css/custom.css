@@ -87,8 +87,7 @@ margin-right: 5px;
 		background-color: #F7DCB4;
 	}
 
-#gradient
-{
+#gradient{
   width: 100%;
   min-height: 100%;
   padding: 0px;
@@ -124,7 +123,7 @@ margin-right: 5px;
  
  
  /*buttons start*/
- .btn-shutterOut {
+.btn-shutterOut {
   display: inline-block;
   vertical-align: middle;
   -webkit-transform: translateZ(0);
