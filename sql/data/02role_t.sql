@@ -56,7 +56,7 @@ INSERT INTO role_perm(role_id, perm_id) VALUES
 ,(1,34)
 ,(1,35)
 ,(1,2)
-,(1,41);
+,(1,42);
 
 INSERT INTO role_perm(role_id,perm_id)
 	SELECT 2, perm_id FROM role_perm WHERE role_id=1;
@@ -73,7 +73,9 @@ INSERT INTO role_perm(role_id,perm_id) VALUES
 ,(2,10)
 ,(2,11)
 ,(2,12)
-,(2,13);
+,(2,13)
+,(2,41)
+,(2,43);
 
 INSERT INTO role_perm(role_id,perm_id)
 	SELECT 3, perm_id FROM role_perm WHERE role_id=2;
