@@ -2,16 +2,17 @@
 function CreateProject(){
 	var url = "http://bloomgenetics.tech/api/v1/projects";
 	var xhttp = new XMLHttpRequest()
-		var data = "name=" + document.getElementById("projectname").value +
-				"&description=" + document.getElementById("description").value +
-				"&location=" + document.getElementById("location").value +
-				"&species=" + document.getElementById("species").value +
-				"&type=" + document.getElementById("type").value +
-				"&public=" + document.getElementById("public").value;
-		xhttp.onreadystatechange = getData;
-		xhttp.open("POST", url, true);
-		xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xhttp.send(data);
+	var data = "name=" + document.getElementById("projectname").value +
+			"&description=" + document.getElementById("description").value +
+			"&location=" + document.getElementById("location").value +
+			"&species=" + document.getElementById("species").value +
+			"&type=" + document.getElementById("type").value +
+			"&public=" + document.getElementById("public").value;
+	xhttp.onreadystatechange = getData;
+	xhttp.open("POST", url, true);
+	xhttp.setRequestHeader("Authorization",localStorage["Authorization"]);
+	xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	xhttp.send(data);
 }
 function getData(){
 	if(this.readyState == 4 && this.status == 200) {
@@ -23,6 +24,9 @@ function getData(){
 			out.innerHTML = resp.status;
 		}
 	}
+}
+if (!localStorage["Authorization"]) {
+	window.location = "/login.html"
 }
 </script>
 
@@ -51,7 +55,7 @@ function getData(){
     </div>
 	<div class="form-group">
       <label for="public">Public (boolean)?</label>
-      <input type="number" class="form-control" id="public" placeholder="public">
+      <input type="text" class="form-control" id="public" placeholder="public">
     </div>
     <button onclick="CreateProject()" class="btn btn-default">Create Project</button>
 </div>
