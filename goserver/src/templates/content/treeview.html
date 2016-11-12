@@ -65,8 +65,10 @@ function drawNode(pos) {
 	ctx.beginPath();
 	this.el.pos.x = pos.x;
 	this.el.pos.y = pos.y;
+	ctx.lineWidth=3;
 	ctx.arc(this.el.pos.x, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
 	ctx.stroke();
+	ctx.lineWidth=1;
 	ctx.strokeText(this.el.id,pos.x - 4,pos.y+4)
 	if (!this.el.children)
 		return;
@@ -76,6 +78,7 @@ function drawNode(pos) {
 	for (c of this.el.children) {
 		c.drawNode(offset);
 		ctx.moveTo(this.el.pos.x,this.el.pos.y - this.el.r);
+		ctx.lineWidth=1;
 		ctx.lineTo(offset.x,offset.y + this.el.r);
 		ctx.stroke();
 		offset.x += 60;
