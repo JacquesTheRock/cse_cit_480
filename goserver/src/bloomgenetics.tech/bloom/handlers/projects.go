@@ -620,10 +620,12 @@ func postProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
 				out.Code = code.INVALIDFIELD
 				out.Status = "Invalid parent1 field"
 			}
-			e.Parent2ID, err = strconv.ParseInt(r.FormValue("parent2"), 10, 64)
-			if err != nil {
-				out.Code = code.INVALIDFIELD
-				out.Status = "Invalid parent2 field"
+			if out.Code == 0 {
+				e.Parent2ID, err = strconv.ParseInt(r.FormValue("parent2"), 10, 64)
+				if err != nil {
+					out.Code = code.INVALIDFIELD
+					out.Status = "Invalid parent2 field"
+				}
 			}
 			e.ProjectID = pid
 		}
