@@ -44,11 +44,11 @@ INSERT INTO perm(id,page,action) VALUES
 (36,'projects_pid_roles','GET'),
 (37,'projects_pid_roles','POST'),
 (38,'projects_pid_roles_uid','GET'),
-(39,'projects_pid_roles_uid','PUTT'),
+(39,'projects_pid_roles_uid','PUT'),
 (40,'projects_pid_roles_uid','DELETE'),
 (41,'images','POST'),
 (42,'images_iid','GET'),
-(43,'images_iid','DELETE'),
+(43,'images_iid','DELETE')
 ;
 
 INSERT INTO role_perm(role_id, perm_id) VALUES 
