@@ -27,7 +27,8 @@
 		-->
 		
       </div>
-		<text id="result">Result</text>
+		<text id="result">Result</text><br>
+		<div id="fooBar">Result2</div>
   </div>
   
   <script>
@@ -71,18 +72,25 @@
 	
 	function searchResults(data){
 		var t1 = JSON.parse(data);
+		var strList = {};
 		for (e in t1.data){
-			
+			var str = "";
+			if (t1.public == true){
+				str = t1.name + " ";
+				str += t1.species + " ";
+				str += t1.description;
+			}
+			strList.append(str);
 		}
 	}
+	
 	function add() {
-		
 		//Create an input type dynamically.
 		var element = document.createElement("input");
 
 		//Create Labels
 		var label = document.createElement("Label");
-		label.innerHTML = "New Label";     
+		label.innerHTML = "<br>New Label<br>";     
 
 		//Assign different attributes to the element.
 		element.setAttribute("type", "text");
