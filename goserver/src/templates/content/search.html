@@ -38,7 +38,6 @@
 			SearchProjects();
 		if (document.getElementById("b2").checked)
 			SearchUsers();
-		add();
 	}
 	
 	function SearchProjects(){
@@ -65,8 +64,8 @@
 	
 	function getData() {
 		if(this.readyState == 4 && this.status == 200) {
-			var out = document.getElementById("result");
-			out.innerHTML = this.responseText;
+			document.getElementById("result").innerHTML = this.responseText;
+			searchResults(this.responseText);
 		}
 	}
 	
