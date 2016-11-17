@@ -15,7 +15,7 @@
         </div>
 		
       </div>
-		<text id="rawResult">Result</text><br>
+		
 	  <ul class="media-list" id="resultList">
 		  <li class="media" id="result">
 			<div class="media-left">
@@ -78,7 +78,6 @@
 	
 	function getData() {
 		if(this.readyState == 4 && this.status == 200) {
-			document.getElementById("rawResult").innerHTML = this.responseText;
 			searchResults(this.responseText);
 		}
 	}
@@ -97,8 +96,8 @@
 				rName.innerHTML = e.name;
 				rSpecies.innerHTML = e.species;
 				rDescription.innerHTML = e.description;
+				add(entry)
 			}
-			add(entry)
 		}
 	}
 	
