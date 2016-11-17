@@ -44,7 +44,7 @@
   </div>
   
   <script>
-	var searchEntry = document.getElementById("result").cloneNode(); //copies entry
+	var searchEntry = document.getElementById("result").cloneNode(true); //copies entry
 	document.getElementById("result").outerHTML = ""; //deletes entry
 	
 	function Search(){
@@ -86,7 +86,7 @@
 	function searchResults(data){
 		var t1 = JSON.parse(data);
 		for (var i = 0; i < t1.data.length; i++){
-			var entry = searchEntry.cloneNode();
+			var entry = searchEntry.cloneNode(true);
 			var rName = entry.getElementById("resultName");
 			var rSpecies = entry.getElementById("resultSpecies");
 			var rDescription = entry.getElementById("resultDescription");
