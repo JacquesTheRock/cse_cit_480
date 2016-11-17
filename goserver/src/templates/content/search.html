@@ -71,7 +71,8 @@
 	
 	function searchResults(data){
 		var t1 = JSON.parse(data);
-		for (e in t1.data){
+		for (var i = 0; i < t1.data.length; i++){
+			var e = t1.data[i];
 			var str = "";
 			if (e.public == true){
 				str = e.name + " ";
