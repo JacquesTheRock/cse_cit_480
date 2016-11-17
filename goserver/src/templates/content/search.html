@@ -13,26 +13,40 @@
         <div class="col-sm-12">
           <button onclick="Search()" class="btn btn-shutterOut col-sm-12" name="submit" id="button-submit">Search</button>
         </div>
-		<!--
-		<script>
-			function generate(var input){
-				var a = 3;
-				var result = document.getElementById("result");
-				for (i = 0; i < a; i++) {
-					var input = document.createElement("input");
-					result.appendChild(input);
-				}
-			}
-		</script>
-		-->
 		
       </div>
-		<text id="result">Result</text><br>
-		<div id="fooBar">Result2</div>
+		<text id="rawResult">Result</text><br>
+	  <ul class="media-list" id="resultList">
+		  <li class="media" id="result">
+			<div class="media-left">
+			  <a href="#" id="resultImgURL">
+				<img class="media-object" src="..." alt="Generic placeholder image" id="resultImg">
+			  </a>
+			</div>
+			<div class="media-body">
+			  <h4 class="media-heading" id="resultName">Media heading</h4>
+			  <p id="resultSpecies"></p>
+			  <text id="recultDescription"></text>
+			</div>
+		  </li>
+	  </ul>
+	  
+	  
+	  <!--
+		<table id="results">
+			<tr id="testResult">
+				<td id="resultName">Test Name</td>
+				<td id="resultSpecies">Test Species</td>
+				<td id="resultDescription">Test Description</td>
+			</tr>
+		</table>
+		-->
   </div>
   
   <script>
-	  
+	var searchEntry = document.getElementById("result").cloneNode(); //copies entry
+	document.getElementById("result").outerHTML = ""; //deletes entry
+	
 	function Search(){
 		if (document.getElementById("b1").checked)
 			SearchProjects();
@@ -64,7 +78,7 @@
 	
 	function getData() {
 		if(this.readyState == 4 && this.status == 200) {
-			document.getElementById("result").innerHTML = this.responseText;
+			document.getElementById("rawResult").innerHTML = this.responseText;
 			searchResults(this.responseText);
 		}
 	}
@@ -72,39 +86,24 @@
 	function searchResults(data){
 		var t1 = JSON.parse(data);
 		for (var i = 0; i < t1.data.length; i++){
+			var entry = searchEntry.cloneNode();
+			var rName = entry.getElementById("resultName");
+			var rSpecies = entry.getElementById("resultSpecies");
+			var rDescription = entry.getElementById("resultDescription");
+			
 			var e = t1.data[i];
-			var str = "";
 			if (e.public == true){
-				str = e.name + " ";
-				str += e.species + " ";
-				str += e.description;
+				rName.innerHTML = e.name;
+				rSpecies.innerHTML = e.species;
+				rDescription.innerHTML = e.description;
 			}
-			add(str)
+			add(entry)
 		}
 	}
 	
 	function add(result) {
-		//Create an input type dynamically.
-		//var element = document.createElement("input");
-
-		//Create Labels
-		var label = document.createElement("Label");
-		label.innerHTML = "<br>"+result+"<br>";     
-
-		//Assign different attributes to the element.
-		//element.setAttribute("type", "text");
-		//element.setAttribute("value", "");
-		//element.setAttribute("name", "Test Name");
-		//element.setAttribute("style", "width:200px");
-
-		label.setAttribute("style", "font-weight:normal");
-
-		// 'foobar' is the div id, where new fields are to be added
-		var foo = document.getElementById("fooBar");
-
-		//Append the element in page (in span).
-		foo.appendChild(label);
-		//foo.appendChild(element);
+		var list = document.getElementById("resultList");
+		list.appendChild(result);
 	}
 	
 	
