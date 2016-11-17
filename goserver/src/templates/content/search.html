@@ -74,10 +74,10 @@
 		var t1 = JSON.parse(data);
 		for (e in t1.data){
 			var str = "";
-			if (t1.public == true){
-				str = t1.name + " ";
-				str += t1.species + " ";
-				str += t1.description;
+			if (e.public == true){
+				str = e.name + " ";
+				str += e.species + " ";
+				str += e.description;
 			}
 			add(str)
 		}
