@@ -48,7 +48,7 @@ func GenerateForest(project_id int64) ([]entity.TreeNode, error) {
 			}
 			used[el.Self.ID] = true
 			next := el.Parents[0]
-			el.Parents = el.Parents[1:]
+			el.Parents = nil //el.Parents[1:]
 			el = next
 		}
 		if !used[el.Self.ID] {
