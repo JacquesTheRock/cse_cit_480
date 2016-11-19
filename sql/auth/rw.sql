@@ -16,3 +16,4 @@ GRANT ALL ON specimen_trait TO bloom_rw;
 GRANT ALL ON trait TO bloom_rw;
 GRANT ALL ON trait_t TO bloom_rw;
 GRANT ALL ON mail TO bloom_rw;
+GRANT ALL ON img TO bloom_rw;

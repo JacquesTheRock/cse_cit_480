@@ -1,0 +1,48 @@
+<div id="error"></div>
+<input type="file" name="submitImage" id="submitImage">
+<input type="button" value="Upload" onclick="encodeFile()">
+<script>
+function postImage(data) {
+	var url = "http://bloomgenetics.tech/api/v1/images";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = imagePostResponse;
+	xhttp.open("POST", url, true);
+	xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.send(JSON.stringify(data));
+}
+
+function encodeFile() {
+	var files = document.getElementById("submitImage").files;
+	if (files.length != 1) {
+		return;
+	}
+	var file = files[0]
+
+	var reader = new FileReader();
+	reader.readAsDataURL(file);
+	reader.onload = function(e) {
+			var data = reader.result;
+			var fields = data.split(":")[1].split(",")
+			var type = fields[0].split(";")[0]
+			var sendData = {
+				type: type,
+				data: data,
+				size: file.size
+			}
+			console.log(sendData)
+			postImage(sendData)
+		}
+}
+
+function imagePostResponse() {
+	if (this.readyState == 4 && this.status == 200) {
+		var out = document.getElementById("error");
+		var obj = JSON.parse(this.responseText)
+		out.innerHTML = obj.status
+		if (obj.code == 0) {
+			
+		}
+	}
+}
+</script>

@@ -58,7 +58,14 @@ func getImagesIid(w http.ResponseWriter, r *http.Request) {
 		out.Status = "Not a numeric Image ID"
 	}
 	if out.Code == 0 {
-		out.Code = iid
+		img := entity.Image{}
+		img.ID = iid
+		img, err := images.GetImage(img)
+		if err != nil {
+			out.Code = code.UNDEFINED
+		} else {
+			out.Data = img
+		}
 	}
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)
