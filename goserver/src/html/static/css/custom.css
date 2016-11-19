@@ -188,3 +188,22 @@ margin-right: 5px;
  
  
  /*project page stop*/
+ 
+ /*Player Profile Page*/
+.pBackground {
+  background: #5F5F5F;
+  border-bottom: solid gold 20px;
+  margin: 0 auto;
+  color: gainsboro;
+}
+.pBackground .header{
+  margin:0 auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.pBackground a:visited{
+  color: purple;
+}
+
+/*End Player Profile Page*/
