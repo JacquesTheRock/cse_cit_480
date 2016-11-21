@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
 	season text DEFAULT 'All',
 	growzone VARCHAR(32) DEFAULT 'undisclosed',
 	specialty text DEFAULT 'None',
+	about text DEFAULT '. . .' NOT NULL,
 	hash bytea,
 	salt bytea,
 	ALGORITHM VARCHAR(10),

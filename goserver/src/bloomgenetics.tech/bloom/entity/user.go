@@ -14,6 +14,7 @@ type User struct {
 	Growzone    string `json:"growzone"`
 	Season      string `json:"season"`
 	Specialty   string `json:"specialty"`
+	About       string `json:"about"`
 }
 
 func (u User) validateID() bool {
@@ -36,12 +37,25 @@ func (u User) validateEmail() bool {
 	return resp
 }
 
+func (u User) validateAbout() bool {
+	const aboutRXP = `[A-Za-z0-9.%+-]*`
+	resp, err := regexp.Match(aboutRXP, []byte(u.About))
+	if err != nil {
+		util.PrintDebug(err)
+		return false
+	}
+	return resp
+}
+
 func (u User) Validate() error {
 	if !u.validateID() {
 		return errors.New("Invalid username")
 	}
 	if !u.validateEmail() {
 		return errors.New("Invalid email")
+	}
+	if !u.validateAbout() {
+		return errors.New("Invalid About me characters")
 	}
 	return nil
 }
