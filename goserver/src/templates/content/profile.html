@@ -1,7 +1,7 @@
 
   <div class="container" style="max-width: 750px;">
     <!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
-      <h2 class="row header container" style="max-width: 750px;">USER's Profile <a href="editprofile.html">
+      <h2 class="row header container" style="max-width: 750px;">USER's Profile <a data-toggle="modal" data-target="#editProfileModal">
         <span class="pull-right">
 			
             <span class="glyphicon glyphicon-edit">
@@ -37,30 +37,80 @@
           </section>
           <section class="row-fluid">
             <h3><b>Projects:</b></h3>
-	<div class="row">
-	  <ul class="media-list" id="resultList">
-		  <div class="media" id="result">
-		<div style="margin: auto;">
-			<div class="media-left well">
-			  <a href="#" id="resultImgURL">
-				<img class="media-object" src="..." alt="Generic placeholder image" id="resultImg">
-			  </a>
+			<div class="row">
+			  <ul class="media-list" id="resultList">
+				  <div class="media" id="result">
+				<div style="margin: auto;">
+					<div class="media-left well">
+					  <a href="#" id="resultImgURL">
+						<img class="media-object" src="..." alt="Generic placeholder image" id="resultImg">
+					  </a>
+					</div>
+					<div class="media-body well">
+					  <h4 class="media-heading" >Media heading</h4>
+					  Location: <text ></text>
+					  <br>
+					  USER's role: <text ></text>
+					  <p ></p>
+					</div>
+				</div>
+				  </div>
+			  </ul>
 			</div>
-			<div class="media-body well">
-			  <h4 class="media-heading" >Media heading</h4>
-			  Location: <text ></text>
-			  <br>
-			  USER's role: <text ></text>
-			  <p ></p>
-			</div>
-		</div>
-		  </div>
-	  </ul>
-	</div>
             <p></p><br>
 
        
           </section>
         </div>
       </div>
+	  
+	  
+	  <div id="editProfileModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+		  <div class="container" style="max-width: 750px;">
+			<!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
+			  <h2 class="row header container" style="max-width: 750px;">Edit USER's Profile </h2>
+			  <div class="contentbox">
+				<div class="container-fluid">
+				  <div id="result"></div>
+					<div class="form-group">
+					  <label for="specialty">Specialty:</label>
+					  <input type="text" class="form-control" id="specialty" placeholder="Specialty">
+					</div>
+					<div class="form-group">
+					  <label for="gzone">Growzone:</label>
+					  <input type="text" class="form-control" id="gzone" placeholder="Growzone">
+					</div>
+					<div class="form-group">
+					  <label for="seasons">Seasons:</label>
+					  <input type="text" class="form-control" id="seasons" placeholder="Seasons">
+					</div>
+					<div class="form-group">
+					  <label for="address">Address:</label>
+					  <input type="text" class="form-control" id="address" placeholder="Address">
+					</div>
+					<div class="form-group">
+					  <label for="email">Email:</label>
+					  <input type="email" class="form-control" id="email" placeholder="Enter email">
+					</div>
+					<div class="form-group">
+					  <label for="description">About me:</label>
+					  <input type="text" class="form-control" id="description" placeholder="Tell everyone about yourself!">
+					</div>
+
+					<button onclick="UpdateUser()" class="btn btn-default">Update</button>
+					
+					<a href="profile.html" class="btn btn-default">Return to Profile Page</a>
+				</div>
+			  </div>
+		  </div>
+
+  </div>
+</div>
+	  
+	  
+	  
+	  
   </div>
