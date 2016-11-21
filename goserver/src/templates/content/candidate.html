@@ -1,6 +1,12 @@
-  <div class="container" style="max-width: 750px;">
+<div class="container" style="max-width: 750px;">
     <!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
-      <h2 class="row header container" style="max-width: 750px;">Candidate: CANDIDATE ID</h2>
+	<h2 class="row header container" style="max-width: 750px;">Candidate: CANDIDATE ID <a data-toggle="modal" data-target="#editCandidateModal">
+		<span class="pull-right">
+				<span class="glyphicon glyphicon-edit">
+				</span>
+			Edit
+		</span></a>
+	</h2>
       <div class="contentbox">
         <div class="container-fluid">
           <!--Adds style color to "Player Profile"-->
@@ -85,4 +91,45 @@
           </section>
         </div>
       </div>
-  </div>
+	  
+	  	<!-- edit page pop up conent start-->
+	<div id="editCandidateModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal content-->
+
+				  <div class="contentbox">
+					<div class="container-fluid">
+					  <div id="result"></div>
+						<b>Update Candidate Picture 
+							<div id="error"></div>
+							<input type="file" name="submitImage" id="submitImage">
+						</b>
+						<div class="form-group">
+							<label for="yeargrown">Year Grown</label>
+							<input type="text" class="form-control" id="yeargrown" placeholder="Year Grown">
+						</div>
+						<div class="form-group">
+							<label for="season grown">Season Grown</label>
+							<input type="text" class="form-control" id="season grown" placeholder="Season Grown">
+						</div>
+						<div class="form-group">
+							<label for="notes">Candidate Notes</label>
+							<input type="text" class="form-control" id="notes" placeholder="Notes">
+						</div>
+			
+
+						<button onclick="UpdateCandidate()" class="btn btn-default">Update</button>
+			
+					</div>
+				  </div>
+
+
+		</div>
+			<!-- edit page pop up conent start-->
+	</div>
+	  
+	  
+	  
+	  
+</div>
