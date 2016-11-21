@@ -6,7 +6,7 @@ import (
 )
 
 func SearchUsers(u entity.User) ([]entity.User, error) {
-	const qBase = "SELECT id,email,name,location,growzone,season,specialty FROM users"
+	const qBase = "SELECT id,email,name,location,growzone,season,specialty, about FROM users"
 	op := "OR "
 	queryVars := make([]interface{}, 0)
 	out := make([]entity.User, 0)
@@ -59,7 +59,7 @@ func SearchUsers(u entity.User) ([]entity.User, error) {
 	defer rows.Close()
 	for rows.Next() {
 		e := entity.User{}
-		err = rows.Scan(&e.ID, &e.Email, &e.DisplayName, &e.Location, &e.Growzone, &e.Season, &e.Specialty)
+		err = rows.Scan(&e.ID, &e.Email, &e.DisplayName, &e.Location, &e.Growzone, &e.Season, &e.Specialty, &e.About)
 		if err != nil {
 			util.PrintError("Unable to read user")
 			util.PrintDebug(err)
@@ -71,13 +71,13 @@ func SearchUsers(u entity.User) ([]entity.User, error) {
 }
 
 func GetUser(u entity.User) (entity.User, error) {
-	const qBase = "SELECT id,email,name,location,growzone,season,specialty FROM users WHERE id = $1"
+	const qBase = "SELECT id,email,name,location,growzone,season,specialty,about FROM users WHERE id = $1"
 	out := entity.User{}
 	rows, err := util.Database.Query(qBase, u.ID)
 	defer rows.Close()
 	for rows.Next() {
 		e := entity.User{}
-		err = rows.Scan(&e.ID, &e.Email, &e.DisplayName, &e.Location, &e.Growzone, &e.Season, &e.Specialty)
+		err = rows.Scan(&e.ID, &e.Email, &e.DisplayName, &e.Location, &e.Growzone, &e.Season, &e.Specialty, &e.About)
 		if err != nil {
 			util.PrintError("Unable to read user")
 			util.PrintDebug(err)
