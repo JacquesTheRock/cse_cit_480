@@ -1,7 +1,36 @@
 <script>
-
+<!-- This script is a direct compy of the createuser JS. This needs to be updated to work. Rename the CreateUser() function to UpdateUser()  --!>
+function CreateUser(){
+	var url = "http://bloomgenetics.tech/api/v1/users";
+	var xhttp = new XMLHttpRequest()
+	if (document.getElementById("password").value == document.getElementById("confirmpassword").value){
+		var data = "username=" + document.getElementById("username").value +
+				"&email=" + document.getElementById("email").value +
+				"&password=" + document.getElementById("password").value +
+				"&location=" + document.getElementById("address").value +
+				"&growzone=" + document.getElementById("gzone").value +
+				"&season=" + document.getElementById("seasons").value +
+				"&specialty=" + document.getElementById("specialty").value;
+		xhttp.onreadystatechange = getData;
+		xhttp.open("POST", url, true);
+		xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		xhttp.send(data);
+	}
+}
+function getData(){
+	if(this.readyState == 4 && this.status == 200) {
+		var out = document.getElementById("result");
+		var resp = JSON.parse(this.responseText);
+		if(resp.code == 0) {
+			window.location="/index.html"
+		} else {
+			out.innerHTML = resp.status;
+		}
+	}
+}
 </script>
 
+<!-- This html should be good -->
 <div class="container">
   <h2>Edit USER's profile</h2>
   <div id="result"></div>
@@ -31,5 +60,6 @@
     </div>
 
     <button onclick="UpdateUser()" class="btn btn-default">Update</button>
+	
 	<a href="profile.html" class="btn btn-default">Return to Profile Page</a>
 </div>
