@@ -61,6 +61,7 @@
 	document.getElementById("result").outerHTML = ""; //deletes entry
 	
 	function Search(){
+		listClear()
 		if (document.getElementById("b1").checked)
 			SearchProjects();
 		if (document.getElementById("b2").checked)
@@ -98,22 +99,39 @@
 	function searchResults(data){
 		var t1 = JSON.parse(data);
 		for (var i = 0; i < t1.data.length; i++){
+			var e = t1.data[i];
+			var person = false
+			if (typeof e.public === "undefined") {
+				person = true
+			}
 			var entry = searchEntry.cloneNode(true);
 			var c = entry.children[1];
-			var rName = c.childNodes[1];
-			var rSpecies = c.childNodes[3];
-			var rDescription = c.childNodes[5];
 			
-			var e = t1.data[i];
-			if (e.public == true){
-				rName.innerHTML = e.name;
+			if (person) {
+				var rName = c.childNodes[1];
+				var rSpecies = c.childNodes[3];
+				var rDescription = c.childNodes[5];
+				rName.innerHTML = "User: " + e.id
+				rSpecies.innerHTML = e.growzone
+				rDescription.innerHTML = "Active: " + e.season
+				add(entry)
+			} else if (e.public == true) {
+				var rName = c.childNodes[1];
+				var rSpecies = c.childNodes[3];
+				var rDescription = c.childNodes[5];
+				rName.innerHTML = "Project: " + e.name;
 				rSpecies.innerHTML = e.species;
 				rDescription.innerHTML = e.description;
 				add(entry)
 			}
 		}
 	}
-	
+	function listClear() {
+		var list = document.getElementById("resultList")
+		while (list.firstChild) {
+ 		   list.removeChild(list.firstChild);
+		}
+	}
 	function add(result) {
 		var list = document.getElementById("resultList");
 		list.appendChild(result);
