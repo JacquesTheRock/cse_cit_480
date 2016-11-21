@@ -8,6 +8,7 @@
 			Edit
 		</span></a>
 	</h2>
+	<div id="error"> </div>
 	<div class="contentbox">
 		<div class="container-fluid">
 		  <!--Adds style color to "Player Profile"-->
@@ -18,17 +19,17 @@
 				<p class="col-sm-6 col-md-4 col-lg-4"><img src="" width="200" height="200" alt="User Profile Picture."></p>
 
 				<section id="personalInfo" class="col-sm-7">
-					<b>Specialty:</b> Peppers and Tomatoes <br>
-					<b>Growzone:</b> Zone 8b <br>
-					<b>Seasons Active:</b> Summer, Fall, Winter, Spring test test test test test test test test test test<br>
-					<b>Address:</b> 908 Blue Heron Dr. Highland Mi 48357 <br>
-					<b>Email:</b>ecdolley@oakland.edu <br>
+					<b>Specialty:</b> Undefined <br>
+					<b>Growzone:</b> Undefined <br>
+					<b>Seasons Active:</b> Undefinedt<br>
+					<b>Address:</b> Nowheres ville <br>
+					<b>Email:</b>address@example.com<br>
 				</section>
 			</section>
 
 			<section class="row-fluid">
 				<h3><b>About me:</b></h3>
-				<p>text text text bla bla bla text text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla bla</p><br>
+				<p id="profileAbout">. . .</p><br>
 			</section>
 			
 			<section class="row-fluid">
@@ -87,17 +88,24 @@ function getParameterByName(name, url) {
 function updatePersonalInfo() {
 	if(this.readyState == 4 && this.status == 200) {
 		var out = JSON.parse(this.responseText)
-		if (out.code != 0) {
-			errorField.innerHTML = out.status;
+		if (out.code == 400) {
+			errorField.innerHTML = "Unable to view user profile: Are you logged in?";
+		} else if (out.code != 0) {
+			errorField.innerHTML = out.status
 		} else {
+			var nHeader = document.getElementById("nameHeader")
+			var b = document.getElementById("editButton");
 			var d = out.data
 			personalInfo.innerHTML = "<b>Specialty:</b> " + d.specialty + "<br>\n"
 			personalInfo.innerHTML += "<b>Growzone:</b>" + d.growzone + "<br\n>"
 			personalInfo.innerHTML += "<b>Season Active:</b>" + d.season + "<br>\n"
 			personalInfo.innerHTML += "<b>Address:</b>" + d.location + "<br>\n"
 			personalInfo.innerHTML += "<b>Email:</b>" + d.email + "<br>\n"
-			var b = document.getElementById("editButton");
-			document.getElementById("nameHeader").innerHTML = d.name + "'s Profile " + b.outerHTML
+			nHeader.innerHTML = d.name + "'s Profile "
+			if(d.id && user != "guest" && d.id == user)
+				nHeader.innerHTML += b.outerHTML
+
+			document.getElementById("profileAbout").innerHTML = d.about
 		}
 	}
 }
