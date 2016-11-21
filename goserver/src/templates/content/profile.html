@@ -64,6 +64,9 @@ document.getElementById("projEntry").outerHTML = ""
 var personalInfo = document.getElementById("personalInfo")
 var errorField = document.getElementById("error")
 var user = getParameterByName("id");
+var editButton = document.getElementById("editButton");
+var nHeader = document.getElementById("nameHeader")
+nHeader.innerHTML = "Profile"
 if (!user && localStorage["Authorization"]) {
 	user = localStorage["Authorization"]
 	token = localStorage["Authorization"].split(" ")[1];
@@ -93,8 +96,6 @@ function updatePersonalInfo() {
 		} else if (out.code != 0) {
 			errorField.innerHTML = out.status
 		} else {
-			var nHeader = document.getElementById("nameHeader")
-			var b = document.getElementById("editButton");
 			var d = out.data
 			personalInfo.innerHTML = "<b>Specialty:</b> " + d.specialty + "<br>\n"
 			personalInfo.innerHTML += "<b>Growzone:</b>" + d.growzone + "<br\n>"
@@ -103,7 +104,7 @@ function updatePersonalInfo() {
 			personalInfo.innerHTML += "<b>Email:</b>" + d.email + "<br>\n"
 			nHeader.innerHTML = d.name + "'s Profile "
 			if(d.id && user != "guest" && d.id == user)
-				nHeader.innerHTML += b.outerHTML
+				nHeader.innerHTML += editButton.outerHTML
 
 			document.getElementById("profileAbout").innerHTML = d.about
 		}
