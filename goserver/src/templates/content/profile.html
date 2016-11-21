@@ -1,7 +1,7 @@
 
 <div class="container" style="max-width: 750px;">
 <!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
-	<h2 class="row header container" style="max-width: 750px;">USER's Profile <a data-toggle="modal" data-target="#editProfileModal">
+	<h2 class="row header container" id="nameHeader" style="max-width: 750px;">USER's Profile <a data-toggle="modal" data-target="#editProfileModal">
 		<span class="pull-right">
 				<span class="glyphicon glyphicon-edit">
 				</span>
@@ -17,7 +17,7 @@
 			<!-- Fetches and displays the player profile image -->
 				<p class="col-sm-6 col-md-4 col-lg-4"><img src="" width="200" height="200" alt="User Profile Picture."></p>
 
-				<section class="col-sm-7">
+				<section id="personalInfo" class="col-sm-7">
 					<b>Specialty:</b> Peppers and Tomatoes <br>
 					<b>Growzone:</b> Zone 8b <br>
 					<b>Seasons Active:</b> Summer, Fall, Winter, Spring test test test test test test test test test test<br>
@@ -34,8 +34,8 @@
 			<section class="row-fluid">
 				<h3><b>Projects:</b></h3>
 				<div class="row">
-					<ul class="media-list" id="resultList">
-						<div class="media" id="result">
+					<ul class="media-list" id="projList">
+						<div class="media" id="projEntry">
 							<div style="margin: auto;">
 								<div class="media-left well">
 									<a href="#" id="resultImgURL">
@@ -44,9 +44,9 @@
 								</div>
 								<div class="media-body well">
 									<h4 class="media-heading" >Media heading</h4>
-									Location: <text ></text>
+									Location: <text >Someplace</text>
 								    <br>
-									USER's role: <text ></text>
+									Role: <text >Somerole</text>
 									<p ></p>
 								</div>
 							</div>
@@ -57,6 +57,101 @@
 			</section>
 		</div>
 	</div>
+	<script>
+var projEntry = document.getElementById("projEntry").cloneNode(true)
+document.getElementById("projEntry").outerHTML = ""
+var personalInfo = document.getElementById("personalInfo")
+var errorField = document.getElementById("error")
+var user = getParameterByName("id");
+if (!user && localStorage["Authorization"]) {
+	user = localStorage["Authorization"]
+	token = localStorage["Authorization"].split(" ")[1];
+	user = atob(token).split(":")[0];
+}
+if (!user) {
+	user = "guest"
+}
+
+function getParameterByName(name, url) {
+    if (!url) {
+      url = window.location.href;
+    }
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function updatePersonalInfo() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code != 0) {
+			errorField.innerHTML = out.status;
+		} else {
+			var d = out.data
+			personalInfo.innerHTML = "<b>Specialty:</b> " + d.specialty + "<br>\n"
+			personalInfo.innerHTML += "<b>Growzone:</b>" + d.growzone + "<br\n>"
+			personalInfo.innerHTML += "<b>Season Active:</b>" + d.season + "<br>\n"
+			personalInfo.innerHTML += "<b>Address:</b>" + d.location + "<br>\n"
+			personalInfo.innerHTML += "<b>Email:</b>" + d.email + "<br>\n"
+			document.getElementById("nameHeader").innerHTML = d.name + "'s Profile"
+		}
+	}
+}
+
+function getPersonalInfo() {
+	var url = "http://bloomgenetics.tech/api/v1/users/";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updatePersonalInfo;
+	xhttp.open("GET", url + user, true);
+	if (localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null)
+}
+
+function updateProjectList() {
+	var list = document.getElementById("projList");
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code != 0) {
+			errorField.innerHTML = out.status;
+		} else {
+			for(var i = 0; i < out.data.length; i++) {
+				var d = out.data[i]
+				if (d.id <= 0)
+					continue
+				var entry = projEntry.cloneNode(true);
+				entry.id += d.id
+				var c = entry.children[0].children[1]
+				var NameF = c.childNodes[1];
+				var LocationF = c.childNodes[3];
+				var RoleF = c.childNodes[7];
+				NameF.innerHTML = d.name
+				LocationF.innerHTML = d.location
+				RoleF.innerHTML = d.role
+				list.appendChild(entry)
+			}
+		}
+	}
+}
+
+
+function getProjectList() {
+	var url = "http://bloomgenetics.tech/api/v1/users/" + user + "/projects";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateProjectList;
+	xhttp.open("GET", url, true);
+	if (localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null)
+}
+
+getPersonalInfo()
+getProjectList()
+
+	</script>
   
 
 	<!-- edit page pop up conent start-->
