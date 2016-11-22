@@ -66,6 +66,7 @@ var errorField = document.getElementById("error")
 var user = getParameterByName("id");
 var editButton = document.getElementById("editButton");
 var nHeader = document.getElementById("nameHeader")
+var userProfile
 nHeader.innerHTML = "Profile"
 if (!user && localStorage["Authorization"]) {
 	user = localStorage["Authorization"]
@@ -97,6 +98,16 @@ function updatePersonalInfo() {
 			errorField.innerHTML = out.status
 		} else {
 			var d = out.data
+
+			
+			document.getElementById("submitSpecialty").value = d.specialty;
+			document.getElementById("submitGzone").value = d.growzone;
+			document.getElementById("submitSeasons").value = d.season;
+			document.getElementById("submitAddress").value = d.location;
+			document.getElementById("submitEmail").value = d.email;
+			document.getElementById("submitDescription").value = d.about;
+
+			userProfile = d
 			personalInfo.innerHTML = "<b>Specialty:</b> " + d.specialty + "<br>\n"
 			personalInfo.innerHTML += "<b>Growzone:</b>" + d.growzone + "<br\n>"
 			personalInfo.innerHTML += "<b>Season Active:</b>" + d.season + "<br>\n"
@@ -158,6 +169,34 @@ function getProjectList() {
 	xhttp.send(null)
 }
 
+function UpdateUser() {
+	var image = document.getElementById("submitImage");
+	var specialty = document.getElementById("submitSpecialty").value;
+	var gzone = document.getElementById("submitGzone").value;
+	var season = document.getElementById("submitSeasons").value;
+	var address = document.getElementById("submitAddress").value;
+	var email = document.getElementById("submitEmail").value;
+	var about = document.getElementById("submitDescription").value;
+	var url = "http://bloomgenetics.tech/api/v1/users/" + user;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() { 
+		if (this.readyState == 4)
+			location.reload();
+	}
+	xhttp.open("PUT", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.setRequestHeader("Content-type", "application/json");
+
+	userProfile.specialty = specialty;
+	userProfile.growzone = gzone;
+	userProfile.season = season;
+	userProfile.location = address
+	userProfile.email = email
+	userProfile.about = about
+	xhttp.send(JSON.stringify(userProfile));
+}
+
 getPersonalInfo()
 getProjectList()
 
@@ -179,27 +218,27 @@ getProjectList()
 						</b>
 						<div class="form-group">
 							<label for="specialty">Specialty:</label>
-							<input type="text" class="form-control" id="specialty" placeholder="Specialty">
+							<input type="text" class="form-control" id="submitSpecialty" placeholder="Specialty">
 						</div>
 						<div class="form-group">
 							<label for="gzone">Growzone:</label>
-							<input type="text" class="form-control" id="gzone" placeholder="Growzone">
+							<input type="text" class="form-control" id="submitGzone" placeholder="Growzone">
 						</div>
 						<div class="form-group">
 							<label for="seasons">Seasons:</label>
-							<input type="text" class="form-control" id="seasons" placeholder="Seasons">
+							<input type="text" class="form-control" id="submitSeasons" placeholder="Seasons">
 						</div>
 						<div class="form-group">
 							<label for="address">Address:</label>
-							<input type="text" class="form-control" id="address" placeholder="Address">
+							<input type="text" class="form-control" id="submitAddress" placeholder="Address">
 						</div>
 						<div class="form-group">
 							<label for="email">Email:</label>
-							<input type="email" class="form-control" id="email" placeholder="Enter email">
+							<input type="email" class="form-control" id="submitEmail" placeholder="Enter email">
 						</div>
 						<div class="form-group">
 							<label for="description">About me:</label>
-							<input type="text" class="form-control" id="description" placeholder="Tell everyone about yourself!">
+							<input type="text" class="form-control" id="submitDescription" placeholder="Tell everyone about yourself!">
 						</div>
 
 						<button onclick="UpdateUser()" class="btn btn-default">Update</button>
