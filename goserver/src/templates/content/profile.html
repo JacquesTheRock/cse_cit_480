@@ -64,17 +64,14 @@ document.getElementById("projEntry").outerHTML = ""
 var personalInfo = document.getElementById("personalInfo")
 var errorField = document.getElementById("error")
 var user = getParameterByName("id");
+var loginUser = "guest"
 var editButton = document.getElementById("editButton");
 var nHeader = document.getElementById("nameHeader")
 var userProfile
 nHeader.innerHTML = "Profile"
-if (!user && localStorage["Authorization"]) {
-	user = localStorage["Authorization"]
+if (!loginUser && localStorage["Authorization"]) {
 	token = localStorage["Authorization"].split(" ")[1];
-	user = atob(token).split(":")[0];
-}
-if (!user) {
-	user = "guest"
+	loginUser = atob(token).split(":")[0];
 }
 
 function getParameterByName(name, url) {
@@ -100,22 +97,22 @@ function updatePersonalInfo() {
 			var d = out.data
 
 			
-			document.getElementById("submitSpecialty").value = d.specialty;
-			document.getElementById("submitGzone").value = d.growzone;
-			document.getElementById("submitSeasons").value = d.season;
-			document.getElementById("submitAddress").value = d.location;
-			document.getElementById("submitEmail").value = d.email;
-			document.getElementById("submitDescription").value = d.about;
-
-			userProfile = d
+					userProfile = d
 			personalInfo.innerHTML = "<b>Specialty:</b> " + d.specialty + "<br>\n"
 			personalInfo.innerHTML += "<b>Growzone:</b>" + d.growzone + "<br\n>"
 			personalInfo.innerHTML += "<b>Season Active:</b>" + d.season + "<br>\n"
 			personalInfo.innerHTML += "<b>Address:</b>" + d.location + "<br>\n"
 			personalInfo.innerHTML += "<b>Email:</b>" + d.email + "<br>\n"
 			nHeader.innerHTML = d.name + "'s Profile "
-			if(d.id && user != "guest" && d.id == user)
+			if(d.id && loginUser != "guest" && d.id == loginUser) { 
 				nHeader.innerHTML += editButton.outerHTML
+				document.getElementById("submitSpecialty").value = d.specialty;
+				document.getElementById("submitGzone").value = d.growzone;
+				document.getElementById("submitSeasons").value = d.season;
+				document.getElementById("submitAddress").value = d.location;
+				document.getElementById("submitEmail").value = d.email;
+				document.getElementById("submitDescription").value = d.about;
+			}
 
 			document.getElementById("profileAbout").innerHTML = d.about
 		}
