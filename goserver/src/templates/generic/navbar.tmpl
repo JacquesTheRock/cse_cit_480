@@ -90,7 +90,7 @@ function listProjects() {
 					var p = obj.data[i]
 					if (p.id == 0)
 						continue;
-					listEl.innerHTML += '<li><a href="/projects?id=' +
+					listEl.innerHTML += '<li><a href="/project.html?id=' +
 						p.id + '">'+ p.name + "</a></li>";
 			}
 			listEl.innerHTML += sepEl.outerHTML
