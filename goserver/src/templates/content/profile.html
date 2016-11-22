@@ -73,6 +73,8 @@ if (localStorage["Authorization"]) {
 	token = localStorage["Authorization"].split(" ")[1];
 	loginUser = atob(token).split(":")[0];
 }
+if (!user)
+	user = loginUser
 
 function getParameterByName(name, url) {
     if (!url) {
@@ -140,6 +142,7 @@ function updateProjectList() {
 					continue
 				var entry = projEntry.cloneNode(true);
 				entry.id += d.id
+				entry.children[0].children[0].children[0].href = "/project.html?id=" + d.id
 				var c = entry.children[0].children[1]
 				var NameF = c.childNodes[1];
 				var LocationF = c.childNodes[3];
