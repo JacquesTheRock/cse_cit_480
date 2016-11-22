@@ -250,7 +250,7 @@ function updateCrossList() {
 				var d = out.data[i]
 				var entry = cEntry.cloneNode(true)
 				entry.id += d.id
-				entry.children[0].children[0].children[0].href = "/cross.html?id=" + d.id
+				entry.children[0].children[0].children[0].href = "/cross.html?id=" + d.id + "&pid=" + projectID
 				var c = entry.children[0].children[1]
 				var NameF = c.childNodes[1];
 				var NoteF = c.childNodes[3];
@@ -406,7 +406,7 @@ function Tree(r, l = 0) {
 }
 
 function clickNode() {
-	window.location = "/cross.html?id=" + this.id
+	window.location = "/cross.html?id=" + this.id + "&pid="+projectID
 }
 
 

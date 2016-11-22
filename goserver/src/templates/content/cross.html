@@ -1,63 +1,61 @@
   <div class="container" style="max-width: 750px;">
-    <!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
-	<h2 class="row header container" style="max-width: 750px;">Cross: CROSS ID <a data-toggle="modal" data-target="#editCrossModal">
+	<!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
+	<h2 id="idHeader" class="row header container" style="max-width: 750px;">Cross: CROSS ID <a id="editButton" data-toggle="modal" data-target="#editCrossModal">
 		<span class="pull-right">
 				<span class="glyphicon glyphicon-edit">
 				</span>
 			Edit
 		</span></a>
 	</h2>
-      <div class="contentbox">
-        <div class="container-fluid">
-          <!--Adds style color to "User Profile"-->
-          <br>
+	  <div class="contentbox">
+		<div class="container-fluid">
+		  <!--Adds style color to "User Profile"-->
+		  <br>
 		  
-          <section class="row container-fluid">
-            <!-- Fetches and displays the user profile image -->
-            <div 
-				class="col-sm-6 col-md-6 col-lg-6" style ="float: center;"><p><h2>Parent 1</h2></p><img src="" width="200" height="200" alt="Cross Picture">
-			</div>
-			<div class="col-sm-6 col-md-6 col-lg-6" style ="float: center;"><p><h2>Parent 2</h2></p><img src="" width="200" height="200" alt="Cross Picture"></div>
-          </section>
+		  <section class="row container-fluid">
+			<!-- Fetches and displays the user profile image -->
+			<div class="col-sm-6 col-md-6 col-lg-6" style ="float: center;" id="parent1"><p><h2>Parent 1</h2></p><img id="p1image" src="" width="200" height="200" alt="Parent Picture"></div>
+			<div class="col-sm-6 col-md-6 col-lg-6" style ="float: center;" id="parent2"><p><h2>Parent 2</h2></p><img id="p2image" src="" width="200" height="200" alt="Parent Picture"></div>
+		  </section>
 		  
-          <section class="row-fluid">
-			<h2>Cross Name: BLA BLA BLA</h2>
-          </section>
+		  <section class="row-fluid">
+			<h2 id="nameHeader" >Cross Name: BLA BLA BLA</h2>
+		  </section>
 		  
-          <section class="row-fluid">
-            <h3><b>Trait Pool and Percentages</b></h3>
-              <input type="checkbox" aria-label="..."><b>Trait 1 - </b> <b>Dominant - </b> <b>100% TT</b><br> 
-              <input type="checkbox" aria-label="..."><b>Trait 2 - </b> <b>Recessive - </b> <b>25% bb, 50%Bb, 25%BB</b><br>
-              <input type="checkbox" aria-label="..."><b>Trait 3 - </b> <b>Recessive - </b> <b>100% tt</b><br>
-              <input type="checkbox" aria-label="..."><b>Trait 4 - </b> <b>Dominant - </b> <b>gg - </b> <b>Doesn't Have</b><br>
+		  <section class="row-fluid">
+			<h3><b>Trait Pool and Percentages</b></h3>
+			  <input type="checkbox" aria-label="..."><b>Trait 1 - </b> <b>Dominant - </b> <b>100% TT</b><br> 
+			  <input type="checkbox" aria-label="..."><b>Trait 2 - </b> <b>Recessive - </b> <b>25% bb, 50%Bb, 25%BB</b><br>
+			  <input type="checkbox" aria-label="..."><b>Trait 3 - </b> <b>Recessive - </b> <b>100% tt</b><br>
+			  <input type="checkbox" aria-label="..."><b>Trait 4 - </b> <b>Dominant - </b> <b>gg - </b> <b>Doesn't Have</b><br>
 			  <b>How many to plant to get desired traits: calculate here based on checked boxes </b>
-          </section>
+		  </section>
 		  
 
-          <section class="row-fluid">
-            <h3><b>Cross Notes</b></h3>
-            <p>bla bla bla bla bla </p><br>
-          </section>
+		  <section class="row-fluid">
+			<h3><b>Cross Notes</b></h3>
+			<p id="crossNote">bla bla bla bla bla </p><br>
+		  </section>
 		  
-          <section class="row-fluid">
+		  <section class="row-fluid">
 			<h3><b><div style="max-width: 230px;">Child Candidates<a class="glyphicon glyphicon-plus pull-right" href="newcandidate.html"></a></div></b></h3>
-              <b>Link to Child Candidate 1</b><br>
-              <b>Link to Child Candidate 2</b><br>
-              <b>Link to Child Candidate 3</b><br>
-          </section>
+			  <b>Link to Child Candidate 1</b><br>
+			  <b>Link to Child Candidate 2</b><br>
+			  <b>Link to Child Candidate 3</b><br>
+		  </section>
 		  
-          <section class="row-fluid">
-            <h3>
+		  <section class="row-fluid">
+			<h3>
 				<b>
 					TreeView
 				</b>
 			</h3>
-              <canvas id="myCanvas" width="500" height="600"></canvas>
+			  <canvas id="myCanvas" width="500" height="600"></canvas>
 
-       
-          </section>
-        </div>
-      </div>
+	   
+		  </section>
+		</div>
+	  </div>
 	  
 	  
 	  
@@ -74,12 +72,12 @@
 					  
 						<div class="form-group">
 							<label for="crossname">Cross Name</label>
-							<input type="text" class="form-control" id="crossname" placeholder="Give your cross a custom name!">
+							<input type="text" class="form-control" id="submitCrossname" placeholder="Give your cross a custom name!">
 						</div>
 					  
 						<div class="form-group">
 							<label for="notes">Cross Notes</label>
-							<input type="text" class="form-control" id="notes" placeholder="Write notes about your cross!">
+							<input type="text" class="form-control" id="submitNotes" placeholder="Write notes about your cross!">
 						</div>
 						
 						<button onclick="UpdateCross()" class="btn btn-default">Update</button>
@@ -91,8 +89,78 @@
 		</div>
 	</div>
 	<!-- edit page pop up content stop-->
-	  
-	  
-	  
-	  
   </div>
+<script>
+var pid = getParameterByName("pid");
+var cid = getParameterByName("id");
+var crossProfile
+var editButton = document.getElementById("editButton");
+var idHeader = document.getElementById("idHeader")
+idHeader.innerHTML = "Cross"
+
+function getParameterByName(name, url) {
+	if (!url) {
+	  url = window.location.href;
+	}
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function UpdateCross() {
+	var name = document.getElementById("submitCrossname");
+	var note = document.getElementById("submitNotes");
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + cid; 
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+	}
+	xhttp.open("PUT", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
+	xhttp.setRequestHeader("Content-type", "application/json");
+	crossProfile.description = note;
+	crossProfile.name = name;
+	xhttp.send(JSON.stringify(crossProfile));
+}
+
+function updateCrossInfo() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if(out.code == 400)
+			errorField.innerHTML = "Unable to view cross: Access Denied"
+		else if (out.code != 0)
+			errorField.innerHTML = out.status
+		else {
+			var d = out.data
+			crossProfile = d
+			idHeader.innerHTML = "Cross: " + d.id
+			document.getElementById("nameHeader").innerHTML = "Cross Name: " + d.name
+			document.getElementById("crossNote").innerHTML = d.description
+			if(d.parent1 == 0)
+				document.getElementById("parent1").outerHTML = ""
+			else
+				document.getElementById("p1image").href = "/candidate.html?pid="+pid+"&cid="+cid+"&id="+d.parent1	
+			if(d.parent2 == 0)
+				document.getElementById("parent2").outerHTML = ""
+			else
+				document.getElementById("p2image").href = "/candidate.html?pid="+pid+"&cid="+cid+"&id="+d.parent2
+
+		}
+	}
+}
+
+function getCrossInfo() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + cid;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateCrossInfo;
+	xhttp.open("GET", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
+	xhttp.send(null)
+}
+
+getCrossInfo();
+</script>
