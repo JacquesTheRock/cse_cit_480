@@ -197,6 +197,7 @@ function updateMembersList() {
 				var d = out.data[i]
 				var entry = mEntry.cloneNode(true)
 				entry.id += d.id
+				entry.children[0].children[0].children[0].href = "/profile.html?id=" + d.user_id
 				var c = entry.children[0].children[1]
 				var NameF = c.childNodes[1];
 				var RoleF = c.childNodes[3];
@@ -237,34 +238,33 @@ function updateProjectInfo() {
 				}
 		}
 }
-function updateProjectInfo() {
-		 if(this.readyState == 4 && this.status == 200) {
-				var out = JSON.parse(this.responseText)
-				if (out.code == 400) {
-						errorField.innerHTML = "Unable to view project profile: Are you logged in?";
-				} else if (out.code != 0) {
-						errorField.innerHTML = out.status
-				} else {
-						var d = out.data
-						projectProfile = d
-						projectInfo.innerHTML = "<b>Species:</b> " + d.species + "<br>\n"
-						projectInfo.innerHTML += "<b>Location:</b> " + d.location + "<br\n>"
-						projectInfo.innerHTML += "<b>Type:</b> " + d.type + "<br>\n"
-						projectInfo.innerHTML += "<b>Availability:</b> " + (d.public ? "Public" : "Private") + "<br>\n"
-						projectInfo.innerHTML += "<b>My Role:</b> " + d.role + "<br>\n"
-						document.getElementById("projectAbout").innerHTML = d.description
-						nHeader.innerHTML = d.name
-						if(d.id && loginUser != "guest" && (d.role == "Admin" || d.role == "Owner")) {
-								nHeader.innerHTML += editButton.outerHTML
-								document.getElementById("submitSpecies").value = d.species;
-								document.getElementById("submitLocation").value = d.location;
-								document.getElementById("submitAvailability").value = d.public;
-								document.getElementById("submitDescription").value = d.description;
-						}
 
-				}
+function updateCrossList() {
+	var list = document.getElementById("crossList");
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code != 0) {
+			errorField.innerHTML = out.status;
+		} else {
+			for(var i = 0; i < out.data.length; i++) {
+				var d = out.data[i]
+				var entry = cEntry.cloneNode(true)
+				entry.id += d.id
+				entry.children[0].children[0].children[0].href = "/cross.html?id=" + d.id
+				var c = entry.children[0].children[1]
+				var NameF = c.childNodes[1];
+				var NoteF = c.childNodes[3];
+				var TraitF = c.childNodes[7];
+				NameF.innerHTML = d.name
+				NoteF.innerHTML = d.description
+				TraitF.innerHTML = "TODO"
+				list.appendChild(entry)
+			}
 		}
+		
+	}
 }
+
 
 
 
@@ -283,6 +283,17 @@ function getMembersInfo() {
 	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID + "/roles";
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = updateMembersList;
+	xhttp.open("GET", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null)
+}
+
+
+function getCrossInfo() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID + "/crosses";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateCrossList;
 	xhttp.open("GET", url, true);
 	if(localStorage["Authorization"])
 		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
@@ -313,6 +324,7 @@ function UpdateProject() {
 
 getProjectInfo()
 getMembersInfo()
+getCrossInfo()
 </script>
 
 
