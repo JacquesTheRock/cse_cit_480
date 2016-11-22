@@ -177,9 +177,11 @@ function getData() {
 		if (resp.data == null)
 			return
 		var roots = [resp.data];
+		resp.data.type = "current"
 		if (resp.data && resp.data.parents ) {
 			roots = resp.data.parents
 			for (r of roots) {
+				r.type = "parent"
 				r.children = [resp.data]
 			}
 		}
@@ -202,11 +204,13 @@ function Tree(r, l = 0) {
 		r: 15,
 		project: r.data.projectId,
 		name: r.data.name,
+		type: r.type,
 		children: [],
 		layer: l
 	};
 	nodes[nodes.length] = this.el
-	this.el.onclick = clickNode
+	if(this.el.type != 'current')
+		this.el.onclick = clickNode
 	this.drawNode = drawNode
 	if (!r.children) 
 		return;
@@ -225,7 +229,11 @@ function drawNode(pos) {
 	this.el.pos.x = pos.x;
 	this.el.pos.y = pos.y;
 	ctx.lineWidth=3;
-	ctx.arc(this.el.pos.x, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
+	if(this.el.type  != "current") {
+		ctx.arc(this.el.pos.x, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
+	} else {
+		ctx.rect(this.el.pos.x - this.el.r, this.el.pos.y - this.el.r, this.el.r * 2, this.el.r * 2);
+	}
 	ctx.stroke();
 	ctx.lineWidth=1;
 	ctx.strokeText(this.el.id,pos.x - 4,pos.y+4)
