@@ -3,7 +3,7 @@
     <h2 class="row header container-fluid col-sm-12 col-md-12 col-lg-12">Search</h2>
 
       <div class="row col-sm-12 col-md-12 col-lg-12">
-        <input type="text" class="form-control" name="search" placeholder="Search here">
+        <input id="terms" type="text" class="form-control" name="search" placeholder="Search here">
         </div>
 		
 		<label class="checkbox-inline"><input id="b1" type="checkbox" value="">Projects</label>
@@ -69,7 +69,7 @@
 	
 	function SearchProjects(){
 		var url = "http://bloomgenetics.tech/api/v1/projects";
-		var data = "?pid="+document.getElementById("terms")+"&name="+document.getElementById("terms");
+		var data = "?pid="+document.getElementById("terms").value+"&name="+document.getElementById("terms").value;
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
 		xhttp.open("GET", url + data, true);
@@ -80,7 +80,7 @@
 	
 	function SearchUsers(){
 		var url = "http://bloomgenetics.tech/api/v1/users";
-		var data = "?id="+document.getElementById("terms")+"&name="+document.getElementById("terms");
+		var data = "?id="+document.getElementById("terms").value+"&name="+document.getElementById("terms").value;
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
 		xhttp.open("GET", url + data, true);

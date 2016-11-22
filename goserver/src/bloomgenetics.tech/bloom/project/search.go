@@ -42,6 +42,7 @@ func GetAllProjects() ([]entity.Project, error) {
 func SearchProjects(q QueryProject) ([]entity.Project, error) {
 	const qBase = "SELECT id,name,description,visibility,location,species,ptype FROM project"
 	queryVars := make([]interface{}, 0)
+	op := " OR "
 	out := make([]entity.Project, 0)
 	query := " WHERE "
 	endQuery := qBase
@@ -50,16 +51,23 @@ func SearchProjects(q QueryProject) ([]entity.Project, error) {
 		query = query + "id = $" + strconv.Itoa(len(queryVars)) + " "
 	}
 	if q.Name.Valid {
+		if len(queryVars) > 0 {
+			query += op
+		}
 		queryVars = append(queryVars, q.Name.String)
 		query = query + "name LIKE $" + strconv.Itoa(len(queryVars)) + " "
 	}
 	if q.Description.Valid {
+		if len(queryVars) > 0 {
+			query += op
+		}
 		queryVars = append(queryVars, q.Description.String)
 		query = query + "description LIKE $" + strconv.Itoa(len(queryVars)) + " "
 	}
 	if len(queryVars) > 0 {
 		endQuery = qBase + query
 	}
+	util.PrintDebug(endQuery)
 	rows, err := util.Database.Query(endQuery, queryVars...)
 	if err != nil {
 		util.PrintError("Query Error")

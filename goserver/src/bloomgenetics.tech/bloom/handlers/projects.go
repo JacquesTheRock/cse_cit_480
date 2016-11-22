@@ -27,7 +27,36 @@ func Projects(w http.ResponseWriter, r *http.Request) {
 }
 func getProjects(w http.ResponseWriter, r *http.Request) {
 	out := entity.ApiData{}
-	p, _ := project.SearchProjects(project.QueryProject{})
+	query := r.URL.Query()
+	q := project.QueryProject{}
+	if query.Get("pid") != "" {
+		var err error
+		q.ID.Int64, err = strconv.ParseInt(query.Get("pid"), 10, 64)
+		if err == nil {
+			q.ID.Valid = true
+		} else {
+			util.PrintDebug(err)
+		}
+	}
+	if query.Get("name") != "" {
+		q.Name.Valid = true
+		q.Name.String = "%" + query.Get("name") + "%"
+	}
+	if query.Get("location") != "" {
+		q.Location.Valid = true
+		q.Location.String = "%" + query.Get("location") + "%"
+	}
+	if query.Get("species") != "" {
+		q.Species.Valid = true
+		q.Species.String = "%" + query.Get("species") + "%"
+	}
+	if query.Get("type") != "" {
+		q.Type.Valid = true
+		q.Type.String = "%" + query.Get("type") + "%"
+	}
+
+	p, _ := project.SearchProjects(q)
+
 	out.Data = p
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
