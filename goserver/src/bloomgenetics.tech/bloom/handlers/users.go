@@ -23,7 +23,24 @@ func Users(w http.ResponseWriter, r *http.Request) {
 }
 func getUsers(w http.ResponseWriter, r *http.Request) {
 	out := entity.ApiData{}
-	users, _ := user.SearchUsers(entity.User{})
+	q := entity.User{}
+	qString := r.URL.Query()
+	if qString != nil {
+		id := qString.Get("id")
+		name := qString.Get("name")
+		if id != "" {
+			q.ID = "%" + id + "%"
+		}
+		if name != "" {
+			q.DisplayName = "%" + name + "%"
+		}
+	}
+	//	q.DisplayName = r.URL.Query().Get("name")
+	//	q.Location = r.URL.Query().Get("location")
+	//	q.Season = r.URL.Query().Get("season")
+	//	q.Growzone = r.URL.Query().Get("growzone")
+	//	q.Specialty = r.URL.Query().Get("specialty")
+	users, _ := user.SearchUsers(q)
 	out.Data = users
 	w.WriteHeader(http.StatusOK)
 	encoder := json.NewEncoder(w)

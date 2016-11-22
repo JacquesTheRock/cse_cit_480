@@ -3,6 +3,7 @@ package user
 import (
 	"bloomgenetics.tech/bloom/entity"
 	"bloomgenetics.tech/bloom/util"
+	"strconv"
 )
 
 func SearchUsers(u entity.User) ([]entity.User, error) {
@@ -14,48 +15,53 @@ func SearchUsers(u entity.User) ([]entity.User, error) {
 	endQuery := qBase
 	if u.ID != "" {
 		queryVars = append(queryVars, u.ID)
-		query = query + "id LIKE %$" + string(len(queryVars)) + "% "
+		query = query + "id LIKE $" + strconv.Itoa(len(queryVars)) + " "
 	}
 	if u.DisplayName != "" {
 		if len(queryVars) > 0 {
 			query += op
 		}
 		queryVars = append(queryVars, u.DisplayName)
-		query = query + "name LIKE %$" + string(len(queryVars)) + "% "
+		query = query + "name LIKE $" + strconv.Itoa(len(queryVars)) + " "
 	}
 	if u.Location != "" {
 		if len(queryVars) > 0 {
 			query += "OR "
 		}
 		queryVars = append(queryVars, u.Location)
-		query = query + "location LIKE %$" + string(len(queryVars)) + "% "
+		query = query + "location LIKE $" + strconv.Itoa(len(queryVars)) + " "
 	}
 	if u.Growzone != "" {
 		if len(queryVars) > 0 {
 			query += op
 		}
 		queryVars = append(queryVars, u.DisplayName)
-		query = query + "growzone = $" + string(len(queryVars)) + " "
+		query = query + "growzone = $" + strconv.Itoa(len(queryVars)) + " "
 	}
 	if u.Season != "" {
 		if len(queryVars) > 0 {
 			query += op
 		}
 		queryVars = append(queryVars, u.DisplayName)
-		query = query + "season = $" + string(len(queryVars)) + " "
+		query = query + "season = $" + strconv.Itoa(len(queryVars)) + " "
 	}
 	if u.Specialty != "" {
 		if len(queryVars) > 0 {
 			query += op
 		}
 		queryVars = append(queryVars, u.DisplayName)
-		query = query + "specialty = $" + string(len(queryVars)) + " "
+		query = query + "specialty = $" + strconv.Itoa(len(queryVars)) + " "
 	}
 
 	if len(queryVars) > 0 {
 		endQuery = qBase + query
 	}
+	util.PrintDebug(endQuery)
 	rows, err := util.Database.Query(endQuery, queryVars...)
+	if err != nil {
+		util.PrintDebug(err)
+		return out, err
+	}
 	defer rows.Close()
 	for rows.Next() {
 		e := entity.User{}
