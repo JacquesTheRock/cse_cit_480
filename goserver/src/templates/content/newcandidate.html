@@ -25,6 +25,34 @@
 				<label for="notes">Candidate Notes</label>
 				<input type="text" class="form-control" id="notes" placeholder="Notes">
 			</div>
+			
+            <h3><b><div style="max-width: 100px;">Traits<a data-toggle="modal" data-target="#editTraitsModal" class="glyphicon glyphicon-edit pull-right" href="newcandidate.html"></a></div></b></h3>
+			  <table class="table table-striped"> <!-- I'm gonna style this better but the basics of this are right -->
+				<thead>
+				  <tr>
+					<th>Trait</th>
+					<th>Dominance</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <tr>
+					<td>Trait 1</td>
+					<td>Dominant</td>
+				  </tr>
+				  <tr>
+					<td>Trait 2</td>
+					<td>Recessive</td>
+				  </tr>
+				  <tr>
+					<td>Trait 3</td>
+					<td>Recessive</td>
+				  </tr>
+				  <tr>
+					<td>Trait 4</td>
+					<td>Dominant</td>
+				  </tr>
+				</tbody>
+			  </table>
 
 
 			<button onclick="CreateCandidate()" class="btn btn-default">Update</button>
@@ -32,7 +60,7 @@
 		</div>
 	  </div>
 	  	<!-- edit candiate page pop up content start-->
-	<div id="editCandidateModal" class="modal fade" role="dialog">
+	<div id="AddTraitModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 
 		<!-- Modal content-->
@@ -40,7 +68,10 @@
 				  <div class="contentbox">
 					<div class="container-fluid">
 					  <div id="result"></div>
-
+						<label class="checkbox"><input type="checkbox" value="">Available Trait 1, pulled from pool of traits in project</label>
+						<label class="checkbox"><input type="checkbox" value="">Available Trait 2, pulled from pool of traits in project</label>
+						<label class="checkbox"><input type="checkbox" value="">Available Trait 3, pulled from pool of traits in project</label>
+						<label class="checkbox"><input type="checkbox" value="">Available Trait 4, pulled from pool of traits in project</label>
 						<div class="form-group">
 							<label for="traitname">Trait Name</label>
 							<input type="text" class="form-control" id="traitname" placeholder="Name the trait you want to breed for">
