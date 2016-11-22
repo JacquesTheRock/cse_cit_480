@@ -69,7 +69,7 @@ var editButton = document.getElementById("editButton");
 var nHeader = document.getElementById("nameHeader")
 var userProfile
 nHeader.innerHTML = "Profile"
-if (!loginUser && localStorage["Authorization"]) {
+if (localStorage["Authorization"]) {
 	token = localStorage["Authorization"].split(" ")[1];
 	loginUser = atob(token).split(":")[0];
 }
@@ -95,9 +95,7 @@ function updatePersonalInfo() {
 			errorField.innerHTML = out.status
 		} else {
 			var d = out.data
-
-			
-					userProfile = d
+			userProfile = d
 			personalInfo.innerHTML = "<b>Specialty:</b> " + d.specialty + "<br>\n"
 			personalInfo.innerHTML += "<b>Growzone:</b>" + d.growzone + "<br\n>"
 			personalInfo.innerHTML += "<b>Season Active:</b>" + d.season + "<br>\n"

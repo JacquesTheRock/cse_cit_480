@@ -1,97 +1,97 @@
 <div class="container" style="max-width: 750px;">
 <!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
-	<h2 class="row header container" style="max-width: 750px;">PROJECTNAME Project <a data-toggle="modal" data-target="#editProjectModal">
+	<h2 id="nameHeader" class="row header container" style="max-width: 750px;">PROJECTNAME Project <a id="editButton" data-toggle="modal" data-target="#editProjectModal">
 		<span class="pull-right">
-				<span class="glyphicon glyphicon-edit">
-				</span>
+	<span class="glyphicon glyphicon-edit">
+	</span>
 			Edit
 		</span></a>
 	</h2>
 	<div class="contentbox">
 		<div class="container-fluid">
-		  <!--Adds style color to "Player Profile"-->
-		  <br>
+	<!--Adds style color to "Player Profile"-->
+	<br>
 
 			<section class="row container-fluid">
 			<!-- Fetches and displays the player profile image -->
-				<p class="col-sm-6 col-md-4 col-lg-4"><img src="" width="200" height="200" alt="Project Picture."></p>
+	<p class="col-sm-6 col-md-4 col-lg-4"><img src="" width="200" height="200" alt="Project Picture."></p>
 
-				<section class="col-sm-7">
-					<b>Species:</b> Pepper <br>
-					<b>Location:</b> Midwest <br>
-					<b>Type:</b> Back Crossing<br>
-					<b>Availability: </b> Public <br>
-					<b>Owner</b> EricSk8trix420 <br>
-				</section>
+	<section id="projectInfo" class="col-sm-7">
+		<b>Species:</b> Pepper <br>
+		<b>Location:</b> Midwest <br>
+		<b>Type:</b> Back Crossing<br>
+		<b>Availability: </b> Public <br>
+		<b>Owner</b> EricSk8trix420 <br>
+	</section>
 			</section>
 
 			<section class="row-fluid">
-				<h3><b>Description:</b></h3>
-				<p>text text text bla bla bla text text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla bla</p><br>
+	<h3><b>Description:</b></h3>
+	<p id="projectAbout">text text text bla bla bla text text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla bla</p><br>
 			</section>
 			
 			<section class="row-fluid">
-				<h3><b>Members</b></h3>
-				<div class="row">
-					<ul class="media-list" id="resultList">
-						<div class="media" id="result">
-							<div style="margin: auto;">
-								<div class="media-left well">
-									<a href="#" id="resultImgURL">
-										<img class="media-object" src="..." alt="Generic placeholder image" id="resultImg">
-									</a>
-								</div>
-								<div class="media-body well">
-									<h4 class="media-heading" >USER</h4>
-									Location: <text ></text>
-								    <br>
-									Role: <text ></text>
-									<p ></p>
-								</div>
-							</div>
-						</div>
-					</ul>
+	<h3><b>Members</b></h3>
+	<div class="row">
+		<ul class="media-list" id="memberList">
+			<div class="media" id="membEntry">
+				<div style="margin: auto;">
+		<div class="media-left well">
+			<a href="#" id="membImgURL">
+				<img class="media-object" src="..." alt="Generic placeholder image" id="resultImg">
+			</a>
+		</div>
+		<div class="media-body well">
+			<h4 class="media-heading" >USER</h4>
+			Location: <text ></text>
+			<br>
+			Role: <text ></text>
+			<p ></p>
+		</div>
 				</div>
-				<p></p><br>
+			</div>
+		</ul>
+	</div>
+	<p></p><br>
 			</section>
 			
 			<section class="row-fluid">
-				<h3><b>Crosses</b></h3>
-				<div class="row">
-					<ul class="media-list" id="resultList">
-						<div class="media" id="result">
-							<div style="margin: auto;">
-								<div class="media-left well">
-									<a href="#" id="resultImgURL">
-										<img class="media-object" src="..." alt="random image of candidate?" id="resultImg">
-									</a>
-								</div>
-								<div class="media-body well">
-									<h4 class="media-heading" >CROSS NAME</h4>
-									Notes: <text ></text>
-								    <br>
-									Traits: <text >Trait 1 Trait 2 Trait 3</text>
-									<p ></p>
-								</div>
-							</div>
-						</div>
-					</ul>
+	<h3><b>Crosses</b></h3>
+	<div class="row">
+		<ul class="media-list" id="crossList">
+			<div class="media" id="crossEntry">
+				<div style="margin: auto;">
+		<div class="media-left well">
+			<a href="#" id="crossImgURL">
+				<img class="media-object" src="..." alt="random image of candidate?" id="resultImg">
+			</a>
+		</div>
+		<div class="media-body well">
+			<h4 class="media-heading" >CROSS NAME</h4>
+			Notes: <text ></text>
+			<br>
+			Traits: <text >Trait 1 Trait 2 Trait 3</text>
+			<p ></p>
+		</div>
 				</div>
-				<p></p><br>
+			</div>
+		</ul>
+	</div>
+	<p></p><br>
 			</section>
 			<section class="row-fluid">
-				<h3>
-					<b>
-						TreeView
-					</b>
-				</h3>
-			  <canvas id="myCanvas" width="500" height="600"></canvas>
+	<h3>
+		<b>
+			TreeView
+		</b>
+	</h3>
+	 <canvas id="myCanvas" width="500" height="600"></canvas>
 
 
 			</section>
 		</div>
 	</div>
-  
+
 
 	<!-- edit page pop up conent start-->
 	<div id="editProjectModal" class="modal fade" role="dialog">
@@ -99,41 +99,129 @@
 
 		<!-- Modal content-->
 
-				  <div class="contentbox">
-					<div class="container-fluid">
-					  <div id="result"></div>
-						<div class="form-group">
-							<label for="species">Species</label>
-							<input type="text" class="form-control" id="species" placeholder="Species">
-						</div>
-						<div class="form-group">
-							<label for="location">Location</label>
-							<input type="text" class="form-control" id="location" placeholder="Location">
-						</div>
-						<div class="form-group">
-							<label for="availability">Availability</label>
-							<input type="text" class="form-control" id="availability" placeholder="Availability">
-						</div>
-						<div class="form-group">
-							<label for="description">Description</label>
-							<input type="text" class="form-control" id="description" placeholder="Description">
-						</div>
+	  <div class="contentbox">
+		<div class="container-fluid">
+		  <div id="result"></div>
+			<div class="form-group">
+				<label for="species">Species</label>
+				<input type="text" class="form-control" id="submitSpecies" placeholder="Species">
+			</div>
+			<div class="form-group">
+				<label for="location">Location</label>
+				<input type="text" class="form-control" id="submitLocation" placeholder="Location">
+			</div>
+			<div class="form-group">
+				<label for="availability">Availability</label>
+				<input type="text" class="form-control" id="submitAvailability" placeholder="Availability">
+			</div>
+			<div class="form-group">
+				<label for="description">Description</label>
+				<input type="text" class="form-control" id="submitDescription" placeholder="Description">
+			</div>
 
-						<button onclick="UpdateProject()" class="btn btn-default">Update</button>
+			<button onclick="UpdateProject()" class="btn btn-default">Update</button>
 			
-					</div>
-				  </div>
+		</div>
+	  </div>
 
 
 	  </div>
 	</div>
 	<!-- edit page pop up conent stop-->
-  
-  
-  
-  
 </div>
 
+<script>
+var mEntry = document.getElementById("membEntry").cloneNode(true)
+document.getElementById("membEntry").outerHTML = ""
+var cEntry = document.getElementById("crossEntry").cloneNode(true)
+document.getElementById("crossEntry").outerHTML = ""
+var projectInfo = document.getElementById("projectInfo")
+var errorField = document.getElementById("error")
+var projectID = getParameterByName("id");
+var loginUser = "guest"
+var editButton = document.getElementById("editButton")
+var nHeader = document.getElementById("nameHeader")
+var projectProfile
+if (localStorage["Authorization"]) {
+		token = localStorage["Authorization"].split(" ")[1];
+		loginUser = atob(token).split(":")[0];
+}
+
+function getParameterByName(name, url) {
+	if (!url) {
+	  url = window.location.href;
+	}
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function updateProjectInfo() {
+		 if(this.readyState == 4 && this.status == 200) {
+				var out = JSON.parse(this.responseText)
+				if (out.code == 400) {
+						errorField.innerHTML = "Unable to view project profile: Are you logged in?";
+				} else if (out.code != 0) {
+						errorField.innerHTML = out.status
+				} else {
+						var d = out.data
+						projectProfile = d
+						projectInfo.innerHTML = "<b>Species:</b> " + d.species + "<br>\n"
+						projectInfo.innerHTML += "<b>Location:</b> " + d.location + "<br\n>"
+						projectInfo.innerHTML += "<b>Type:</b> " + d.type + "<br>\n"
+						projectInfo.innerHTML += "<b>Availability:</b> " + (d.public ? "Public" : "Private") + "<br>\n"
+						projectInfo.innerHTML += "<b>My Role:</b> " + d.role + "<br>\n"
+						document.getElementById("projectAbout").innerHTML = d.description
+						nHeader.innerHTML = d.name
+						if(d.id && loginUser != "guest" && (d.role == "Admin" || d.role == "Owner")) {
+								nHeader.innerHTML += editButton.outerHTML
+								document.getElementById("submitSpecies").value = d.species;
+								document.getElementById("submitLocation").value = d.location;
+								document.getElementById("submitAvailability").value = d.public;
+								document.getElementById("submitDescription").value = d.description;
+						}
+
+				}
+		}
+}
+
+function getProjectInfo() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateProjectInfo;
+	xhttp.open("GET", url + projectID, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null)
+}
+
+function UpdateProject() {
+	var species = document.getElementById("submitSpecies").value;
+	var address = document.getElementById("submitLocation").value;
+	var availability = document.getElementById("submitAvailability").value;
+	var description = document.getElementById("submitDescription").value;
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4)
+			location.reload();
+	}
+	xhttp.open("PUT", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	projectProfile.species = species
+	projectProfile.location = address
+	projectProfile.public = availability == "true" ? true : false
+	projectProfile.description = description
+	xhttp.send(JSON.stringify(projectProfile));
+}	
+
+getProjectInfo()
+</script>
 
 
 
@@ -142,29 +230,29 @@
 <div class="container">   
    <div class="row">
 	<div class="col-sm-12">
-      <div class="col-md-4">
-        <div class="contentbox">
-		  <h1 align="center">Project Name</h1>
-          <p><img class = "logo" src="\static\media\flower.png" width="275" height="250" alt="Logo"></p>
-		  <h2 align="left">Species: Pepper</h2>
-		  <h2 align="left">Mail</h2>
-		  <h2 align="left">Join</h2>
-         
-        </div>
-      </div>
+	  <div class="col-md-4">
+		<div class="contentbox">
+	<h1 align="center">Project Name</h1>
+		  <p><img class = "logo" src="\static\media\flower.png" width="275" height="250" alt="Logo"></p>
+	<h2 align="left">Species: Pepper</h2>
+	<h2 align="left">Mail</h2>
+	<h2 align="left">Join</h2>
+		 
+		</div>
+	  </div>
 	  
-      <div class="col-md-4">
-        <div class="contentbox">
-          <h1 align="center">Project Description</h1>
-		  <p align="center"> Blah blah peppers blah wada wada</p>
-        </div>
-      </div>
+	  <div class="col-md-4">
+		<div class="contentbox">
+		  <h1 align="center">Project Description</h1>
+	<p align="center"> Blah blah peppers blah wada wada</p>
+		</div>
+	  </div>
 	  
-      <div class="col-md-4">
-        <div class="contentbox">
-          <h1 align="center">Welcome!</h1>
-          <p align="center">...to Bloom. If you're new, try our <a href="#">About</a> page. Otherwise, you can check out <a href="#">Registration</a> or search our <a href="#">Project Profiles</a>. If you have any questions, please consult our <a href="#">FAQ</a> first.</p>
-        </div>
-      </div>
+	  <div class="col-md-4">
+		<div class="contentbox">
+		  <h1 align="center">Welcome!</h1>
+		  <p align="center">...to Bloom. If you're new, try our <a href="#">About</a> page. Otherwise, you can check out <a href="#">Registration</a> or search our <a href="#">Project Profiles</a>. If you have any questions, please consult our <a href="#">FAQ</a> first.</p>
+		</div>
+	  </div>
 </div>
 -->
