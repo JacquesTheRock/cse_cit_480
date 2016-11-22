@@ -2,6 +2,7 @@ CREATE TABLE IF NOT EXISTS crosses (
 	id serial,
 	project_id INTEGER,
 	name VARCHAR(255),
+	description text DEFAULT '',
 	PRIMARY KEY(id)
 );
 

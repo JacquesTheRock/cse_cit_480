@@ -37,8 +37,8 @@ func AssignParents(e entity.Cross) (entity.Cross, error) {
 }
 
 func CreateCross(e entity.Cross) (entity.Cross, error) {
-	const qBase = "INSERT INTO crosses(project_id,name) VALUES ($1,$2) RETURNING id"
-	err := util.Database.QueryRow(qBase, e.ProjectID, e.Name).Scan(&e.ID)
+	const qBase = "INSERT INTO crosses(project_id,name,description) VALUES ($1,$2,$3) RETURNING id"
+	err := util.Database.QueryRow(qBase, e.ProjectID, e.Name, e.Description).Scan(&e.ID)
 	if err != nil {
 		util.PrintError("Insert Error")
 		util.PrintDebug(err)
@@ -49,8 +49,8 @@ func CreateCross(e entity.Cross) (entity.Cross, error) {
 }
 
 func UpdateCross(e entity.Cross) (entity.Cross, error) {
-	const qBase = "UPDATE crosses SET name = $1 WHERE id = $2 AND project_id = $3"
-	_, err := util.Database.Exec(qBase, e.Name, e.ID, e.ProjectID)
+	const qBase = "UPDATE crosses SET name = $3, description = $4 WHERE id = $1 AND project_id = $2"
+	_, err := util.Database.Exec(qBase, e.ID, e.ProjectID, e.Name, e.Description)
 	if err != nil {
 		util.PrintError("Unable to Update cross")
 		util.PrintDebug(err)

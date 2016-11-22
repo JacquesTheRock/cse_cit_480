@@ -14,7 +14,7 @@ type CrossQuery struct {
 }
 
 func SearchCrosses(q CrossQuery) ([]entity.Cross, error) {
-	const qBase = "SELECT id,project_id,name FROM crosses"
+	const qBase = "SELECT id,project_id,name,description FROM crosses"
 	queryVars := make([]interface{}, 0)
 	out := make([]entity.Cross, 0)
 	query := " WHERE "
@@ -45,7 +45,7 @@ func SearchCrosses(q CrossQuery) ([]entity.Cross, error) {
 	for rows.Next() {
 		e := entity.Cross{}
 		var name sql.NullString
-		err = rows.Scan(&e.ID, &e.ProjectID, &name)
+		err = rows.Scan(&e.ID, &e.ProjectID, &name, &e.Description)
 		if err != nil {
 			util.PrintError("Unable to read Cross")
 			util.PrintDebug(err)
@@ -59,7 +59,7 @@ func SearchCrosses(q CrossQuery) ([]entity.Cross, error) {
 }
 
 func GetCross(q CrossQuery) (entity.Cross, error) {
-	const qBase = "SELECT c.id,c.project_id,c.name,p.specimen_id FROM crosses c LEFT JOIN cross_parent p ON c.id = p.cross_id WHERE c.id = $1 AND c.project_id = $2"
+	const qBase = "SELECT c.id,c.project_id,c.name,c.description,p.specimen_id FROM crosses c LEFT JOIN cross_parent p ON c.id = p.cross_id WHERE c.id = $1 AND c.project_id = $2"
 	out := entity.Cross{}
 	rows, err := util.Database.Query(qBase, q.ID.Int64, q.ProjectID.Int64)
 	if err != nil {
@@ -71,7 +71,7 @@ func GetCross(q CrossQuery) (entity.Cross, error) {
 	for rows.Next() {
 		var name sql.NullString
 		var parent sql.NullInt64
-		err = rows.Scan(&out.ID, &out.ProjectID, &name, &parent)
+		err = rows.Scan(&out.ID, &out.ProjectID, &name, &out.Description, &parent)
 		if err != nil {
 			util.PrintError("Unable to read Cross")
 			util.PrintDebug(err)

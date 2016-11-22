@@ -616,6 +616,7 @@ func postProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
 		default:
 			r.ParseForm()
 			e.Name = r.FormValue("name")
+			e.Description = r.FormValue("description")
 			e.Parent1ID, err = strconv.ParseInt(r.FormValue("parent1"), 10, 64)
 			if err != nil {
 				out.Code = code.INVALIDFIELD
@@ -722,6 +723,7 @@ func putProjectsPidCrossesCid(w http.ResponseWriter, r *http.Request) {
 		default:
 			r.ParseForm()
 			e.Name = r.FormValue("name")
+			e.Description = r.FormValue("description")
 			e.Parent1ID, err = strconv.ParseInt(r.FormValue("parent1"), 10, 64)
 			if err != nil {
 				out.Code = code.INVALIDFIELD
