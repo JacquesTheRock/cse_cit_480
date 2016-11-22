@@ -21,6 +21,16 @@
 		  <section class="row-fluid">
 			<h2 id="nameHeader" >Cross Name: BLA BLA BLA</h2>
 		  </section>
+		  <section class="row-fluid">
+			<h3>
+				<b>
+					TreeView
+				</b>
+			</h3>
+			  <canvas id="tree" width="500" height="200"></canvas>
+
+	   
+		  </section>
 		  
 		  <section class="row-fluid">
 			<h3><b>Trait Pool and Percentages</b></h3>
@@ -44,16 +54,6 @@
 			  <b>Link to Child Candidate 3</b><br>
 		  </section>
 		  
-		  <section class="row-fluid">
-			<h3>
-				<b>
-					TreeView
-				</b>
-			</h3>
-			  <canvas id="tree" width="500" height="600"></canvas>
-
-	   
-		  </section>
 		</div>
 	  </div>
 	  
@@ -196,7 +196,7 @@ var trees = [];
 var nodes = [];
 var canvas = null;
 var ctx = null;
-var camera_pos = {x:300,y:300}
+var camera_pos = {x:250,y:125}
 function Tree(r, l = 0) {
 	this.el = {
 		pos: {x: 0, y: 0},
