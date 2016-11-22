@@ -1,1 +1,153 @@
-This page isn't filled out yet :/
+<div class="container" style="max-width: 750px;">
+    <!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
+	<h2 class="row header container" style="max-width: 750px;">
+	</h2>
+      <div class="contentbox">
+        <div class="container-fluid">
+          <!--Adds style color to "Player Profile"-->
+          <br>
+
+          <section class="row container-fluid">
+            <!-- Fetches and displays the player profile image -->
+            <p class="col-sm-6 col-md-4 col-lg-4"><img src="" width="200" height="200" alt="Candidate Picture."></p>
+
+            <section class="col-sm-7">
+              <b>Parent Cross:</b> Link to parent cross <br>
+              <b>Parent 1:</b> Link to Parent Candidate 1<br>
+              <b>Parent 2:</b> Link to Parent Candidate 2<br>
+              <b>Year Grown:</b> 2016<br>
+              <b>Season Grown:</b> Summer<br>
+            </section>
+
+          </section>
+
+		  
+          <section class="row-fluid">
+            <h3><b><div style="max-width: 100px;">Traits<a data-toggle="modal" data-target="#editTraitsModal" class="glyphicon glyphicon-edit pull-right" href="newcandidate.html"></a></div></b></h3>
+            </span></b></h3>
+			  <table class="table table-striped"> <!-- I'm gonna style this better but the basics of this are right -->
+				<thead>
+				  <tr>
+					<th>Trait</th>
+					<th>Dominance</th>
+					<th>Status</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <tr>
+					<td>Trait 1</td>
+					<td>Dominant</td>
+					<td>Has</td>
+				  </tr>
+				  <tr>
+					<td>Trait 2</td>
+					<td>Recessive</td>
+					<td>Has</td>
+				  </tr>
+				  <tr>
+					<td>Trait 3</td>
+					<td>Recessive</td>
+					<td>Potential Carrier - 66% chance</td>
+				  </tr>
+				  <tr>
+					<td>Trait 4</td>
+					<td>Dominant</td>
+					<td>Doesn't Have</td>
+				  </tr>
+				</tbody>
+			  </table>
+			  <!--old shitty table
+			  <b>Trait 1 - </b> <b>Dominant - </b> <b>Tt - </b> <b>Has</b><br> 
+              <b>Trait 2 - </b> <b>Recessive - </b> <b>cc - </b> <b>Has</b><br>
+              <b>Trait 3 - </b> <b>Recessive - </b> <b>B? - </b> <b>Potential Carrier - 66% chance</b><br>
+              <b>Trait 4 - </b> <b>Dominant - </b> <b>gg - </b> <b>Doesn't Have</b><br>
+			  -->
+       
+          </section>
+          <section class="row-fluid">
+            <h3><b>Candidate Notes</b></h3>
+
+            <p>This plant has grown exeptionally well. It is displaying a new unique feature of jagged leaves, I have added this trait to it's trait list. Though it doesn't have trait 4, it can be re-introduced if we choose the right plant to cross with. I feel this is a strong candidate for continuing on the project. </p><br>
+
+       
+          </section>
+		  
+          <section class="row-fluid">
+            <h3>
+				<b>
+					Child Crosses
+				</b>
+			</h3>
+              <b>Link to Child Cross 1</b><br>
+              <b>Link to Child Cross 2</b><br>
+              <b>Link to Child Cross 3</b><br>
+
+       
+          </section>
+        </div>
+      </div>
+	  
+	<!-- edit candiate page pop up content start-->
+	<div id="editCandidateModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal content-->
+
+				  <div class="contentbox">
+					<div class="container-fluid">
+					  <div id="result"></div>
+						<b>Update Candidate Picture 
+							<div id="error"></div>
+							<input type="file" name="submitImage" id="submitImage">
+						</b>
+						<div class="form-group">
+							<label for="yeargrown">Year Grown</label>
+							<input type="text" class="form-control" id="yeargrown" placeholder="Year Grown">
+						</div>
+						<div class="form-group">
+							<label for="season grown">Season Grown</label>
+							<input type="text" class="form-control" id="season grown" placeholder="Season Grown">
+						</div>
+						<div class="form-group">
+							<label for="notes">Candidate Notes</label>
+							<input type="text" class="form-control" id="notes" placeholder="Notes">
+						</div>
+			
+
+						<button onclick="UpdateCandidate()" class="btn btn-default">Update</button>
+			
+					</div>
+				  </div>
+
+
+		</div>
+	</div>
+	<!-- edit candidate page pop up content  stop-->
+
+	<!-- edit traits page pop up content start-->
+	<div id="editTraitsModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal content-->
+				  <div class="contentbox">
+					<div class="container-fluid">
+					  <div id="result"></div>
+						This all still needs to be populated and such
+						<br>
+
+			
+
+						<button onclick="UpdateTraits()" class="btn btn-default">Update</button>
+			
+					</div>
+				  </div>
+
+
+		</div>
+	</div>
+	<!-- edit traits page pop up content stop-->
+	  
+	  
+	  
+	  
+</div>
