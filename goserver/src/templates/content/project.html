@@ -412,26 +412,36 @@ function clickNode() {
 
 function drawNode(pos) {
 	ctx.beginPath();
-	this.el.pos.x = pos.x;
-	this.el.pos.y = pos.y;
-	ctx.lineWidth=3;
-	ctx.arc(this.el.pos.x, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
-	ctx.stroke();
-	ctx.lineWidth=1;
-	ctx.strokeText(this.el.id,pos.x - 4,pos.y+4)
-	if (!this.el.children)
-		return;
-	var offset = { x: pos.x, y: pos.y }
-	offset.x -= (this.el.children.length * 15);
-	offset.y = pos.y - 50;
-	for (c of this.el.children) {
-		c.drawNode(offset);
-		ctx.moveTo(this.el.pos.x,this.el.pos.y - this.el.r);
-		ctx.lineWidth=1;
-		ctx.lineTo(offset.x,offset.y + this.el.r);
-		ctx.stroke();
-		offset.x += 60;
-	}
+        this.el.pos.x = pos.x;
+        this.el.pos.y = pos.y;
+        ctx.lineWidth=2;
+        ctx.stroke();
+        ctx.closePath();
+        var twidth = ctx.measureText(this.el.name + "").width
+        ctx.save();
+	var xscale = 1
+	if((twidth / 2) + 3 > this.el.r)
+		xscale = (twidth/2 + 3)/this.el.r;
+	var ixscale = 1/xscale
+	ctx.scale(xscale, 1)
+	ctx.arc(this.el.pos.x * ixscale, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
+        ctx.lineWidth=1;
+        ctx.strokeText(this.el.name,pos.x - twidth/2,pos.y+4)
+        if (!this.el.children)
+        	return;
+        var offset = { x: pos.x, y: pos.y }
+        offset.x -= (this.el.children.length * 15);
+        offset.y = pos.y - 50;
+        for (c of this.el.children) {
+                c.drawNode(offset);
+                ctx.moveTo(this.el.pos.x,this.el.pos.y - this.el.r);
+                ctx.lineWidth=1;
+                ctx.lineTo(offset.x,offset.y + this.el.r);
+                ctx.stroke();
+                offset.x += 60;
+        }
 }
 
 prevMouse = {x:0,y:0}
@@ -493,6 +503,7 @@ function begin() {
 			dragged=false;
 		}, false);
 	ctx = canvas.getContext("2d");
+	ctx.font = "8pt Courier"
 	var URL = "http://bloomgenetics.tech/api/v1";
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = getData;

@@ -32,7 +32,7 @@
 	   
 		  </section>
 		  
-		  <section class="row-fluid">
+		  <section id="traitPool" class="row-fluid">
 			<h3><b>Trait Pool and Percentages</b></h3>
 			  <input type="checkbox" aria-label="..."><b>Trait 1 - </b> <b>Dominant - </b> <b>100% TT</b><br> 
 			  <input type="checkbox" aria-label="..."><b>Trait 2 - </b> <b>Recessive - </b> <b>25% bb, 50%Bb, 25%BB</b><br>
@@ -135,25 +135,83 @@ function updateCrossInfo() {
 			errorField.innerHTML = out.status
 		else {
 			var d = out.data
-			crossProfile = d
-			idHeader.innerHTML = "Cross: " + d.id
-			document.getElementById("nameHeader").innerHTML = "Cross Name: " + d.name
-			document.getElementById("crossNote").innerHTML = d.description
-			if(d.parent1 == 0)
+			crossProfile = d.data
+			idHeader.innerHTML = "Cross: " + d.data.id
+			document.getElementById("nameHeader").innerHTML = "Cross Name: " + d.data.name
+			document.getElementById("crossNote").innerHTML = d.data.description
+			if(d.data.parent1 == 0)
 				document.getElementById("parent1").outerHTML = ""
-			else
-				document.getElementById("p1image").href = "/candidate.html?pid="+pid+"&cid="+cid+"&id="+d.parent1	
-			if(d.parent2 == 0)
+			else if(d.parents.length > 0) {
+				var p
+				if (d.parents.length == 2 && d.parents[1].id == d.data.parent1)
+					p = d.parents[1].data.id
+				else
+					p = d.parents[0].data.id
+				var p1I = document.getElementById("p1image")
+				p1I.parentNode.href = "/candidate.html?pid="+pid+"&cid="+p+"&id="+d.data.parent1
+				getTraits(p, d.data.parent1)
+			}
+			if(d.data.parent2 == 0)
 				document.getElementById("parent2").outerHTML = ""
-			else
-				document.getElementById("p2image").href = "/candidate.html?pid="+pid+"&cid="+cid+"&id="+d.parent2
-
+			else if(d.parents.length > 0) {
+				var p
+				if (d.parents.length == 2 && d.parents[1].id == d.data.parent2)
+					p = d.parents[1].data.id
+				else
+					p = d.parents[0].data.id
+				var p2I = document.getElementById("p2image")
+				p2I.parentNode.href = "/candidate.html?pid="+pid+"&cid="+p+"&id="+d.data.parent2
+				getTraits(p, d.data.parent2)
+			}
 		}
 	}
 }
 
+var allTraits = []
+function updateTraitInfo() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if(out.code == 400)
+			errorField.innerHTML = "Not Allowed to view trait info"
+		else if (out.code != 0)
+			errorField.innerHTML = out.status
+		else {
+			var map = {}
+			var poolEl = document.getElementById("traitPool")
+			poolEl.innerHTML = "<h3><b>Trait Pool and Percentages</b></h3>"
+			var d = out.data
+			for(t of d.traits) {
+				if(!allTraits[t.pool])
+					allTraits[t.pool] = []
+				var pool = allTraits[t.pool]
+				t.count = 0
+				pool[pool.length] = t
+				if(!map[t.id])
+					map[t.id] = t
+			}
+			for (var i = 0; i < allTraits.length; i++) { // for each pool
+				var pool = allTraits[i]
+				for (t of pool) {
+					map[t.id].count += 1
+					poolEl.innerHTML += t.name + "<br>"
+				}
+			}
+		}
+	}
+}
+
+function getTraits(pcid,p) {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + pcid + "/candidates/" + p
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateTraitInfo;
+	xhttp.open("GET", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
+	xhttp.send(null)
+}
+
 function getCrossInfo() {
-	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + cid;
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/treview/" + cid;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = updateCrossInfo;
 	xhttp.open("GET", url, true);
@@ -223,20 +281,37 @@ function clickNode() {
 	window.location = "/cross.html?id=" + this.id + "&pid=" + pid
 }
 
+function max(a,b) {
+	if(a < b)
+		return b
+	else
+		return a
+}
 
 function drawNode(pos) {
 	ctx.beginPath();
 	this.el.pos.x = pos.x;
 	this.el.pos.y = pos.y;
-	ctx.lineWidth=3;
+	ctx.lineWidth=2;
+	ctx.stroke();
+	ctx.closePath();
+	var twidth = ctx.measureText(this.el.name + "").width
+	ctx.save();
 	if(this.el.type  != "current") {
-		ctx.arc(this.el.pos.x, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
+		var xscale = 1
+		if((twidth / 2) - 3 > this.el.r)
+			xscale = (twidth/2 + 3)/this.el.r;
+		var ixscale = 1/xscale
+		ctx.scale(xscale, 1)
+		ctx.arc(this.el.pos.x * ixscale, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
 	} else {
-		ctx.rect(this.el.pos.x - this.el.r, this.el.pos.y - this.el.r, this.el.r * 2, this.el.r * 2);
+		var width = max(this.el.r - 3, twidth /2 + 3 )
+		ctx.rect(this.el.pos.x - width, this.el.pos.y - this.el.r, width * 2, this.el.r * 2);
 	}
 	ctx.stroke();
+	ctx.restore();
 	ctx.lineWidth=1;
-	ctx.strokeText(this.el.id,pos.x - 4,pos.y+4)
+	ctx.strokeText(this.el.name,pos.x - twidth/2,pos.y+4)
 	if (!this.el.children)
 		return;
 	var offset = { x: pos.x, y: pos.y }
@@ -311,6 +386,7 @@ function begin() {
 			dragged=false;
 		}, false);
 	ctx = canvas.getContext("2d");
+	ctx.font = "8pt Courier"
 	var URL = "http://bloomgenetics.tech/api/v1";
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = getData;
