@@ -19,7 +19,6 @@
 		<h2 style="text-align: center; text-decoration: underline;"> RESULTS </h2>
 	  <ul class="media-list" id="resultList">
 		  <div class="media" id="result">
-
 			<div class="media-left well">
 			  <a href="#" id="resultImgURL">
 				<img class="media-object" src="..." alt="Generic placeholder image" id="resultImg">
@@ -105,9 +104,12 @@
 				person = true
 			}
 			var entry = searchEntry.cloneNode(true);
+//<a href="#" id="resultImgURL">
 			var c = entry.children[1];
 			
 			if (person) {
+				entry.id += "User" + e.id
+				entry.children[0].children[0].href = "/profile.html?id=" + e.id
 				var rName = c.childNodes[1];
 				var rSpecies = c.childNodes[3];
 				var rDescription = c.childNodes[5];
@@ -116,6 +118,8 @@
 				rDescription.innerHTML = "Active: " + e.season
 				add(entry)
 			} else if (e.public == true) {
+				entry.id += "Project" + e.id
+				entry.children[0].children[0].href = "/project.html?id=" + e.id
 				var rName = c.childNodes[1];
 				var rSpecies = c.childNodes[3];
 				var rDescription = c.childNodes[5];
