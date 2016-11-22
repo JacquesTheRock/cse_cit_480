@@ -144,6 +144,7 @@ func putProjectsPid(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		out.Code = code.INVALIDFIELD
 		out.Status = "Not a Numeric Project ID"
+		util.PrintDebug(out.Status)
 	} else {
 		ctype := r.Header.Get("Content-type")
 		switch ctype {
@@ -166,7 +167,7 @@ func putProjectsPid(w http.ResponseWriter, r *http.Request) {
 				e.Visibility = false
 			}
 		}
-		if out.Code != 0 {
+		if out.Code == 0 {
 			q := project.QueryProject{}
 			q.ID.Valid = true
 			q.ID.Int64 = pid

@@ -39,13 +39,14 @@ func NewProject(uid string, p entity.Project) (entity.Project, error) {
 
 //TODO: Expand fields to all other fields
 func UpdateProject(p entity.Project) (entity.Project, error) {
-	const qBase = "UPDATE project SET name = $1, description = $2, visibility = $3 WHERE id = $4"
+	const qBase = "UPDATE project SET name = $2, description = $3, visibility = $4, location = $5, species = $6, ptype = $7 WHERE id = $1"
 	output := entity.Project{}
+	util.PrintDebug(p)
 	visible := 0
 	if p.Visibility {
 		visible = 1
 	}
-	_, err := util.Database.Exec(qBase, p.Name, p.Description, visible, p.ID)
+	_, err := util.Database.Exec(qBase, p.ID, p.Name, p.Description, visible, p.Location, p.Species, p.Type)
 	if err != nil {
 		util.PrintError("Unable to update Project")
 		return output, err
