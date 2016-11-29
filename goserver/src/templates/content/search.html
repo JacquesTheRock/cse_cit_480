@@ -65,6 +65,10 @@
 			SearchProjects();
 		if (document.getElementById("b2").checked)
 			SearchUsers();
+		
+		if (!list.firstChild) {
+			add("There were no results");
+		}
 	}
 	
 	function SearchProjects(){
