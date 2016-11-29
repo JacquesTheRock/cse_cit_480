@@ -107,7 +107,7 @@ margin-right: 5px;
 }
 
 .jumbotron{
-  background-color: #CCCCCC;
+  background-color: #E6E6E6;
   color: black !important;
   z-index: 1;
 }
@@ -177,7 +177,7 @@ margin-right: 5px;
  
  /*project page start*/
 .contentbox{
-	background-color: #CCCCCC;
+	background-color: #E6E6E6;
 	color: black !important;
 	border-radius: 8px;
     padding: 20px; 
