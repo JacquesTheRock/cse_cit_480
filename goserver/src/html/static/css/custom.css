@@ -209,7 +209,7 @@ margin-right: 5px;
 /*End Player Profile Page*/
 
 /* media boxes */
-.media {
-background-color: #E6E6E6;
+.media-body, .media-left, .media-right {
+background: #F7DCB4;
 }
 /* end */
