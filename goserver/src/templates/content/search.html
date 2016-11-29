@@ -66,8 +66,7 @@
 		if (document.getElementById("b2").checked)
 			SearchUsers();
 		var list = document.getElementById("resultList")
-		if (list.innerHTML == '') {}
-		else {
+		if (!list.firstChild){
 			var div = document.createElement('div');
 			div.innerHTML = '<text>There were no results</text>';
 			add(div);
