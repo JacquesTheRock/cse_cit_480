@@ -65,6 +65,12 @@
 			SearchProjects();
 		if (document.getElementById("b2").checked)
 			SearchUsers();
+		
+		if (!list.firstChild) {
+			var div = document.createElement('div');
+			div.innerHTML = '<text>There were no results</text>';
+			add(div);
+		}
 	}
 	
 	function SearchProjects(){
