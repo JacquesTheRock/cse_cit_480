@@ -67,7 +67,9 @@
 			SearchUsers();
 		
 		if (!list.firstChild) {
-			add("There were no results");
+			var div = document.createElement('div');
+			div.innerHTML = '<text>There were no results</text>';
+			add(div);
 		}
 	}
 	
