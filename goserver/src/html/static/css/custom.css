@@ -110,8 +110,8 @@ html, body {
 
 .jumbotron{
   background-color: #F5F5F5;
-  color: black !important;
-  border: 2px #000000;
+  color: black;
+  border: 2px solid red;
   border-radius: 8px;
 }
 
