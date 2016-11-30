@@ -30,7 +30,7 @@ func DeleteTraits(e entity.Candidate, trans *sql.Tx) (entity.Candidate, error) {
 }
 
 func DeleteCandidate(e entity.Candidate) (entity.Candidate, error) {
-	const qBase = "DELETE FROM specimen WHERE id = $1 AND cross_id = $2"
-	_, err := util.Database.Exec(qBase, e.ID, e.CrossID)
+	const qBase = "DELETE FROM specimen WHERE id = $1"
+	_, err := util.Database.Exec(qBase, e.ID)
 	return e, err
 }

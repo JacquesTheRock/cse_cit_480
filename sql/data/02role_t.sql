@@ -48,7 +48,10 @@ INSERT INTO perm(id,page,action) VALUES
 (40,'projects_pid_roles_uid','DELETE'),
 (41,'images','POST'),
 (42,'images_iid','GET'),
-(43,'images_iid','DELETE')
+(43,'images_iid','DELETE'),
+(44,'projects_pid_candidates','GET'),
+(45,'projects_pid_candidates_cnid','GET'),
+(46,'projects_pid_candidates_cnid','PUT')
 ;
 
 INSERT INTO role_perm(role_id, perm_id) VALUES 
@@ -90,7 +93,9 @@ INSERT INTO role_perm(role_id,perm_id) VALUES
 ,(3,28)
 ,(3,31)
 ,(3,32)
-,(3,36);
+,(3,36)
+,(2,44)
+,(2,45);
 
 
 INSERT INTO role_perm(role_id,perm_id)
@@ -105,7 +110,8 @@ INSERT INTO role_perm(role_id,perm_id) VALUES
 ,(4,24)
 ,(4,25)
 ,(4,29)
-,(4,30);
+,(4,30)
+,(4,46);
 
 INSERT INTO role_perm(role_id,perm_id)
 	SELECT 5, perm_id FROM role_perm WHERE role_id=4;

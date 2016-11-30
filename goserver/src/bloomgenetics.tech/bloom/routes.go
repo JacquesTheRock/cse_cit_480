@@ -184,6 +184,18 @@ var routes = Routes{
 		handlers.ProjectsPidRolesUid,
 	},
 	Route{
+		"projects_pid_candidates",
+		[]string{"GET"},
+		"/projects/{pid}/candidates",
+		handlers.ProjectsPidCandidates,
+	},
+	Route{
+		"projects_pid_candidates_cnid",
+		[]string{"GET", "PUT"},
+		"/projects/{pid}/candidates/{cnid}",
+		handlers.ProjectsPidCandidatesCnid,
+	},
+	Route{
 		"images",
 		[]string{"POST"},
 		"/images",

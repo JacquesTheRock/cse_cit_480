@@ -238,6 +238,144 @@ func deleteProjectsPid(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.Encode(out)
 }
+func ProjectsPidCandidates(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		getProjectsPidCandidates(w, r)
+	}
+}
+
+func getProjectsPidCandidates(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	if out.Code == 0 {
+		q := candidate.CandidateQuery{}
+		q.ProjectID.Int64 = pid
+		q.ProjectID.Valid = true
+		var err error
+		out.Data, err = candidate.SearchCandidates(q)
+		if err != nil {
+			out.Code = code.UNDEFINED
+			out.Status = "Error Finding Candidates"
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
+}
+
+func ProjectsPidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		getProjectsPidCandidatesCnid(w, r)
+	case "PUT":
+		putProjectsPidCandidatesCnid(w, r)
+	}
+}
+
+func getProjectsPidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	cnid, err := strconv.ParseInt(vars["cnid"], 10, 64)
+	if out.Code == 0 && err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Candidate ID"
+	}
+	if out.Code == 0 {
+		q := candidate.CandidateQuery{}
+		q.ProjectID.Int64 = pid
+		q.ProjectID.Valid = true
+		q.ID.Int64 = cnid
+		q.ID.Valid = true
+		res, err := candidate.SearchCandidates(q)
+		if err != nil {
+			out.Code = code.UNDEFINED
+			out.Status = "Error Finding Candidates"
+		} else {
+			if len(res) == 1 {
+				out.Data = res[0]
+			} else {
+				out.Code = code.UNDEFINED
+				out.Status = "No Results"
+			}
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
+}
+
+func putProjectsPidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
+	out := entity.ApiData{}
+	vars := mux.Vars(r)
+	pid, err := strconv.ParseInt(vars["pid"], 10, 64)
+	if err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Project ID"
+	}
+	cnid, err := strconv.ParseInt(vars["cnid"], 10, 64)
+	if out.Code == 0 && err != nil {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not a Numeric Candidate ID"
+	}
+
+	if out.Code == 0 {
+		ctype := r.Header.Get("Content-type")
+		e := entity.Candidate{}
+		switch ctype {
+		case "application/json":
+			decoder := json.NewDecoder(r.Body)
+			err = decoder.Decode(&e)
+			if err != nil {
+				out.Code = code.UNDEFINED
+				out.Status = "Invalid JSON Posted"
+				util.PrintError("Unable to decode json")
+				util.PrintDebug(err)
+			}
+		default:
+			r.ParseForm()
+			traitIDStrings := strings.Split(r.FormValue("traits"), ",")
+			for _, s := range traitIDStrings {
+				var tid int64
+				tid, err = strconv.ParseInt(s, 10, 64)
+				if err != nil {
+					out.Status = "Error Converting Trait ID: " + s
+					out.Code = code.INVALIDFIELD
+					break
+				} else {
+					t := entity.Trait{}
+					t.ID = tid
+					e.Traits = append(e.Traits, t)
+				}
+			}
+		}
+		if out.Code == 0 {
+			e.ID = cnid
+			e.ProjectID = pid
+			out.Data, err = candidate.UpdateCandidate(e)
+			if err != nil {
+				out.Code = code.UNDEFINED
+				out.Status = "Error when Updating Candidate"
+			}
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(out)
+}
 
 func ProjectsPidRoles(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {

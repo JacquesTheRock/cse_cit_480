@@ -34,6 +34,25 @@ func GetTraits(e entity.Candidate) (entity.Candidate, error) {
 	return e, nil
 }
 
+func GetAll(pid int64) ([]entity.Candidate, error) {
+	const qBase = "SELECT s.id,c.id,c.project_id FROM crosses c JOIN specimen s ON c.id = s.cross_id WHERE c.project_id = $1"
+	out := make([]entity.Candidate, 0)
+	rows, err := util.Database.Query(qBase, pid)
+	defer rows.Close()
+	for rows.Next() {
+		e := entity.Candidate{}
+		err = rows.Scan(&e.ID, &e.CrossID, &e.ProjectID)
+		if err != nil {
+			util.PrintError("Unable to read project")
+			util.PrintDebug(err)
+		}
+		e, _ = GetTraits(e)
+		out = append(out, e)
+	}
+	return out, nil
+
+}
+
 func SearchCandidates(q CandidateQuery) ([]entity.Candidate, error) {
 	const qBase = "SELECT s.id,c.id,c.project_id FROM crosses c JOIN specimen s ON c.id = s.cross_id"
 	queryVars := make([]interface{}, 0)
