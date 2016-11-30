@@ -94,8 +94,8 @@ INSERT INTO role_perm(role_id,perm_id) VALUES
 ,(3,31)
 ,(3,32)
 ,(3,36)
-,(2,44)
-,(2,45);
+,(3,44)
+,(3,45);
 
 
 INSERT INTO role_perm(role_id,perm_id)
