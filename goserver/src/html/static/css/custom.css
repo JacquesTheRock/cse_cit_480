@@ -109,10 +109,9 @@ html, body {
 }
 
 .jumbotron{
-  background-color: #e6e6e6;
+  background-color: #F5F5F5;
   color: black;
-  border: 2px solid #F5F5F5;
-  border-radius: 8px;
+  border: 2px solid #4b3827;
 }
 
 .logo{
