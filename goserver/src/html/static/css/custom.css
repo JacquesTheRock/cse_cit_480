@@ -85,8 +85,7 @@ html, body {
 	height: 100%;
 	margin: 0;
 	background-image: url("/static/media/paper.jpg");
-	background-repeat: repeat-y;
-	background-repeat: repeat-x;
+	background-repeat: repeat-y repeat-x;
 }
 
 
