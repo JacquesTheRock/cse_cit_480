@@ -111,7 +111,8 @@ html, body {
 .jumbotron{
   background-color: #F5F5F5;
   color: black !important;
-  z-index: 1;
+  border: 2px #fffeee;
+  border-radius: 8px;
 }
 
 .logo{
