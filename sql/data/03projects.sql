@@ -14,14 +14,14 @@ INSERT INTO trait_T(name,weight) VALUES
 INSERT INTO trait(project_id,name,class) VALUES
 (1,'Green',2)
 ,(1,'Blue',1)
-,(2,'Tall',1)
-,(2,'Short',2);
+,(1,'Tall',1)
+,(1,'Short',2);
 
 INSERT INTO crosses(project_id,name) VALUES 
-(1,'Cross1')
-,(1,'Cross2')
-,(1,'Cross3')
-,(1,'Cross4');
+(1,'Start')
+,(1,'EC2')
+,(1,'EC3')
+,(1,'EC4');
 
 INSERT INTO specimen(cross_id) VALUES
 (1)
