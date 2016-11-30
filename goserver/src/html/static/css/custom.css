@@ -81,11 +81,14 @@ margin-right: 5px;
 /*navbar stop*/
 
 /*background css start*/
-	html, body {
-		height: 100%;
-		margin: 0;
-		background-color: #333333;
-	}
+html, body {
+	height: 100%;
+	margin: 0;
+	background-image: url("\static\media\paper.jpg");
+	background-repeat: repeat-y;
+	background-repeat: repeat-x;
+}
+
 
 #gradient{
   width: 100%;
