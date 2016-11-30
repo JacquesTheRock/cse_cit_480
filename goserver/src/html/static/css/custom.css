@@ -181,6 +181,7 @@ html, body {
 .contentbox{
 	background-color: #F5F5F5;
 	color: black !important;
+	border: 2px solid #4b3827;
 	border-radius: 8px;
     padding: 20px; 
 	
