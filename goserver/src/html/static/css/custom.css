@@ -200,10 +200,12 @@ html, body {
 	background-image: url("/static/media/paper.jpg");
 	background-repeat: repeat-y repeat-x;
 	color: black !important;
-	border: 3px solid #4b3827;
+	border-top: 3px solid #4b3827;
+	border-left: 3px solid #4b3827;
+	border-right: 3px solid #4b3827;
 	border-radius: 8px;
     padding: 20px; 	
-	margin-bottom: 0px;
+	margin-bottom: -3px;
 	font-weight: bold;
 	display: inline-block;
 	
