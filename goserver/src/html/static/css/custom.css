@@ -83,7 +83,8 @@ margin-right: 5px;
 html, body {
 	height: 100%;
 	margin: 0;
-	background-color: #d9c6c1
+ 	background-image: url("/static/media/tile2.jpg");
+	background-repeat: repeat-y repeat-x;
 }
 #gradient{
   width: 100%;
