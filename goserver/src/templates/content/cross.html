@@ -168,6 +168,7 @@ function updateCrossInfo() {
 }
 
 var allTraits = []
+var map = []
 function updateTraitInfo() {
 	if(this.readyState == 4 && this.status == 200) {
 		var out = JSON.parse(this.responseText)
@@ -176,7 +177,6 @@ function updateTraitInfo() {
 		else if (out.code != 0)
 			errorField.innerHTML = out.status
 		else {
-			var map = {}
 			var poolEl = document.getElementById("traitPool")
 			poolEl.innerHTML = "<h3><b>Trait Pool and Percentages</b></h3>"
 			var d = out.data
@@ -192,8 +192,9 @@ function updateTraitInfo() {
 			for (var i = 1; i < allTraits.length; i++) { // for each pool
 				var pool = allTraits[i]
 				for (t of pool) {
-					t.count = (t.count || 0) + 1
-					poolEl.innerHTML += t.name + "<br>"
+					var tmp = map[t.id];
+					tmp.count = (tmp.count || 0) + 1
+					poolEl.innerHTML += tmp.name + "<br>"
 				}
 			}
 		}
