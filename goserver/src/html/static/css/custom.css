@@ -107,9 +107,10 @@ background-color: #d9c6c1
 }
 
 .jumbotron{
-  background-color: #F5F5F5;
-  color: black;
-  border: 2px solid #4b3827;
+ 	background-image: url("/static/media/paper.jpg");
+	background-repeat: repeat-y repeat-x;
+	color: black;
+	border: 2px solid #4b3827;
 }
 
 .logo{
@@ -173,7 +174,12 @@ background-color: #d9c6c1
 
  /*buttons stop*/
 
+ /*subsection start, put styling to distinquish rows here*/
+.subsection{
+	
+}
  
+ /*subsection stop*/
  
  /*project page start*/
 .contentbox{
