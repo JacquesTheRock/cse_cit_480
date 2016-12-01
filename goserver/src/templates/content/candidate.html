@@ -203,11 +203,41 @@ function updateCandidateInfo() {
 			infoEl = document.getElementById("note")
 			infoEl.innerHTML = c.note
 
+			if(c.imageId != 0) {
+				getCandidateImage(c.imageId)
+			} else {
+				var el = document.getElementById("candidateImage")
+				el.src = "/static/media/flower.png"
+			}
 			/* Missing API Point
 			infoEl = document.getElementById("childCrossList")
 			*/
 		}
 	}
+}
+
+function updateCandidateImage() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if(out.code == 400)
+			errorField.innerHTML = "Not allowed to view image"
+		else if (out.code != 0)
+			errorField.innerHTML = out.status
+		else {
+			var el = document.getElementById("candidateImage")
+			el.src = out.data.data	
+		}
+	}
+}
+
+function getCandidateImage(iid) {
+        var url = "http://bloomgenetics.tech/api/v1/images/" + iid
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = updateCandidateImage;
+        xhttp.open("GET", url, true);
+        if(localStorage["Authorization"])
+                xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
+        xhttp.send(null)
 }
 
 function getCandidateInfo() {
