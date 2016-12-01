@@ -37,39 +37,9 @@
 					<th>Expressing Trait?</th>
 					<th>Trait</th>
 					<th>Dominance</th>
-					<th>% Chance </th>
-					<th>% Chance Carrier</th>
 				  </tr>
 				</thead>
-				<tbody>
-				  <tr>
-					<td><label><input type="checkbox" value=""></label></td>
-					<td>Trait 1</td>
-					<td>Dominant</td>
-					<td>33</td>
-					<td>50</td>
-				  </tr>
-				  <tr>
-					<td><label><input type="checkbox" value=""></label></td>
-					<td>Trait 2</td>
-					<td>Recessive</td>
-					<td>75</td>
-					<td>33</td>
-				  </tr>
-				  <tr>
-					<td><label><input type="checkbox" value=""></label></td>
-					<td>Trait 3</td>
-					<td>Recessive</td>
-					<td>50</td>
-					<td>25</td>
-				  </tr>
-				  <tr>
-					<td><label><input type="checkbox" value=""></label></td>
-					<td>Trait 4</td>
-					<td>Dominant</td>
-					<td>33</td>
-					<td>0</td>
-				  </tr>
+				<tbody id="traitTBody">
 				</tbody>
 			  </table>
 
@@ -137,3 +107,142 @@
 	
 	  
 </div>
+<script>
+
+var pid = getParameterByName("pid");
+var cid = getParameterByName("cid");
+
+function getParameterByName(name, url) {
+	if (!url) {
+	  url = window.location.href;
+	}
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+
+
+
+function postImage(data) {
+	var url = "http://bloomgenetics.tech/api/v1/images";
+	var xhttp = new XMLHttpRequest();
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = imagePostResponse;
+	xhttp.open("POST", url, true);
+	xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.send(JSON.stringify(data));
+}
+
+function CreateCandidate() {
+	var files = document.getElementById("submitImage").files;
+	if (files.length > 1) {
+		return;
+	}
+	if(files.length == 0) {
+		submitCandidate();
+		return;
+	}
+	var file = files[0]
+
+	var reader = new FileReader();
+	reader.readAsDataURL(file);
+	reader.onload = function(e) {
+			var data = reader.result;
+			var fields = data.split(":")[1].split(",")
+			var type = fields[0].split(";")[0]
+			var sendData = {
+				type: type,
+				data: data,
+				size: file.size
+			}
+			console.log(sendData)
+			postImage(sendData)
+		}
+}
+
+
+function updateTraits() {
+	if (this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code == 0) {
+			var el = document.getElementById("traitTBody")
+			for (t of out.data) {
+				var innerHTML = "<tr>"
+				innerHTML += "<td><label><input name='traits' type='checkbox' id='"
+				innerHTML += t.id
+				innerHTML +="'></label></td>"
+				innerHTML += "<td>" + t.name + "</td>"
+				innerHTML += "<td>" + t.type + "</td>"
+				innerHTML += "</tr>"
+				el.innerHTML += innerHTML
+			}
+		}
+	}
+
+}
+
+function getTraits() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/traits";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateTraits;
+	xhttp.open("GET", url, true);
+	xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.send(null);
+}
+
+function imagePostResponse() {
+	if (this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code == 0) {
+			var image = out.data
+			submitCandidate(image.iid)
+		}
+	}
+}
+
+function candidateResponse() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code != 0) {
+			alert(out.status)
+		} else {
+			var candidate = out.data
+		}
+	}
+}
+
+function submitCandidate(iid=0) {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + cid + "/candidates";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = candidateResponse;
+	xhttp.open("POST", url, true);
+	xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	var r = document.querySelectorAll('input[name="traits"]:checked')
+
+	var traits = []
+	for( tel of r) {
+		var trait = {
+			id: parseInt(tel.id)
+		}
+		traits[traits.length] = trait
+	}
+	
+	var data = {
+		crossId: parseInt(cid),
+		projectId: parseInt(pid),
+		traits: traits,
+		imageId: iid,
+		note: document.getElementById("candidatenotes").value
+	}
+	xhttp.send(JSON.stringify(data));
+
+}
+getTraits()
+</script>
