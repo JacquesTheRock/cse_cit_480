@@ -1,7 +1,6 @@
 /*navbar start*/
 .navbar-nav> li> a:hover{
   background-color: black !important;
-  color: #D4AD62 !important;
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
   /*box-shadow: 0 0 1px rgba(0, 0, 0, 0);*/
@@ -21,7 +20,7 @@
 }
 
 .navbar-inverse{
-	background-color: #6B6B6B;
+	background-color: #4b3827;
 }
 
 .navbar{
