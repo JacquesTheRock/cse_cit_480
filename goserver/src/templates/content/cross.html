@@ -189,10 +189,10 @@ function updateTraitInfo() {
 				if(!map[t.id])
 					map[t.id] = t
 			}
-			for (var i = 0; i < allTraits.length; i++) { // for each pool
+			for (var i = 1; i < allTraits.length; i++) { // for each pool
 				var pool = allTraits[i]
 				for (t of pool) {
-					map[t.id].count += 1
+					t.count = (t.count || 0) + 1
 					poolEl.innerHTML += t.name + "<br>"
 				}
 			}
