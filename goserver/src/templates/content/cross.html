@@ -179,6 +179,17 @@ function updateTraitInfo() {
 			var poolEl = document.getElementById("traitPool")
 			var poolInner = "<h3><b>Trait Pool and Percentages</b></h3><table border='2' cellpadding='5'><th>type</th><th>Name</th><th>Carrier</th><th>Shows</th>"
 			var d = out.data
+		/*Code to set up image */
+			var elID = "p1image"
+			if(d.id == parent2ID)
+				elID = "p2image"
+			if(d.imageId == 0) {
+				var el = document.getElementById(elID)
+				el.src = "/static/media/flower.png"
+			}
+			else
+				getCandidateImage(d.imageId, elID)
+		/* end image setup */
 			for(t of d.traits) {
 				if(!allTraits[t.pool])
 					allTraits[t.pool] = []
@@ -280,6 +291,32 @@ function updateCandidateList() {
 			}
 		}
 	}	
+}
+
+
+function makeImageFunc(elID) {
+	return function () {
+		if(this.readyState == 4 && this.status == 200) {
+                	var out = JSON.parse(this.responseText)
+                	if(out.code == 400)
+                	        errorField.innerHTML = "Not allowed to view image"
+                	else if (out.code != 0)
+                	        errorField.innerHTML = out.status
+                	else {
+                	        var el = document.getElementById(elID)
+                	        el.src = out.data.data
+                	}
+		}
+	}
+}
+function getCandidateImage(iid,elID) {
+	var url = "http://bloomgenetics.tech/api/v1/images/" + iid
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = makeImageFunc(elID);
+        xhttp.open("GET", url, true);
+        if(localStorage["Authorization"])
+                xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
+        xhttp.send(null)
 }
 
 function getTraits(pcid,p) {
