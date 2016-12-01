@@ -237,5 +237,7 @@ html, body {
 /* media boxes */
 .media-body, .media-left, .media-right {
 background: #E6E6E6;
+border: 3px solid #4b3827;
+
 }
 /* end */
