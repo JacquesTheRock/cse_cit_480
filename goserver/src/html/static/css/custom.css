@@ -84,7 +84,7 @@ html, body {
 	height: 100%;
 	margin: 0;
 	background-color: #c8b098;
- 	background-image: url("/static/media/paper.jpg");
+ 	background-image: url("/static/media/tile2.jpg");
 	background-repeat: repeat-y repeat-x;
 }
 #gradient{
