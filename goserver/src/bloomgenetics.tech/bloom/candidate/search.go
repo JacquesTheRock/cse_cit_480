@@ -35,16 +35,20 @@ func GetTraits(e entity.Candidate) (entity.Candidate, error) {
 }
 
 func GetAll(pid int64) ([]entity.Candidate, error) {
-	const qBase = "SELECT s.id,c.id,c.project_id FROM crosses c JOIN specimen s ON c.id = s.cross_id WHERE c.project_id = $1"
+	const qBase = "SELECT s.id,c.id,c.project_id,s.note,s.img_id FROM crosses c JOIN specimen s ON c.id = s.cross_id WHERE c.project_id = $1"
 	out := make([]entity.Candidate, 0)
 	rows, err := util.Database.Query(qBase, pid)
 	defer rows.Close()
 	for rows.Next() {
 		e := entity.Candidate{}
-		err = rows.Scan(&e.ID, &e.CrossID, &e.ProjectID)
+		var iid sql.NullInt64
+		err = rows.Scan(&e.ID, &e.CrossID, &e.ProjectID, &e.Note, &iid)
 		if err != nil {
 			util.PrintError("Unable to read project")
 			util.PrintDebug(err)
+		}
+		if iid.Valid {
+			e.ImageID = iid.Int64
 		}
 		e, _ = GetTraits(e)
 		out = append(out, e)
@@ -54,7 +58,7 @@ func GetAll(pid int64) ([]entity.Candidate, error) {
 }
 
 func SearchCandidates(q CandidateQuery) ([]entity.Candidate, error) {
-	const qBase = "SELECT s.id,c.id,c.project_id FROM crosses c JOIN specimen s ON c.id = s.cross_id"
+	const qBase = "SELECT s.id,c.id,c.project_id,s.note,s.img_id FROM crosses c JOIN specimen s ON c.id = s.cross_id"
 	queryVars := make([]interface{}, 0)
 	out := make([]entity.Candidate, 0)
 	query := " WHERE "
@@ -89,10 +93,14 @@ func SearchCandidates(q CandidateQuery) ([]entity.Candidate, error) {
 	defer rows.Close()
 	for rows.Next() {
 		e := entity.Candidate{}
-		err = rows.Scan(&e.ID, &e.CrossID, &e.ProjectID)
+		var iid sql.NullInt64
+		err = rows.Scan(&e.ID, &e.CrossID, &e.ProjectID, &e.Note, &iid)
 		if err != nil {
 			util.PrintError("Unable to read project")
 			util.PrintDebug(err)
+		}
+		if iid.Valid {
+			e.ImageID = iid.Int64
 		}
 		e, _ = GetTraits(e)
 		out = append(out, e)

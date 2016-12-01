@@ -360,6 +360,14 @@ func putProjectsPidCandidatesCnid(w http.ResponseWriter, r *http.Request) {
 					e.Traits = append(e.Traits, t)
 				}
 			}
+			if out.Code == 0 {
+				e.Note = r.FormValue("note")
+				e.ImageID, err = strconv.ParseInt(r.FormValue("imageID"), 10, 64)
+				if err != nil {
+					out.Status = "Error Converting imageID to int"
+					out.Code = code.INVALIDFIELD
+				}
+			}
 		}
 		if out.Code == 0 {
 			e.ID = cnid
@@ -1052,6 +1060,14 @@ func postProjectsPidCrossesCidCandidates(w http.ResponseWriter, r *http.Request)
 					e.Traits = append(e.Traits, t)
 				}
 			}
+			if out.Code == 0 {
+				e.Note = r.FormValue("note")
+				e.ImageID, err = strconv.ParseInt(r.FormValue("imageID"), 10, 64)
+				if err != nil {
+					out.Status = "Error Converting imageID to int"
+					out.Code = code.INVALIDFIELD
+				}
+			}
 		}
 
 		if out.Code == 0 {
@@ -1165,6 +1181,14 @@ func putProjectsPidCrossesCidCandidatesCnid(w http.ResponseWriter, r *http.Reque
 					t := entity.Trait{}
 					t.ID = tid
 					e.Traits = append(e.Traits, t)
+				}
+			}
+			if out.Code == 0 {
+				e.Note = r.FormValue("note")
+				e.ImageID, err = strconv.ParseInt(r.FormValue("imageID"), 10, 64)
+				if err != nil {
+					out.Status = "Error Converting imageID to int"
+					out.Code = code.INVALIDFIELD
 				}
 			}
 		}

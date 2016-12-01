@@ -32,9 +32,9 @@ func LinkTraits(e entity.Candidate, trans *sql.Tx) (entity.Candidate, error) {
 }
 
 func CreateCandidate(e entity.Candidate) (entity.Candidate, error) {
-	const qBase = "INSERT INTO specimen(cross_id) VALUES($1) RETURNING id"
+	const qBase = "INSERT INTO specimen(cross_id,note,img_id) VALUES($1) RETURNING id"
 	trans, _ := util.Database.Begin()
-	err := trans.QueryRow(qBase, e.CrossID).Scan(&e.ID)
+	err := trans.QueryRow(qBase, e.CrossID, e.Note, e.ImageID).Scan(&e.ID)
 	if err != nil {
 		util.PrintError("Candidate Query Error")
 		util.PrintDebug(err)

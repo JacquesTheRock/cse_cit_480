@@ -34,24 +34,18 @@
 		  
 		  <section id="traitPool" class="row-fluid">
 			<h3><b>Trait Pool and Percentages</b></h3>
-			  <input type="checkbox" aria-label="..."><b>Trait 1 - </b> <b>Dominant - </b> <b>100% TT</b><br> 
-			  <input type="checkbox" aria-label="..."><b>Trait 2 - </b> <b>Recessive - </b> <b>25% bb, 50%Bb, 25%BB</b><br>
-			  <input type="checkbox" aria-label="..."><b>Trait 3 - </b> <b>Recessive - </b> <b>100% tt</b><br>
-			  <input type="checkbox" aria-label="..."><b>Trait 4 - </b> <b>Dominant - </b> <b>gg - </b> <b>Doesn't Have</b><br>
-			  <b>How many to plant to get desired traits: calculate here based on checked boxes </b>
+			This Cross has no Parents with Traits
 		  </section>
 		  
 
 		  <section class="row-fluid">
 			<h3><b>Cross Notes</b></h3>
-			<p id="crossNote">bla bla bla bla bla </p><br>
+			<p id="crossNote"></p><br>
 		  </section>
 		  
 		  <section class="row-fluid">
 			<h3><b><div style="max-width: 230px;">Child Candidates<a class="glyphicon glyphicon-plus pull-right" href="newcandidate.html"></a></div></b></h3>
-			  <b>Link to Child Candidate 1</b><br>
-			  <b>Link to Child Candidate 2</b><br>
-			  <b>Link to Child Candidate 3</b><br>
+			<ul id="candidateList"></ul>
 		  </section>
 		  
 		</div>
@@ -167,6 +161,7 @@ function updateCrossInfo() {
 				getTraits(p, d.data.parent2)
 				parent2ID = d.data.parent2
 			}
+			getCandidateList();
 		}
 	}
 }
@@ -265,6 +260,28 @@ function updateTraitInfo() {
 	}
 }
 
+function updateCandidateList() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if(out.code == 400)
+			errorField.innerHTML = "Not Allowed to view candidates"
+		else if (out.code != 0)
+			errorField.innerHTML = out.status
+		else {
+			var listEl = document.getElementById("candidateList")
+			if (out.data) {
+				for (s of out.data) {
+					var li = "<li><a href='candidate.html?pid=" + pid
+					li += "&cid=" + cid + "&id=" + s.id +"'>"
+					li += "Link to Candidate: " + s.id
+					li += "</a></li>"
+					listEl.innerHTML += li;
+				}
+			}
+		}
+	}	
+}
+
 function getTraits(pcid,p) {
 	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + pcid + "/candidates/" + p
 	var xhttp = new XMLHttpRequest();
@@ -283,6 +300,17 @@ function getCrossInfo() {
 	if(localStorage["Authorization"])
 		xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
 	xhttp.send(null)
+}
+
+function getCandidateList() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + cid + "/candidates"
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateCandidateList;
+	xhttp.open("GET", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
+	xhttp.send(null)
+		
 }
 
 getCrossInfo();
@@ -364,13 +392,13 @@ function drawNode(pos) {
 	ctx.save();
 	if(this.el.type  != "current") {
 		var xscale = 1
-		if((twidth / 2) - 3 > this.el.r)
+		if((twidth / 2) + 3 > this.el.r)
 			xscale = (twidth/2 + 3)/this.el.r;
 		var ixscale = 1/xscale
 		ctx.scale(xscale, 1)
 		ctx.arc(this.el.pos.x * ixscale, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
 	} else {
-		var width = max(this.el.r - 3, twidth /2 + 3 )
+		var width = max(this.el.r - 5, twidth /2 + 3 )
 		ctx.rect(this.el.pos.x - width, this.el.pos.y - this.el.r, width * 2, this.el.r * 2);
 	}
 	ctx.stroke();
