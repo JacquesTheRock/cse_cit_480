@@ -125,6 +125,7 @@ html, body {
  
  /*buttons start*/
 .btn-shutterOut {
+  width: 100%;
   margin: auto;
   display: inline-block;
   vertical-align: middle;
