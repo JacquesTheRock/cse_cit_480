@@ -6,132 +6,122 @@
 	</span>
 	
 		</span></a>
-	</h2>
-
-	
-	<h2 class="header contentbox-header" style="max-width: 750px; margin-left: -4px; border-left: 0px;">Test </h2>
-	
-	
+	</h2>	
+<!-- 	<h2 class="header contentbox-header" style="max-width: 750px; margin-left: -4px; border-left: 0px;">Test </h2> -->
 	<div class="contentbox">
-	
 		<div class="container-fluid">
-	<!--Adds style color to "Player Profile"-->
-
-			<section class="row container-fluid subsection-1">
-			<!-- Fetches and displays the player profile image -->
-	<p class="col-sm-6 col-md-4 col-lg-4"><img src="/static/media/flower.png" width="200" height="200" alt="Project Picture."></p>
-
-	<h4><section id="projectInfo" class="col-sm-7">
-		<b>Species:</b> Pepper <br>
-		<b>Location:</b> Midwest <br>
-		<b>Type:</b> Back Crossing<br>
-		<b>Availability: </b> Public <br>
-		<b>Owner</b> EricSk8trix420 <br>
-	</section></h4>
-			</section>
-			<div>
-				<div style="display: inline-block;"><button style="font-size: 20px;" onclick="CreateCandidate()" class="btn btn-shutterOut">Email Project Owner</button></div>
-				<div style="display: inline-block;"><button style="font-size: 20px;" onclick="CreateCandidate()" class="btn btn-shutterOut">Ask to Join Project</button></a></div>
-			</div>
-			<section class="row-fluid">
-	<h3><b>Description:</b></h3>
-	<p id="projectAbout">Blank text</p><br>
-			</section>
-			<section class="row-fluid">
-	<h3>
-		<b>
-			TreeView:
-		</b>
-	</h3>
-	 <canvas id="tree" width="500" height="350"></canvas>
-
-
-			</section>
-			<section class="row-fluid">
-	<h3><b><div style="display: inline-block;">Members<a style="margin-left: 10px;" data-toggle="modal" data-target="#addMemberModal" class="glyphicon glyphicon-plus pull-right"></a></div></h3></b>
-	<div class="row">
-		<ul class="media-list" id="memberList">
-			<div class="media" id="membEntry">
-				<div style="margin: auto;">
-		<div class="media-left well">
-			<a href="#" id="membImgURL">
-				<img class="media-object" src="/static/media/flower.png" style="height: 50px; width: 50px;"  alt="Generic placeholder image" id="resultImg">
-			</a>
-		</div>
-		<div class="media-body well">
-			<h4 class="media-heading" >USER</h4>
-			Role: <text ></text>
-			<p ></p>
-		</div>
+			<!--Adds style color to "Player Profile"-->
+					<section class="row container-fluid subsection-1">
+					<!-- Fetches and displays the player profile image -->
+						<p class="col-sm-6 col-md-4 col-lg-4"><img src="/static/media/flower.png" width="200" height="200" alt="Project Picture."></p>
+						<h4><section id="projectInfo" class="col-sm-7">
+							<b>Species:</b> Pepper <br>
+							<b>Location:</b> Midwest <br>
+							<b>Type:</b> Back Crossing<br>
+							<b>Availability: </b> Public <br>
+							<b>Owner</b> EricSk8trix420 <br>
+						</section></h4>
+					</section>
+					<div>
+						<div style="display: inline-block;"><button style="font-size: 20px;" onclick="CreateCandidate()" class="btn btn-shutterOut">Email Project Owner</button></div>
+						<div style="display: inline-block;"><button style="font-size: 20px;" onclick="CreateCandidate()" class="btn btn-shutterOut">Ask to Join Project</button></a></div>
+					</div>
+					<section class="row-fluid">
+						<h3><b>Description:</b></h3>
+						<p id="projectAbout">Blank text</p><br>
+					</section>
+					<section class="row-fluid">
+						<h3>
+							<b>
+								TreeView:
+							</b>
+						</h3>
+					<canvas id="tree" width="500" height="350"></canvas>
+					</section>
+					<section class="row-fluid">
+			<h3><b><div style="display: inline-block;">Members<a style="margin-left: 10px;" data-toggle="modal" data-target="#addMemberModal" class="glyphicon glyphicon-plus pull-right"></a></div></h3></b>
+			<div class="row">
+				<ul class="media-list" id="memberList">
+					<div class="media" id="membEntry">
+						<div style="margin: auto;">
+				<div class="media-left well">
+					<a href="#" id="membImgURL">
+						<img class="media-object" src="/static/media/flower.png" style="height: 50px; width: 50px;"  alt="Generic placeholder image" id="resultImg">
+					</a>
 				</div>
-			</div>
-		</ul>
-	</div>
-	<p></p><br>
-			</section>
-			
-			<section class="row-fluid">
-	<h3><b><div style="display: inline-block;">Crosses<a style="margin-left: 10px;" class="glyphicon glyphicon-plus pull-right"></a></div></h3></b>
-	<div class="row">
-		<ul class="media-list" id="crossList">
-			<div class="media" id="crossEntry">
-				<div style="margin: auto;">
-		<div class="media-left well">
-			<a href="#" id="crossImgURL">
-				<img class="media-object" src="/static/media/flower.png" style="height: 50px; width: 50px;" alt="random image of candidate?" id="resultImg">
-			</a>
-		</div>
-		<div class="media-body well">
-			<h4 class="media-heading" >CROSS NAME</h4>
-			Notes: <text ></text>
-			<br>
-			Traits: <text >Trait 1 Trait 2 Trait 3</text>
-			<p ></p>
-		</div>
+				<div class="media-body well">
+					<h4 class="media-heading" >USER</h4>
+					Role: <text ></text>
+					<p ></p>
 				</div>
+						</div>
+					</div>
+				</ul>
 			</div>
-		</ul>
-	</div>
-	<p></p><br>
-			</section>
-
+			<p></p><br>
+					</section>
+					
+					<section class="row-fluid">
+						<h3><b><div style="display: inline-block;">Crosses<a style="margin-left: 10px;" class="glyphicon glyphicon-plus pull-right" href="newcross.html"></a></div></h3></b>
+						<div class="row">
+							<ul class="media-list" id="crossList">
+								<div class="media" id="crossEntry">
+									<div style="margin: auto;">
+										<div class="media-left well">
+											<a href="#" id="crossImgURL">
+												<img class="media-object" src="/static/media/flower.png" style="height: 50px; width: 50px;" alt="random image of candidate?" id="resultImg">
+											</a>
+										</div>
+										<div class="media-body well">
+											<h4 class="media-heading" >CROSS NAME</h4>
+											Notes: <text ></text>
+											<br>
+											Traits: <text >Trait 1 Trait 2 Trait 3</text>
+											<p ></p>
+										</div>
+									</div>
+								</div>
+							</ul>
+						</div>
+						<p></p><br>
+					</section>
 		</div>
 	</div>
 
 
 	<!-- edit page pop up conent start-->
 	<div id="editProjectModal" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
+		<div class="modal-dialog">
 
 		<!-- Modal content-->
 
-	  <div class="contentbox">
-		<div class="container-fluid">
-		  <div id="result"></div>
-			<div class="form-group">
-				<label for="species">Species</label>
-				<input type="text" class="form-control" id="submitSpecies" placeholder="Species">
-			</div>
-			<div class="form-group">
-				<label for="location">Location</label>
-				<input type="text" class="form-control" id="submitLocation" placeholder="Location">
-			</div>
-			<div class="form-group">
-				<label for="availability">Availability</label>
-				<input type="text" class="form-control" id="submitAvailability" placeholder="Availability">
-			</div>
-			<div class="form-group">
-				<label for="description">Description</label>
-				<input type="text" class="form-control" id="submitDescription" placeholder="Description">
-			</div>
+		<div class="contentbox">
+			<div class="container-fluid">
+				<div id="result"></div>
+				<div class="form-group">
+					<label for="species">Species</label>
+					<input type="text" class="form-control" id="submitSpecies" placeholder="Species">
+				</div>
+				<div class="form-group">
+					<label for="location">Location</label>
+					<input type="text" class="form-control" id="submitLocation" placeholder="Location">
+				</div>
+				<div class="form-group">
+					<label for="availability">Availability</label>
+					<input type="text" class="form-control" id="submitAvailability" placeholder="Availability">
+				</div>
+				<div class="form-group">
+					<label for="description">Description</label>
+					<input type="text" class="form-control" id="submitDescription" placeholder="Description">
+				</div>
 
-			<button onclick="UpdateProject()" class="btn btn-shutterOut">Update</button>
-			
+				<button onclick="UpdateProject()" class="btn btn-shutterOut">Update</button>
+
+			</div>
 		</div>
-	  </div>
 
 
-	  </div>
+		</div>
 	</div>
 	<!-- edit page pop up conent stop-->
 </div>
@@ -335,39 +325,6 @@ getMembersInfo()
 getCrossInfo()
 </script>
 
-
-
-
-<!--Shitty old layout
-<div class="container">   
-   <div class="row">
-	<div class="col-sm-12">
-	  <div class="col-md-4">
-		<div class="contentbox">
-	<h1 align="center">Project Name</h1>
-		  <p><img class = "logo" src="\static\media\flower.png" width="275" height="250" alt="Logo"></p>
-	<h2 align="left">Species: Pepper</h2>
-	<h2 align="left">Mail</h2>
-	<h2 align="left">Join</h2>
-		 
-		</div>
-	  </div>
-	  
-	  <div class="col-md-4">
-		<div class="contentbox">
-		  <h1 align="center">Project Description</h1>
-	<p align="center"> Blah blah peppers blah wada wada</p>
-		</div>
-	  </div>
-	  
-	  <div class="col-md-4">
-		<div class="contentbox">
-		  <h1 align="center">Welcome!</h1>
-		  <p align="center">...to Bloom. If you're new, try our <a href="#">About</a> page. Otherwise, you can check out <a href="#">Registration</a> or search our <a href="#">Project Profiles</a>. If you have any questions, please consult our <a href="#">FAQ</a> first.</p>
-		</div>
-	  </div>
-</div>
--->
 <script>
 
 function getData() {
