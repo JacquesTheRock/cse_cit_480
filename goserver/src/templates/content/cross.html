@@ -44,7 +44,7 @@
 		  </section>
 		  
 		  <section class="row-fluid">
-			<h3><b><div style="max-width: 230px;">Child Candidates<a class="glyphicon glyphicon-plus pull-right" href="newcandidate.html"></a></div></b></h3>
+			<h3><b><div style="max-width: 230px;">Child Candidates<a id="newCN" class="glyphicon glyphicon-plus pull-right" href="newcandidate.html"></a></div></b></h3>
 			<ul id="candidateList"></ul>
 		  </section>
 		  
@@ -87,6 +87,10 @@
 <script>
 var pid = getParameterByName("pid");
 var cid = getParameterByName("id");
+{
+var newCN = document.getElementById("newCN");
+newCN.href += "?pid=" + pid + "&cid=" + cid
+}
 var crossProfile
 var editButton = document.getElementById("editButton");
 var idHeader = document.getElementById("idHeader")
