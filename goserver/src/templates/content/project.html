@@ -62,7 +62,7 @@
 					</section>
 					
 					<section class="row-fluid">
-						<h3><b><div style="display: inline-block;">Crosses<a style="margin-left: 10px;" class="glyphicon glyphicon-plus pull-right" href="newcross.html"></a></div></h3></b>
+						<h3><b><div style="display: inline-block;">Crosses<a style="margin-left: 10px;" class="glyphicon glyphicon-plus pull-right" id="newcross" href="newcross.html"></a></div></h3></b>
 						<div class="row">
 							<ul class="media-list" id="crossList">
 								<div class="media" id="crossEntry">
@@ -143,6 +143,11 @@ if (localStorage["Authorization"]) {
 		loginUser = atob(token).split(":")[0];
 }
 
+
+
+var newcross = document.getElementById("newcross")
+newcross.href += "?pid=" + projectID
+
 function getParameterByName(name, url) {
 	if (!url) {
 	  url = window.location.href;
@@ -164,6 +169,7 @@ function updateProjectInfo() {
 						errorField.innerHTML = out.status
 				} else {
 						var d = out.data
+
 						projectProfile = d
 						projectInfo.innerHTML = "<b>Species:</b> " + d.species + "<br>\n"
 						projectInfo.innerHTML += "<b>Location:</b> " + d.location + "<br\n>"
@@ -178,8 +184,10 @@ function updateProjectInfo() {
 								document.getElementById("submitLocation").value = d.location;
 								document.getElementById("submitAvailability").value = d.public;
 								document.getElementById("submitDescription").value = d.description;
-						}
-
+						}	
+						var newcross = document.getElementById("newcross")
+						if(d.role != "Admin" && d.role != "Owner" && d.role != "Member")
+							newcross.outerHTML = ""
 				}
 		}
 }
