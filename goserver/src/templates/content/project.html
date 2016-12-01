@@ -1,0 +1,537 @@
+<div class="container" style="max-width: 750px;">
+<!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
+	<h2  id="nameHeader" class="header contentbox-header" style="max-width: 750px;">Project <a id="editButton" data-toggle="modal" data-target="#editProjectModal">
+		<span class="pull-right">
+	<span class="glyphicon glyphicon-edit">
+	</span>
+	
+		</span></a>
+	</h2>
+
+	
+	<h2 class="header contentbox-header" style="max-width: 750px;">Test </h2>
+	
+	
+	<div class="contentbox">
+	
+		<div class="container-fluid">
+
+	<!--Adds style color to "Player Profile"-->
+	<br>
+
+			<section class="row container-fluid">
+			<!-- Fetches and displays the player profile image -->
+	<p class="col-sm-6 col-md-4 col-lg-4"><img src="/static/media/flower.png" width="200" height="200" alt="Project Picture."></p>
+
+	<section id="projectInfo" class="col-sm-7">
+		<b>Species:</b> Pepper <br>
+		<b>Location:</b> Midwest <br>
+		<b>Type:</b> Back Crossing<br>
+		<b>Availability: </b> Public <br>
+		<b>Owner</b> EricSk8trix420 <br>
+	</section>
+			</section>
+
+			<section class="row-fluid">
+	<h3><b>Description:</b></h3>
+	<p id="projectAbout">text text text bla bla bla text text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla blatext text text bla bla bla</p><br>
+			</section>
+			
+			<section class="row-fluid">
+	<h3><b>Members</b></h3>
+	<div class="row">
+		<ul class="media-list" id="memberList">
+			<div class="media" id="membEntry">
+				<div style="margin: auto;">
+		<div class="media-left well">
+			<a href="#" id="membImgURL">
+				<img class="media-object" src="/static/media/flower.png" style="height: 50px; width: 50px;"  alt="Generic placeholder image" id="resultImg">
+			</a>
+		</div>
+		<div class="media-body well">
+			<h4 class="media-heading" >USER</h4>
+			Role: <text ></text>
+			<p ></p>
+		</div>
+				</div>
+			</div>
+		</ul>
+	</div>
+	<p></p><br>
+			</section>
+			
+			<section class="row-fluid">
+	<h3><b>Crosses</b></h3>
+	<div class="row">
+		<ul class="media-list" id="crossList">
+			<div class="media" id="crossEntry">
+				<div style="margin: auto;">
+		<div class="media-left well">
+			<a href="#" id="crossImgURL">
+				<img class="media-object" src="/static/media/flower.png" style="height: 50px; width: 50px;" alt="random image of candidate?" id="resultImg">
+			</a>
+		</div>
+		<div class="media-body well">
+			<h4 class="media-heading" >CROSS NAME</h4>
+			Notes: <text ></text>
+			<br>
+			Traits: <text >Trait 1 Trait 2 Trait 3</text>
+			<p ></p>
+		</div>
+				</div>
+			</div>
+		</ul>
+	</div>
+	<p></p><br>
+			</section>
+			<section class="row-fluid">
+	<h3>
+		<b>
+			TreeView
+		</b>
+	</h3>
+	 <canvas id="tree" width="500" height="600"></canvas>
+
+
+			</section>
+		</div>
+	</div>
+
+
+	<!-- edit page pop up conent start-->
+	<div id="editProjectModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+		<!-- Modal content-->
+
+	  <div class="contentbox">
+		<div class="container-fluid">
+		  <div id="result"></div>
+			<div class="form-group">
+				<label for="species">Species</label>
+				<input type="text" class="form-control" id="submitSpecies" placeholder="Species">
+			</div>
+			<div class="form-group">
+				<label for="location">Location</label>
+				<input type="text" class="form-control" id="submitLocation" placeholder="Location">
+			</div>
+			<div class="form-group">
+				<label for="availability">Availability</label>
+				<input type="text" class="form-control" id="submitAvailability" placeholder="Availability">
+			</div>
+			<div class="form-group">
+				<label for="description">Description</label>
+				<input type="text" class="form-control" id="submitDescription" placeholder="Description">
+			</div>
+
+			<button onclick="UpdateProject()" class="btn btn-default">Update</button>
+			
+		</div>
+	  </div>
+
+
+	  </div>
+	</div>
+	<!-- edit page pop up conent stop-->
+</div>
+
+<script>
+var mEntry = document.getElementById("membEntry").cloneNode(true)
+document.getElementById("membEntry").outerHTML = ""
+var cEntry = document.getElementById("crossEntry").cloneNode(true)
+document.getElementById("crossEntry").outerHTML = ""
+var projectInfo = document.getElementById("projectInfo")
+var errorField = document.getElementById("error")
+var projectID = getParameterByName("id");
+var loginUser = "guest"
+var editButton = document.getElementById("editButton")
+var nHeader = document.getElementById("nameHeader")
+var projectProfile
+if (localStorage["Authorization"]) {
+		token = localStorage["Authorization"].split(" ")[1];
+		loginUser = atob(token).split(":")[0];
+}
+
+function getParameterByName(name, url) {
+	if (!url) {
+	  url = window.location.href;
+	}
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function updateProjectInfo() {
+		 if(this.readyState == 4 && this.status == 200) {
+				var out = JSON.parse(this.responseText)
+				if (out.code == 400) {
+						errorField.innerHTML = "Unable to view project profile: Are you logged in?";
+				} else if (out.code != 0) {
+						errorField.innerHTML = out.status
+				} else {
+						var d = out.data
+						projectProfile = d
+						projectInfo.innerHTML = "<b>Species:</b> " + d.species + "<br>\n"
+						projectInfo.innerHTML += "<b>Location:</b> " + d.location + "<br\n>"
+						projectInfo.innerHTML += "<b>Type:</b> " + d.type + "<br>\n"
+						projectInfo.innerHTML += "<b>Availability:</b> " + (d.public ? "Public" : "Private") + "<br>\n"
+						projectInfo.innerHTML += "<b>My Role:</b> " + d.role + "<br>\n"
+						document.getElementById("projectAbout").innerHTML = d.description
+						nHeader.innerHTML = d.name
+						if(d.id && loginUser != "guest" && (d.role == "Admin" || d.role == "Owner")) {
+								nHeader.innerHTML += editButton.outerHTML
+								document.getElementById("submitSpecies").value = d.species;
+								document.getElementById("submitLocation").value = d.location;
+								document.getElementById("submitAvailability").value = d.public;
+								document.getElementById("submitDescription").value = d.description;
+						}
+
+				}
+		}
+}
+
+function updateMembersList() {
+	var list = document.getElementById("memberList");
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code != 0) {
+			errorField.innerHTML = out.status;
+		} else {
+			for(var i = 0; i < out.data.length; i++) {
+				var d = out.data[i]
+				var entry = mEntry.cloneNode(true)
+				entry.id += d.id
+				entry.children[0].children[0].children[0].href = "/profile.html?id=" + d.user_id
+				var c = entry.children[0].children[1]
+				var NameF = c.childNodes[1];
+				var RoleF = c.childNodes[3];
+				NameF.innerHTML = d.user_id
+				RoleF.innerHTML = d.role_name
+				list.appendChild(entry)
+			}
+		}
+		
+	}
+}
+
+function updateProjectInfo() {
+		 if(this.readyState == 4 && this.status == 200) {
+				var out = JSON.parse(this.responseText)
+				if (out.code == 400) {
+						errorField.innerHTML = "Unable to view project profile: Are you logged in?";
+				} else if (out.code != 0) {
+						errorField.innerHTML = out.status
+				} else {
+						var d = out.data
+						projectProfile = d
+						projectInfo.innerHTML = "<b>Species:</b> " + d.species + "<br>\n"
+						projectInfo.innerHTML += "<b>Location:</b> " + d.location + "<br\n>"
+						projectInfo.innerHTML += "<b>Type:</b> " + d.type + "<br>\n"
+						projectInfo.innerHTML += "<b>Availability:</b> " + (d.public ? "Public" : "Private") + "<br>\n"
+						projectInfo.innerHTML += "<b>My Role:</b> " + d.role + "<br>\n"
+						document.getElementById("projectAbout").innerHTML = d.description
+						nHeader.innerHTML = d.name
+						if(d.id && loginUser != "guest" && (d.role == "Admin" || d.role == "Owner")) {
+								nHeader.innerHTML += editButton.outerHTML
+								document.getElementById("submitSpecies").value = d.species;
+								document.getElementById("submitLocation").value = d.location;
+								document.getElementById("submitAvailability").value = d.public;
+								document.getElementById("submitDescription").value = d.description;
+						}
+
+				}
+		}
+}
+
+function updateCrossList() {
+	var list = document.getElementById("crossList");
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code != 0) {
+			errorField.innerHTML = out.status;
+		} else {
+			for(var i = 0; i < out.data.length; i++) {
+				var d = out.data[i]
+				var entry = cEntry.cloneNode(true)
+				entry.id += d.id
+				entry.children[0].children[0].children[0].href = "/cross.html?id=" + d.id + "&pid=" + projectID
+				var c = entry.children[0].children[1]
+				var NameF = c.childNodes[1];
+				var NoteF = c.childNodes[3];
+				var TraitF = c.childNodes[7];
+				NameF.innerHTML = d.name
+				NoteF.innerHTML = d.description
+				TraitF.innerHTML = "TODO"
+				list.appendChild(entry)
+			}
+		}
+		
+	}
+}
+
+
+
+
+
+function getProjectInfo() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateProjectInfo;
+	xhttp.open("GET", url + projectID, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null)
+}
+
+function getMembersInfo() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID + "/roles";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateMembersList;
+	xhttp.open("GET", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null)
+}
+
+
+function getCrossInfo() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID + "/crosses";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateCrossList;
+	xhttp.open("GET", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null)
+}
+
+function UpdateProject() {
+	var species = document.getElementById("submitSpecies").value;
+	var address = document.getElementById("submitLocation").value;
+	var availability = document.getElementById("submitAvailability").value;
+	var description = document.getElementById("submitDescription").value;
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4)
+			location.reload();
+	}
+	xhttp.open("PUT", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.setRequestHeader("Content-type", "application/json");
+	projectProfile.species = species
+	projectProfile.location = address
+	projectProfile.public = availability == "true" ? true : false
+	projectProfile.description = description
+	xhttp.send(JSON.stringify(projectProfile));
+}	
+
+getProjectInfo()
+getMembersInfo()
+getCrossInfo()
+</script>
+
+
+
+
+<!--Shitty old layout
+<div class="container">   
+   <div class="row">
+	<div class="col-sm-12">
+	  <div class="col-md-4">
+		<div class="contentbox">
+	<h1 align="center">Project Name</h1>
+		  <p><img class = "logo" src="\static\media\flower.png" width="275" height="250" alt="Logo"></p>
+	<h2 align="left">Species: Pepper</h2>
+	<h2 align="left">Mail</h2>
+	<h2 align="left">Join</h2>
+		 
+		</div>
+	  </div>
+	  
+	  <div class="col-md-4">
+		<div class="contentbox">
+		  <h1 align="center">Project Description</h1>
+	<p align="center"> Blah blah peppers blah wada wada</p>
+		</div>
+	  </div>
+	  
+	  <div class="col-md-4">
+		<div class="contentbox">
+		  <h1 align="center">Welcome!</h1>
+		  <p align="center">...to Bloom. If you're new, try our <a href="#">About</a> page. Otherwise, you can check out <a href="#">Registration</a> or search our <a href="#">Project Profiles</a>. If you have any questions, please consult our <a href="#">FAQ</a> first.</p>
+		</div>
+	  </div>
+</div>
+-->
+<script>
+
+function getData() {
+	if(this.readyState == 4 && this.status == 200) {
+		errdiv = document.getElementById("error");	
+		var resp = JSON.parse(this.responseText)
+		if (resp.code != 0) {
+			errdiv.innerHTML = "Unable to load treeview for Project " +
+				projectID + " because:<br> " +
+				resp.status;
+		}
+		if (resp.data == null)
+			return
+		for (r of resp.data) {
+			trees[trees.length] = new Tree(r);
+		}
+		draw();
+	}
+}
+
+var trees = [];
+var nodes = [];
+var canvas = null;
+var ctx = null;
+var camera_pos = {x:300,y:300}
+function Tree(r, l = 0) {
+	this.el = {
+		pos: {x: 0, y: 0},
+		id: r.data.id,
+		r: 15,
+		project: r.data.projectId,
+		name: r.data.name,
+		children: [],
+		layer: l
+	};
+	nodes[nodes.length] = this.el
+	this.el.onclick = clickNode
+	this.drawNode = drawNode
+	if (!r.children) 
+		return;
+	for( c of r.children) {
+		this.el.children[this.el.children.length] = new Tree(c,l+1);
+	}
+}
+
+function clickNode() {
+	window.location = "/cross.html?id=" + this.id + "&pid="+projectID
+}
+
+
+function drawNode(pos) {
+	ctx.beginPath();
+        this.el.pos.x = pos.x;
+        this.el.pos.y = pos.y;
+        ctx.lineWidth=2;
+        ctx.stroke();
+        ctx.closePath();
+        var twidth = ctx.measureText(this.el.name + "").width
+        ctx.save();
+	var xscale = 1
+	if((twidth / 2) + 3 > this.el.r)
+		xscale = (twidth/2 + 3)/this.el.r;
+	var ixscale = 1/xscale
+	ctx.scale(xscale, 1)
+	ctx.arc(this.el.pos.x * ixscale, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
+        ctx.lineWidth=1;
+        ctx.strokeText(this.el.name,pos.x - twidth/2,pos.y+4)
+        if (!this.el.children)
+        	return;
+        var offset = { x: pos.x, y: pos.y }
+        offset.x -= (this.el.children.length * 15);
+        offset.y = pos.y - 50;
+        for (c of this.el.children) {
+                c.drawNode(offset);
+                ctx.moveTo(this.el.pos.x,this.el.pos.y - this.el.r);
+                ctx.lineWidth=1;
+                ctx.lineTo(offset.x,offset.y + this.el.r);
+                ctx.stroke();
+                offset.x += 60;
+        }
+}
+
+prevMouse = {x:0,y:0}
+var clicked = false
+var dragged = false
+function mouseDrag(e) {
+	var rect = canvas.getBoundingClientRect();
+	var mousePos = {
+		x: e.clientX - rect.left,
+		y: e.clientY - rect.top
+	}
+	if (clicked) {
+		dragged = true;
+		delta = {
+			x: mousePos.x - prevMouse.x,
+			y: mousePos.y - prevMouse.y
+		}
+		camera_pos.x += delta.x * 0.7
+		camera_pos.y += delta.y * 0.7
+		ctx.clearRect(0,0,canvas.width,canvas.height);
+		draw();
+	}
+	prevMouse.x = mousePos.x
+	prevMouse.y = mousePos.y
+	
+}
+
+function mouseClick(e) {
+	var rect = canvas.getBoundingClientRect();
+	var mousePos = {
+		x: e.clientX - rect.left,
+		y: e.clientY - rect.top
+	}
+	var clickPos = {
+		x: mousePos.x,// - camera_pos.x,
+		y: mousePos.y// - camera_pos.y
+	}
+	for(var i = 0; i < nodes.length; i++) {
+		var node = nodes[i]
+		var xSq = (clickPos.x - node.pos.x)
+		xSq *= xSq
+		var ySq = (clickPos.y - node.pos.y)
+		ySq *= ySq
+		if(xSq + ySq < node.r * node.r)
+			node.onclick()
+		
+	}
+}
+
+
+function begin() {
+	canvas = document.getElementById("tree");	
+	canvas.addEventListener('mousemove', mouseDrag, false);
+	canvas.addEventListener('mousedown', function(e) {clicked = true;dragged=false;}, false);
+	canvas.addEventListener('mouseup', function(e) {
+			clicked = false;
+			if (!dragged)
+				mouseClick(e)
+			dragged=false;
+		}, false);
+	ctx = canvas.getContext("2d");
+	ctx.font = "8pt Courier"
+	var URL = "http://bloomgenetics.tech/api/v1";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = getData;
+	xhttp.open("GET", URL + "/projects/" + projectID + "/treview", true);
+	if (localStorage.getItem("Authorization")) {
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	}
+	xhttp.send(null);
+}
+
+function draw() {
+	if (trees.length == 0)
+		return
+	offset = {
+		x: camera_pos.x,
+		y: camera_pos.y
+		}
+	for (r of trees) {
+		r.drawNode(offset)
+		offset.x += 100
+	}
+}
+window.onload = begin
+</script>
