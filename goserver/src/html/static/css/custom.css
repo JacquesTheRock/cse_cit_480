@@ -205,7 +205,7 @@ html, body {
     padding: 20px; 	
 	margin-bottom: 0px;
 	font-weight: bold;
-	width: 300px;
+	display: inline-block;
 	
 }
  
