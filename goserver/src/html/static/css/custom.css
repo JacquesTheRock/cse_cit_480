@@ -190,7 +190,7 @@ html, body {
 	background-repeat: repeat-y repeat-x;
 	color: black !important;
 	border: 3px solid #4b3827;
-	border-radius: 8px;
+	border-radius: 0px 8px 8px 8px;
     padding: 20px; 
 	
 	margin-bottom: 20px;
