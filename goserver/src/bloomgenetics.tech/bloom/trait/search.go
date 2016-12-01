@@ -27,6 +27,7 @@ func SearchTraits(t entity.Trait) ([]entity.Trait, error) {
 	if len(queryVars) > 0 {
 		endQuery = qBase + query
 	}
+	endQuery += " ORDER BY a.pool"
 	util.PrintInfo(endQuery)
 	rows, err := util.Database.Query(endQuery, queryVars...)
 	defer rows.Close()

@@ -602,7 +602,7 @@ func postProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
 		out.Code = code.INVALIDFIELD
 		out.Status = "Not a Numeric Project ID"
 	}
-	if out.Code != 0 {
+	if out.Code == 0 {
 		ctype := r.Header.Get("Content-type")
 		e := entity.Trait{}
 		switch ctype {
@@ -629,7 +629,11 @@ func postProjectsPidTraits(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if e.Project_ID == pid {
-			e, _ = trait.NewTrait(e)
+			util.PrintDebug(e)
+			e, err = trait.NewTrait(e)
+			if err != nil {
+				util.PrintDebug(err)
+			}
 		}
 		out.Data = e
 	}
