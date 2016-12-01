@@ -86,7 +86,7 @@ html, body {
 	background-color: #c8b098;
  	background-image: url("/static/media/tile2.jpg");
 	background-repeat: repeat-y repeat-x;
-}
+
   width: 100%;
   min-height: 100%;
   padding: 0px;
@@ -200,11 +200,10 @@ html, body {
 	background-image: url("/static/media/paper.jpg");
 	background-repeat: repeat-y repeat-x;
 	color: black !important;
-	border: 3px solid #4b3827;
+	border: 5px solid #4b3827;
 	border-radius: 8px;
-    padding: 20px; 
-	
-	margin-bottom: 0px;
+    padding: 20px; 	
+	margin-bottom: 1px;
 	
 }
  
