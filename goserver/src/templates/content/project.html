@@ -181,7 +181,7 @@ function updateProjectInfo() {
 						document.getElementById("projectAbout").innerHTML = d.description
 						nHeader.innerHTML = d.name
 						if(d.id && loginUser != "guest" && (d.role == "Admin" || d.role == "Owner")) {
-								eHeader.innerHTML += editButton.outerHTML
+								editButton.innerHTML += editButton.outerHTML
 								document.getElementById("submitSpecies").value = d.species;
 								document.getElementById("submitLocation").value = d.location;
 								document.getElementById("submitAvailability").value = d.public;
@@ -234,7 +234,7 @@ function updateProjectInfo() {
 						document.getElementById("projectAbout").innerHTML = d.description
 						nHeader.innerHTML = d.name
 						if(d.id && loginUser != "guest" && (d.role == "Admin" || d.role == "Owner")) {
-								eHeader.innerHTML += editButton.outerHTML
+								editButton.innerHTML += editButton.outerHTML
 								document.getElementById("submitSpecies").value = d.species;
 								document.getElementById("submitLocation").value = d.location;
 								document.getElementById("submitAvailability").value = d.public;
