@@ -5,6 +5,7 @@
 	  <div class="contentbox">
 		<div class="container-fluid">
 		  <div id="result"></div>
+		   <h3>Parent Cross: HERE</h3>
 			<b>Upload Candidate Picture 
 				<div id="error"></div>
 				<input type="file" name="submitImage" id="submitImage">
@@ -56,7 +57,7 @@
 		</div>
 	  </div>
 	  	<!-- edit candiate page pop up content start-->
-	<div id="AddTraitsModal" class="modal fade" role="dialog">
+	<div id="newTraitModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 
 		<!-- Modal content-->
@@ -87,5 +88,34 @@
 		</div>
 	</div>
 	<!-- edit candidate page pop up content  stop-->
+	
+	
+		  	<!-- edit candiate page pop up content start-->
+	<div id="existingTraitModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal content-->
+
+				  <div class="contentbox">
+					<div class="container-fluid">
+					  <div id="result"></div>
+						<label class="checkbox"><input type="checkbox" value="">Available Trait 1, pulled from pool of traits in project</label>
+						<label class="checkbox"><input type="checkbox" value="">Available Trait 2, pulled from pool of traits in project</label>
+						<label class="checkbox"><input type="checkbox" value="">Available Trait 3, pulled from pool of traits in project</label>
+						<label class="checkbox"><input type="checkbox" value="">Available Trait 4, pulled from pool of traits in project</label>
+		
+						<button onclick="AddTrait()" class="btn btn-default">Add Trait</button>
+			
+					</div>
+				  </div>
+
+
+		</div>
+	</div>
+	<!-- edit candidate page pop up content  stop-->
+	  
+	
+	
+	
 	  
 </div>
