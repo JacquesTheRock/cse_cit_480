@@ -30,32 +30,39 @@ if (!localStorage["Authorization"]) {
 }
 </script>
 
-<div class="container">
-  <h2>Create New Project</h2>
-  <div id="result"></div>
-    <div class="form-group">
-      <label for="projectname">Project Name</label>
-      <input type="text" class="form-control" id="projectname" placeholder="Project Name">
-    </div>
-    <div class="form-group">
-      <label for="description">Description:</label>
-      <input type="text" class="form-control" id="description" placeholder="Description">
-    </div>
-    <div class="form-group">
-      <label for="location">Location</label>
-      <input type="text" class="form-control" id="location" placeholder="Location">
-    </div>
-	<div class="form-group">
-      <label for="species">Species</label>
-      <input type="text" class="form-control" id="species" placeholder="Species">
-    </div>
-	<div class="form-group">
-      <label for="type">Project Type</label>
-      <input type="text" class="form-control" id="type" placeholder="Project Type">
-    </div>
-	<div class="form-group">
-      <label for="public">Public (boolean)?</label>
-      <input type="text" class="form-control" id="public" placeholder="public">
-    </div>
-    <button onclick="CreateProject()" class="btn btn-default">Create Project</button>
+<div class="container" style="max-width: 750px;">
+	  <h2 class="row header container" style="max-width: 750px;">Create New Project</h2>
+	  <div class="contentbox">
+		<div class="container-fluid">
+		  <div id="result"></div>
+			<div class="form-group">
+			  <label for="projectname">Project Name</label>
+			  <input type="text" class="form-control" id="projectname" placeholder="Project Name">
+			</div>
+			<div class="form-group">
+			  <label for="description">Description:</label>
+			  <input type="text" class="form-control" id="description" placeholder="Description">
+			</div>
+			<div class="form-group">
+			  <label for="location">Location</label>
+			  <input type="text" class="form-control" id="location" placeholder="Location">
+			</div>
+			<div class="form-group">
+			  <label for="species">Species</label>
+			  <input type="text" class="form-control" id="species" placeholder="Species">
+			</div>
+			<div class="form-group">
+			  <label for="type">Project Type</label>
+			  <input type="text" class="form-control" id="type" placeholder="Project Type">
+			</div>
+			<div class="form-group">
+			  <label for="public">Public (boolean)?</label>
+			  <input type="text" class="form-control" id="public" placeholder="public">
+			</div>
+			<button onclick="CreateProject()" class="btn btn-default">Create Project</button>
+		
+		
+		
+		</div>
+	  </div>  
 </div>
