@@ -382,6 +382,7 @@ function Tree(r, l = 0) {
 	nodes[nodes.length] = this.el
 	this.el.onclick = clickNode
 	this.drawNode = drawNode
+	this.Width = calcTreeWidth
 	if (!r.children) 
 		return;
 	for( c of r.children) {
@@ -393,6 +394,13 @@ function clickNode() {
 	window.location = "/cross.html?id=" + this.id + "&pid="+projectID
 }
 
+function calcTreeWidth() {
+	var twidth = ctx.measureText(this.el.name + "").width
+	var width = twidth < this.el.r ? this.el.r : twidth
+	for (e of this.el.children)
+		width += e.Width();
+	return width
+}
 
 function drawNode(pos) {
 	ctx.beginPath();
@@ -415,16 +423,17 @@ function drawNode(pos) {
         ctx.strokeText(this.el.name,pos.x - twidth/2,pos.y+4)
         if (!this.el.children)
         	return;
-        var offset = { x: pos.x, y: pos.y }
-        offset.x -= (this.el.children.length * 15);
-        offset.y = pos.y - 50;
-        for (c of this.el.children) {
+	var totalWidth = (this.Width())
+        var offset = { x: pos.x - totalWidth /2, y: pos.y }
+        for (var i = 0; i < this.el.children.length; i++) {
+		var c = this.el.children[i]
+        	offset.y = pos.y - 50;
                 c.drawNode(offset);
                 ctx.moveTo(this.el.pos.x,this.el.pos.y - this.el.r);
                 ctx.lineWidth=1;
                 ctx.lineTo(offset.x,offset.y + this.el.r);
                 ctx.stroke();
-                offset.x += 60;
+                offset.x += c.Width();
         }
 }
 
