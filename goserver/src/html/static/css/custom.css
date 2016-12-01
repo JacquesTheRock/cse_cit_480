@@ -178,7 +178,7 @@ html, body {
  
  /*project page start*/
 .contentbox{
-	background-color: #FDFDFD;
+	background-color: white;
 	color: black !important;
 	border: 3px solid #4b3827;
 	border-radius: 8px;
