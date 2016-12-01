@@ -87,7 +87,6 @@ html, body {
  	background-image: url("/static/media/tile2.jpg");
 	background-repeat: repeat-y repeat-x;
 }
-#gradient{
   width: 100%;
   min-height: 100%;
   padding: 0px;
@@ -182,7 +181,7 @@ html, body {
  
  /*subsection stop*/
  
- /*project page start*/
+ /*contentbox start*/
 .contentbox{
 	background-color: #ececec;
 	background-image: url("/static/media/paper.jpg");
@@ -195,9 +194,21 @@ html, body {
 	margin-bottom: 20px;
 	
 }
+
+.contentbox-header{
+	background-color: #ececec;
+	background-image: url("/static/media/paper.jpg");
+	background-repeat: repeat-y repeat-x;
+	color: black !important;
+	border: 3px solid #4b3827;
+	border-radius: 8px;
+    padding: 20px; 
+	
+	margin-bottom: 0px;
+	
+}
  
- 
- /*project page stop*/
+ /*contentbox stop*/
  
  /*Player Profile Page*/
 .pBackground {
