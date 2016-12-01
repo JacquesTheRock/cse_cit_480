@@ -1,17 +1,12 @@
 <div class="container" style="max-width: 750px;">
 <!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
-	<h2  id="nameHeader" class="header contentbox-header" style="max-width: 750px;">Project 
-	</h2>
-	
-	<h2 id="editHeader" class="header contentbox-header" style="max-width: 750px;"><a id="editButton" data-toggle="modal" data-target="#editProjectModal">
+	<h2  id="nameHeader" class="header contentbox-header" style="max-width: 750px;">Project <a id="editButton" data-toggle="modal" data-target="#editProjectModal">
 		<span class="pull-right">
 	<span class="glyphicon glyphicon-edit">
 	</span>
 			Edit
 		</span></a>
 	</h2>
-	
-	
 	<div class="contentbox">
 		<div class="container-fluid">
 	<!--Adds style color to "Player Profile"-->
@@ -144,7 +139,6 @@ var projectID = getParameterByName("id");
 var loginUser = "guest"
 var editButton = document.getElementById("editButton")
 var nHeader = document.getElementById("nameHeader")
-var eHeader = document.getElementById("editHeader")
 var projectProfile
 if (localStorage["Authorization"]) {
 		token = localStorage["Authorization"].split(" ")[1];
@@ -181,7 +175,7 @@ function updateProjectInfo() {
 						document.getElementById("projectAbout").innerHTML = d.description
 						nHeader.innerHTML = d.name
 						if(d.id && loginUser != "guest" && (d.role == "Admin" || d.role == "Owner")) {
-								editButton.innerHTML += editButton.outerHTML
+								nHeader.innerHTML += editButton.outerHTML
 								document.getElementById("submitSpecies").value = d.species;
 								document.getElementById("submitLocation").value = d.location;
 								document.getElementById("submitAvailability").value = d.public;
@@ -234,7 +228,7 @@ function updateProjectInfo() {
 						document.getElementById("projectAbout").innerHTML = d.description
 						nHeader.innerHTML = d.name
 						if(d.id && loginUser != "guest" && (d.role == "Admin" || d.role == "Owner")) {
-								editButton.innerHTML += editButton.outerHTML
+								nHeader.innerHTML += editButton.outerHTML
 								document.getElementById("submitSpecies").value = d.species;
 								document.getElementById("submitLocation").value = d.location;
 								document.getElementById("submitAvailability").value = d.public;
