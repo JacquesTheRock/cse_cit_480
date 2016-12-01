@@ -20,7 +20,7 @@
 }
 
 .navbar-inverse{
-	background-color: #4b3827;
+	background-color: #6B6B6B;
 }
 
 .navbar{
@@ -178,7 +178,7 @@ html, body {
  
  /*project page start*/
 .contentbox{
-	background-color: #FDFDFD;
+	background-color: #66883f;
 	color: black !important;
 	border: 2px solid #4b3827;
 	border-radius: 8px;
