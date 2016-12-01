@@ -2,33 +2,29 @@
     <!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
       <h2 class="header contentbox-header" style="max-width: 750px;">New Cross</h2>
       <div class="contentbox">
-        <div class="container-fluid">
+	<div class="container-fluid">
 			  <div id="result"></div>
 					<section class="row container-fluid">
 
 							<div class="dropdown"  style="display: inline-block;" >
-								<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Parent 1
+								<button id='p1button' class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Parent 1
 								<span class="caret"></span></button>
-								<ul class="dropdown-menu">
-									<li><a href="#">parent 2</a></li>
-									<li><a href="#">parent 3</a></li>
-									<li><a href="#">parent 5</a></li>
+								<ul class="dropdown-menu" id="parent1list">
 								</ul>
 							</div>
 
 
 							<div class="dropdown"  style="display: inline-block;" >
-								<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Parent 2
+								<button id='p2button' class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Parent 2
 								<span class="caret"></span></button>
-								<ul class="dropdown-menu">
-									<li><a href="#">parent 2</a></li>
-									<li><a href="#">parent 3</a></li>
-									<li><a href="#">parent 5</a></li>
+								<ul class="dropdown-menu" id="parent2list">
 								</ul>
 							</div>
 
 					
 						<div class="form-group">
+						  <label for="notes">Name</label>
+						  <input type="text" class="form-control" id="crossName" placeholder="Name">
 						  <label for="notes">Notes</label>
 						  <input type="text" class="form-control" id="notes" placeholder="Notes">
 						</div>
@@ -36,6 +32,116 @@
 
 						<button onclick="CreateCross()" class="btn btn-shutterOut">Create Cross</button>
 					</section>
-        </div>
+	</div>
       </div>
   </div>
+<script>
+var pid = getParameterByName("pid");
+
+function getParameterByName(name, url) {
+	if (!url) {
+	  url = window.location.href;
+	}
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+function text_truncate(str, length, ending) {  
+    if (length == null) {  
+      length = 100;  
+    }  
+    if (ending == null) {  
+      ending = '...';  
+    }  
+    if (str.length > length) {  
+      return str.substring(0, length - ending.length) + ending;  
+    } else {  
+      return str;  
+    }  
+}
+
+
+function crossResponse() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if(out.code != 0) {
+			alert(out.status)
+		} else {
+			window.location = document.referrer
+		}
+	}
+}
+
+function CreateCross() {
+	var p1 = parseInt(document.getElementById('p1button').firstChild.data)
+	var p2 = parseInt(document.getElementById('p2button').firstChild.data)
+	var desc = document.getElementById('notes').value
+	var name = document.getElementById('crossName').value
+	if (isNaN(p1))
+		p1 = 0
+	if(isNaN(p2))
+		p2 = 0
+	var cross = {
+		name: name,
+		parent1: p1,
+		parent2: p2,
+		description: desc,
+		projectId: parseInt(pid)
+	}
+        var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = crossResponse;
+        xhttp.open("POST", url, true);
+        xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+        xhttp.setRequestHeader("Content-type", "application/json");
+	xhttp.send(JSON.stringify(cross));
+
+
+}
+
+function ChooseParent(parEL, candidate) {
+	var docEl
+	if(parEL == "parent1list")
+		docEl = document.getElementById('p1button')
+	else if(parEL == "parent2list")
+		docEl = document.getElementById('p2button')
+	else
+		return false
+	docEl.firstChild.data = candidate	
+
+	return false
+} 
+
+function updateDropDowns() {
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if(out.code == 0) {
+			var ps = [document.getElementById("parent1list"), document.getElementById("parent2list")]
+			for (p of ps) {
+				for (c of out.data) {
+					p.innerHTML += "<li><a onclick='ChooseParent(\"" + p.id + '",' + c.id +
+						")'>" + c.id  + ":" +text_truncate(c.note,30) + "</a></li>"
+				}
+			}
+		}
+	}
+}
+
+function getCandidates() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/candidates";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateDropDowns;
+	xhttp.open("GET", url, true);
+	xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null);
+
+}
+
+getCandidates()
+
+
+</script>

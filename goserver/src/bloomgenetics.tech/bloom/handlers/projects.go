@@ -812,7 +812,7 @@ func postProjectsPidCrosses(w http.ResponseWriter, r *http.Request) {
 			q.ProjectID.Int64 = pid
 			curCrosses, _ := cross.SearchCrosses(q)
 			count := len(curCrosses)
-			e.Name = "PROJECT" + strconv.FormatInt(pid, 10) + "CROSS" + strconv.Itoa(count)
+			e.Name = "P" + strconv.FormatInt(pid, 10) + "C" + strconv.Itoa(count)
 		}
 		if out.Code == 0 {
 			out.Data, err = cross.CreateCross(e)

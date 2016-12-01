@@ -192,7 +192,6 @@ function getTraits() {
 	xhttp.onreadystatechange = updateTraits;
 	xhttp.open("GET", url, true);
 	xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
-	xhttp.setRequestHeader("Content-type", "application/json");
 	xhttp.send(null);
 }
 
