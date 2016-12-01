@@ -178,7 +178,8 @@ html, body {
  
  /*project page start*/
 .contentbox{
-	background-color: #d9c6c1;
+	background-image: url("/static/media/paper.jpg");
+	background-repeat: repeat-y repeat-x;
 	color: black !important;
 	border: 3px solid #4b3827;
 	border-radius: 8px;
