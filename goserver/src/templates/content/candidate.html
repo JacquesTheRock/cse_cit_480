@@ -189,10 +189,11 @@ function updateCandidateInfo() {
 			infoEl.innerHTML = "Candidate: " + c.id + infoEl.innerHTML
 
 			infoEl = document.getElementById("traitTable")
-			tmp = "<tr><thead><th>Trait</th><th>Dominance</th></thead></tr><tbody>"
+			tmp = "<tr><thead><th>Group</th><th>Trait</th><th>Dominance</th></thead></tr><tbody>"
 			c.traits = c.traits || []
 			for (t of c.traits) {
 				tmp += "<tr>"
+				tmp += "<td>" + t.pool + "</td>"
 				tmp += "<td>" + t.name + "</td>"
 				tmp += "<td>" + t.type + "</td>"
 				tmp += "</tr>"

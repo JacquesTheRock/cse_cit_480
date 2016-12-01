@@ -215,7 +215,7 @@ function candidateResponse() {
 		if (out.code != 0) {
 			alert(out.status)
 		} else {
-			var candidate = out.data
+			window.location = document.referrer
 		}
 	}
 }
