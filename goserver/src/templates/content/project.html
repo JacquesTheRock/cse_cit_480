@@ -76,7 +76,7 @@
 											<h4 class="media-heading" >CROSS NAME</h4>
 											Notes: <text ></text>
 											<br>
-											Traits: <text >Trait 1 Trait 2 Trait 3</text>
+											<!--Traits: <text ></text>-->
 											<p ></p>
 										</div>
 									</div>
@@ -263,7 +263,18 @@ function updateCrossList() {
 				var TraitF = c.childNodes[7];
 				NameF.innerHTML = d.name
 				NoteF.innerHTML = d.description
-				TraitF.innerHTML = "TODO"
+/*
+				if(d.traits) {
+					TraitF.innerHTML = ""
+					for (t of d.traits) {
+						if(TraitF.innerHTML == "")
+							TraitF.innerHTML += t.name 
+						else
+							TraitF.innerHTML += ", " + t.name
+					}
+				} else
+					TraitF.innerHTML = "TODO"
+*/
 				list.appendChild(entry)
 			}
 		}
