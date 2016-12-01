@@ -107,6 +107,7 @@ html, body {
 }
 
 .jumbotron{
+	background-color: #ececec;
  	background-image: url("/static/media/paper.jpg");
 	background-repeat: repeat-y repeat-x;
 	color: black;
@@ -183,6 +184,7 @@ html, body {
  
  /*project page start*/
 .contentbox{
+	background-color: #ececec;
 	background-image: url("/static/media/paper.jpg");
 	background-repeat: repeat-y repeat-x;
 	color: black !important;
