@@ -126,6 +126,8 @@ function UpdateCross() {
 	xhttp.send(JSON.stringify(crossProfile));
 }
 
+var parent1ID = 0
+var parent2ID = 0
 function updateCrossInfo() {
 	if(this.readyState == 4 && this.status == 200) {
 		var out = JSON.parse(this.responseText)
@@ -150,6 +152,7 @@ function updateCrossInfo() {
 				var p1I = document.getElementById("p1image")
 				p1I.parentNode.href = "/candidate.html?pid="+pid+"&cid="+p+"&id="+d.data.parent1
 				getTraits(p, d.data.parent1)
+				parent1ID = d.data.parent1
 			}
 			if(d.data.parent2 == 0)
 				document.getElementById("parent2").outerHTML = ""
@@ -162,6 +165,7 @@ function updateCrossInfo() {
 				var p2I = document.getElementById("p2image")
 				p2I.parentNode.href = "/candidate.html?pid="+pid+"&cid="+p+"&id="+d.data.parent2
 				getTraits(p, d.data.parent2)
+				parent2ID = d.data.parent2
 			}
 		}
 	}
@@ -178,13 +182,12 @@ function updateTraitInfo() {
 			errorField.innerHTML = out.status
 		else {
 			var poolEl = document.getElementById("traitPool")
-			poolEl.innerHTML = "<h3><b>Trait Pool and Percentages</b></h3>"
+			var poolInner = "<h3><b>Trait Pool and Percentages</b></h3><table border='2' cellpadding='5'><th>type</th><th>Name</th><th>Carrier</th><th>Shows</th>"
 			var d = out.data
 			for(t of d.traits) {
 				if(!allTraits[t.pool])
 					allTraits[t.pool] = []
 				var pool = allTraits[t.pool]
-				t.count = 0
 				pool[pool.length] = t
 				if(!map[t.id])
 					map[t.id] = t
@@ -193,11 +196,72 @@ function updateTraitInfo() {
 				var pool = allTraits[i]
 				for (t of pool) {
 					var tmp = map[t.id];
-					tmp.count = (tmp.count || 0) + 1
-					poolEl.innerHTML += tmp.name + "<br>"
+					if(d.id == parent1ID)
+						tmp.p1count = (tmp.p1count || 0) + 1
+					if(d.id == parent2ID)
+						tmp.p2count = (tmp.p2count || 0) + 1
+					var shows = 0;
+					var carrier = 0;
+					var p1Traits = 0
+					var p2Traits = 0
+					if(tmp.p1count)
+						p1Traits = 1
+					if(tmp.p2count)
+						p2Traits = 1
+					for(j of pool) {
+						if(tmp.id == j.id)
+							continue
+						if(j.p1count)
+							p1Traits += 1
+						if(j.p2count)
+							p2Traits += 1
+					}
+					if(parent1ID > 0 && parent2ID > 0 && parent1ID != parent2ID) {
+						if((tmp.p1count && p1Traits == 1)||(tmp.p2count && p2Traits == 1)) {
+							carrier = 100
+						} else if(p1Traits == 2 &&  p2Traits == 2) {
+							carrier = 75
+						} else {
+							carrier = 50
+						}
+	
+						if(tmp.type_id == 2) {
+							shows = carrier
+						} else if (tmp.type_id == 1) {
+							if(pool.length == 1)
+								shows = 100
+							else if(pool.length == 2)
+								if (tmp.p1count && tmp.p2count && (p1Traits != 2 || p1Traits != 2))
+									shows = 50
+								else if (tmp.p1count && tmp.p2count)
+									shows = 25
+								else
+									shows = 0
+								
+						}
+					} else {
+						if(pool.length == 1)
+							carrier = 100
+						else
+							carrier = 75
+						if(tmp.type_id == 2)
+							shows = carrier
+						else {
+							if(pool.length == 2)
+								shows = 25
+							else if(pool.length == 1)
+								shows = 100
+							else
+								shows = 0
+						}
+					}
+					
+					poolInner += "<tr><td>"+tmp.type+"</td><td>"+tmp.name + "</td><td>" + carrier + "%</td><td>" + shows +"%</td></tr>"
 				}
 			}
 		}
+		poolInner += "</table>"
+		poolEl.innerHTML = poolInner
 	}
 }
 
