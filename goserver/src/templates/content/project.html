@@ -398,15 +398,17 @@ const TMOD = 3
 
 function calcTreeWidth() {
 	var twidth = ctx.measureText(this.el.name + "").width
-	twidth += 2 * TMOD
+	twidth = twidth + (2 * TMOD)
 	var myWidth = twidth < (2 * this.el.r) ? (2 * this.el.r) : twidth
 	this.width = myWidth
 	var subWidth = 0
-	for (e of this.el.children) {
+	for (var i = 0; i < this.el.children.length; i++) {
+		var e = this.el.children[i]
 		subWidth += e.Width();
 	}
 	return subWidth <= myWidth ? myWidth : subWidth
 }
+
 
 function drawNode(pos) {
 	var subWidth = this.Width()
@@ -426,15 +428,23 @@ function drawNode(pos) {
 	ctx.restore();
 	var newPos = {
 		y: pos.y - 50, // go up
-		x: pos.x - (subWidth/ 2) //Move the tree left
+		x: pos.x //Move the tree left
 	}
-	for (c of this.el.children) {
-		newPos.x += c.Width() / 2
+	if(this.el.children.length > 1)
+		newPos.x -= (subWidth / 2)
+	var tWidth = subWidth;
+	for (var i = 0; i < this.el.children.length; i++) {
+		var c = this.el.children[i]
 		c.drawNode(newPos)
 		ctx.moveTo(this.el.pos.x, this.el.pos.y - this.el.r);
 		ctx.lineTo(newPos.x, newPos.y + c.el.r)
 		ctx.stroke();
-		newPos.x += (c.width/2)
+		var change = c.Width()
+		if(i + 1 < this.el.children.length) {
+			var t  = this.el.children[i+1].Width()
+			change = t > change ? t : change
+		}
+		newPos.x += change
 	}
 	ctx.lineWidth=1;
 	ctx.strokeText(this.el.name,pos.x - (this.width/2) +  TMOD ,pos.y+4)
