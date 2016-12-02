@@ -194,6 +194,8 @@ function updateTraitInfo() {
 			else
 				getCandidateImage(d.imageId, elID)
 		/* end image setup */
+			if(!d.traits)
+				return 
 			for(t of d.traits) {
 				if(!allTraits[t.pool])
 					allTraits[t.pool] = []
