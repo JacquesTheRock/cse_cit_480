@@ -394,47 +394,50 @@ function clickNode() {
 	window.location = "/cross.html?id=" + this.id + "&pid="+projectID
 }
 
+const TMOD = 3
+
 function calcTreeWidth() {
 	var twidth = ctx.measureText(this.el.name + "").width
-	var width = twidth < this.el.r ? this.el.r : twidth
-	for (e of this.el.children)
-		width += e.Width();
-	return width
+	twidth += 2 * TMOD
+	var myWidth = twidth < (2 * this.el.r) ? (2 * this.el.r) : twidth
+	this.width = myWidth
+	var subWidth = 0
+	for (e of this.el.children) {
+		subWidth += e.Width();
+	}
+	return subWidth <= myWidth ? myWidth : subWidth
 }
 
 function drawNode(pos) {
+	var subWidth = this.Width()
 	ctx.beginPath();
-        this.el.pos.x = pos.x;
-        this.el.pos.y = pos.y;
-        ctx.lineWidth=2;
-        ctx.stroke();
-        ctx.closePath();
-        var twidth = ctx.measureText(this.el.name + "").width
-        ctx.save();
-	var xscale = 1
-	if((twidth / 2) + 3 > this.el.r)
-		xscale = (twidth/2 + 3)/this.el.r;
-	var ixscale = 1/xscale
+	this.el.pos.x = pos.x
+	this.el.pos.y = pos.y
+	ctx.save()
+	var xscale = 1.0
+	var ixscale = 1.0
+	if(this.width >= 2 * this.el.r ) {
+		xscale = (this.width / 2) / this.el.r;
+		ixscale = 1/xscale
+	}
 	ctx.scale(xscale, 1)
-	ctx.arc(this.el.pos.x * ixscale, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
-        ctx.stroke();
-        ctx.restore();
-        ctx.lineWidth=1;
-        ctx.strokeText(this.el.name,pos.x - twidth/2,pos.y+4)
-        if (!this.el.children)
-        	return;
-	var totalWidth = (this.Width())
-        var offset = { x: pos.x - totalWidth /2, y: pos.y }
-        for (var i = 0; i < this.el.children.length; i++) {
-		var c = this.el.children[i]
-        	offset.y = pos.y - 50;
-                c.drawNode(offset);
-                ctx.moveTo(this.el.pos.x,this.el.pos.y - this.el.r);
-                ctx.lineWidth=1;
-                ctx.lineTo(offset.x,offset.y + this.el.r);
-                ctx.stroke();
-                offset.x += c.Width();
-        }
+	ctx.arc(this.el.pos.x * ixscale, this.el.pos.y, this.el.r, 0, 2 * Math.PI);
+	ctx.stroke();
+	ctx.restore();
+	var newPos = {
+		y: pos.y - 50, // go up
+		x: pos.x - (subWidth/ 2) //Move the tree left
+	}
+	for (c of this.el.children) {
+		newPos.x += c.Width() / 2
+		c.drawNode(newPos)
+		ctx.moveTo(this.el.pos.x, this.el.pos.y - this.el.r);
+		ctx.lineTo(newPos.x, newPos.y + c.el.r)
+		ctx.stroke();
+		newPos.x += (c.width/2)
+	}
+	ctx.lineWidth=1;
+	ctx.strokeText(this.el.name,pos.x - (this.width/2) +  TMOD ,pos.y+4)
 }
 
 prevMouse = {x:0,y:0}
