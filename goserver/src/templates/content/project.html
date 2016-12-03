@@ -442,7 +442,7 @@ function drawNode(pos) {
 		var change = c.Width()
 		if(i + 1 < this.el.children.length) {
 			var t  = this.el.children[i+1].Width()
-			change = t > change ? t : change
+			change += t
 		}
 		newPos.x += change
 	}

@@ -249,7 +249,7 @@ function submitCandidate(iid=0) {
 }
 
 function traitResponse() {
-	if(this.responseText == 4 && this.status == 200) {
+	if(this.readyState == 4 && this.status == 200) {
 		out = JSON.parse(this.responseText)
 		if(out.code != 0)
 			alert(out.status)
