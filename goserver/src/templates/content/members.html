@@ -1,0 +1,46 @@
+  <div class="container" style="max-width: 750px;">
+	<!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
+	<h2 id="idHeader" class="header contentbox-header" style="max-width: 750px;">Cross: <a id="editButton" data-toggle="modal" data-target="#editMemberModal">
+		<span class="pull-right">
+				<span class="glyphicon glyphicon-edit">
+				</span>
+
+		</span></a>
+	</h2>
+	  <div class="contentbox">
+
+	  </div>
+	  
+	  
+	  
+	  
+	<!-- edit page pop up content start-->
+	<div id="editMemberModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal content-->
+
+				  <div class="contentbox">
+					<div class="container-fluid">
+					  <div id="result"></div>
+					  
+						<div class="form-group">
+							<label for="crossname">Cross Name</label>
+							<input type="text" class="form-control" id="submitCrossname" placeholder="Give your cross a custom name!">
+						</div>
+					  
+						<div class="form-group">
+							<label for="notes">Cross Notes</label>
+							<input type="text" class="form-control" id="submitNotes" placeholder="Write notes about your cross!">
+						</div>
+						
+						<button onclick="UpdateCross()" class="btn btn-default">Update</button>
+			
+					</div>
+				  </div>
+
+
+		</div>
+	</div>
+	<!-- edit page pop up content stop-->
+  </div>
