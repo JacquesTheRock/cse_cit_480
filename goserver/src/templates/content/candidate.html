@@ -8,28 +8,28 @@
 		</span></a>
 	</h2>
       <div class="contentbox">
-        <div class="container-fluid">
-          <!--Adds style color to "Player Profile"-->
-          <br>
+	<div class="container-fluid">
+	  <!--Adds style color to "Player Profile"-->
+	  <br>
 
-          <section class="row container-fluid">
-            <!-- Fetches and displays the player profile image -->
-            <p class="col-sm-6 col-md-4 col-lg-4"><img src="" width="200" height="200" id="candidateImage" alt="Candidate Picture."></p>
+	  <section class="row container-fluid">
+	    <!-- Fetches and displays the player profile image -->
+	    <p class="col-sm-6 col-md-4 col-lg-4"><img src="" width="200" height="200" id="candidateImage" alt="Candidate Picture."></p>
 
-            <section class="col-sm-7" id="candidateInfo">
-              <b>Parent Cross:</b> Link to parent cross <br>
-              <b>Parent 1:</b> Link to Parent Candidate 1<br>
-              <b>Parent 2:</b> Link to Parent Candidate 2<br>
-              <b>Year Grown:</b> 2016<br>
-              <b>Season Grown:</b> Summer<br>
-            </section>
+	    <section class="col-sm-7" id="candidateInfo">
+	      <b>Parent Cross:</b> Link to parent cross <br>
+	      <b>Parent 1:</b> Link to Parent Candidate 1<br>
+	      <b>Parent 2:</b> Link to Parent Candidate 2<br>
+	      <b>Year Grown:</b> 2016<br>
+	      <b>Season Grown:</b> Summer<br>
+	    </section>
 
-          </section>
+	  </section>
 
 		  
-          <section class="row-fluid">
-            <h3><b><div style="max-width: 100px;">Traits<a data-toggle="modal" data-target="#editTraitsModal" class="glyphicon glyphicon-edit pull-right" href="newcandidate.html"></a></div></b></h3>
-            </span></b></h3>
+	  <section class="row-fluid">
+	    <h3><b><div style="max-width: 100px;">Traits<a data-toggle="modal" data-target="#editTraitsModal" class="glyphicon glyphicon-edit pull-right" href="newcandidate.html"></a></div></b></h3>
+	    </span></b></h3>
 			  <table class="table table-striped" id="traitTable">  <!-- I'm gonna style this better but the basics of this are right -->
 				<thead>
 				  <tr>
@@ -63,31 +63,31 @@
 			  </table>
 			  <!--old shitty table
 			  <b>Trait 1 - </b> <b>Dominant - </b> <b>Tt - </b> <b>Has</b><br> 
-              <b>Trait 2 - </b> <b>Recessive - </b> <b>cc - </b> <b>Has</b><br>
-              <b>Trait 3 - </b> <b>Recessive - </b> <b>B? - </b> <b>Potential Carrier - 66% chance</b><br>
-              <b>Trait 4 - </b> <b>Dominant - </b> <b>gg - </b> <b>Doesn't Have</b><br>
+	      <b>Trait 2 - </b> <b>Recessive - </b> <b>cc - </b> <b>Has</b><br>
+	      <b>Trait 3 - </b> <b>Recessive - </b> <b>B? - </b> <b>Potential Carrier - 66% chance</b><br>
+	      <b>Trait 4 - </b> <b>Dominant - </b> <b>gg - </b> <b>Doesn't Have</b><br>
 			  -->
        
-          </section>
-          <section class="row-fluid">
-            <h3><b>Candidate Notes</b></h3>
+	  </section>
+	  <section class="row-fluid">
+	    <h3><b>Candidate Notes</b></h3>
 
-            <p id="note">This plant has grown exeptionally well. It is displaying a new unique feature of jagged leaves, I have added this trait to it's trait list. Though it doesn't have trait 4, it can be re-introduced if we choose the right plant to cross with. I feel this is a strong candidate for continuing on the project. </p><br>
+	    <p id="note">This plant has grown exeptionally well. It is displaying a new unique feature of jagged leaves, I have added this trait to it's trait list. Though it doesn't have trait 4, it can be re-introduced if we choose the right plant to cross with. I feel this is a strong candidate for continuing on the project. </p><br>
 
        
-          </section>
+	  </section>
 		  
 <!-- Missing API Point
-          <section class="row-fluid">
-            <h3>
+	  <section class="row-fluid">
+	    <h3>
 				<b>
 					Child Crosses
 				</b>
 			</h3>
 		<ul id="childCrossList"></ul>
-          </section>
+	  </section>
 -->
-        </div>
+	</div>
       </div>
 	  
 	<!-- edit candiate page pop up content start-->
@@ -135,9 +135,20 @@
 				  <div class="contentbox">
 					<div class="container-fluid">
 					  <div id="result"></div>
-						This all still needs to be populated and such
+						Available Traits:
 						<br>
-
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Expressing Trait?</th>
+									<th>Group</th>
+									<th>Trait</th>
+									<th>Dominance</th>
+								</tr>
+							</thead>
+							<tbody id="traitTBody">
+							</tbody>
+						</table>
 			
 
 						<button onclick="UpdateTraits()" class="btn btn-shutterOut">Update</button>
@@ -156,18 +167,19 @@ var cid = getParameterByName("cid");
 var cnid = getParameterByName("id");
 
 function getParameterByName(name, url) {
-        if (!url) {
-          url = window.location.href;
-        }
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
+	if (!url) {
+	  url = window.location.href;
+	}
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 
+var candidate
 function updateCandidateInfo() {
 	if (this.readyState == 4 && this.status == 200) {
 		var out = JSON.parse(this.responseText)
@@ -177,6 +189,7 @@ function updateCandidateInfo() {
 			errorField.innerHTML = out.status
 		else {
 			var c = out.data
+			candidate = c
 			var infoEl = document.getElementById("candidateInfo")
 			var tmp = "<b>Parent Cross:</b>"
 			tmp += "<a href=/cross.html?pid=" + pid + "&id=" + c.crossId + "> "
@@ -213,6 +226,7 @@ function updateCandidateInfo() {
 			/* Missing API Point
 			infoEl = document.getElementById("childCrossList")
 			*/
+			getAllTraits()
 		}
 	}
 }
@@ -232,24 +246,93 @@ function updateCandidateImage() {
 }
 
 function getCandidateImage(iid) {
-        var url = "http://bloomgenetics.tech/api/v1/images/" + iid
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = updateCandidateImage;
-        xhttp.open("GET", url, true);
-        if(localStorage["Authorization"])
-                xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
-        xhttp.send(null)
+	var url = "http://bloomgenetics.tech/api/v1/images/" + iid
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateCandidateImage;
+	xhttp.open("GET", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
+	xhttp.send(null)
 }
 
 function getCandidateInfo() {
-        var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + cid + "/candidates/" + cnid
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = updateCandidateInfo;
-        xhttp.open("GET", url, true);
-        if(localStorage["Authorization"])
-                xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
-        xhttp.send(null)
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + cid + "/candidates/" + cnid
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateCandidateInfo;
+	xhttp.open("GET", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
+	xhttp.send(null)
 }
+
+function updateTraits() {
+	if (this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code == 0) {
+			var el = document.getElementById("traitTBody")
+			for (t of out.data) {
+				var innerHTML = "<tr>"
+				innerHTML += "<td><label><input name='traits' type='checkbox' id='"
+				innerHTML += t.id
+				innerHTML +="' "
+				for ( ct of candidate.traits) {
+					if(ct.id == t.id) {
+						innerHTML += "checked"
+						break
+					}
+				}
+				innerHTML += "></label></td>"
+				innerHTML += "<td>" + t.pool + "</td>"
+				innerHTML += "<td>" + t.name + "</td>"
+				innerHTML += "<td>" + t.type + "</td>"
+				innerHTML += "</tr>"
+				el.innerHTML += innerHTML
+			}
+		}
+	}
+
+}
+
+function getAllTraits() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/traits";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateTraits;
+	xhttp.open("GET", url, true);
+	xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null);
+}
+
+
+function refreshResponse() {
+	if(this.readyState == 4) {
+		window.location.reload()
+	}
+}
+
+function UpdateTraits() {
+        var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + cid + "/candidates/" + cnid;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = refreshResponse;
+        xhttp.open("PUT", url, true);
+        xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        var r = document.querySelectorAll('input[name="traits"]:checked')
+
+        candidate.traits = []
+        for( tel of r) {
+                var trait = {
+                        id: parseInt(tel.id)
+                }
+                candidate.traits[candidate.traits.length] = trait
+        }
+
+        xhttp.send(JSON.stringify(candidate));
+
+}
+
+
+
+
 
 getCandidateInfo()
 </script>
