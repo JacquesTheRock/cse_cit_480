@@ -1024,72 +1024,84 @@ func getProjectsPidCrossesCidPunnet(w http.ResponseWriter, r *http.Request) {
 			out.Status = "Failure to obtain cross info"
 		}
 		parents, _ := candidate.GetParents(me)
-		p1 := make(map[int64][]entity.Trait)
-		p2 := make(map[int64][]entity.Trait)
-		p := parents[0]
-		for _, t := range p.Traits {
-			p1[t.Pool] = append(p1[t.Pool], t)
-		}
-		if len(parents) > 1 {
-			p = parents[1] // Set to other parent
-		} else {
-			p = parents[0] // Same parent
-		}
-		for _, t := range p.Traits {
-			p2[t.Pool] = append(p2[t.Pool], t)
-		}
-		type Chance struct {
-			Trait        entity.Trait `json:"trait"`
-			PercentCarry float64      `json:"carry"`
-			PercentShow  float64      `json:"show"`
-		}
-		output := make(map[int64]*Chance)
+		if len(parents) > 0 {
+			p1 := make(map[int64][]entity.Trait)
+			p2 := make(map[int64][]entity.Trait)
+			p := parents[0]
+			for _, t := range p.Traits {
+				p1[t.Pool] = append(p1[t.Pool], t)
+			}
+			for _, p := range p1 {
+				if len(p) == 1 {
+					p = append(p, p[0])
+				}
+			}
+			if len(parents) > 1 {
+				p = parents[1] // Set to other parent
+			} else {
+				p = parents[0] // Same parent
+			}
+			for _, t := range p.Traits {
+				p2[t.Pool] = append(p2[t.Pool], t)
+			}
+			for _, p := range p2 {
+				if len(p) == 1 {
+					p = append(p, p[0])
+				}
+			}
+			type Chance struct {
+				Trait        entity.Trait `json:"trait"`
+				PercentCarry float64      `json:"carry"`
+				PercentShow  float64      `json:"show"`
+				Total        int          `json:"count"`
+			}
+			output := make(map[int64]*Chance)
 
-		for i, p := range p1 {
-			var pairs [][2]entity.Trait
-			for _, f := range p {
-				for _, m := range p2[i] {
-					if m.ID < f.ID {
-						m, f = f, m //Maintain an order
+			for i, p := range p1 {
+				var pairs [][2]entity.Trait
+				for _, f := range p {
+					for _, m := range p2[i] {
+						if m.ID < f.ID {
+							m, f = f, m //Maintain an order
+						}
+						output[m.ID] = &Chance{Trait: m, PercentCarry: 0, PercentShow: 0}
+						output[f.ID] = &Chance{Trait: f, PercentCarry: 0, PercentShow: 0}
+						pair := [2]entity.Trait{m, f}
+						pairs = append(pairs, pair) // Essentially, dot Product
 					}
-					output[m.ID] = &Chance{Trait: m}
-					output[f.ID] = &Chance{Trait: f}
-					pair := [2]entity.Trait{m, f}
-					pairs = append(pairs, pair) // Essentially, dot Product
 				}
-			}
-			for _, pair := range pairs {
-				m := pair[0]
-				f := pair[1]
-				if f.ID != m.ID {
-					o := output[m.ID]
-					o.PercentCarry += 1
-					o = output[f.ID]
-					o.PercentCarry += 1
-					if f.Type_ID == 2 {
+				for _, pair := range pairs {
+					m := pair[0]
+					f := pair[1]
+					if f.ID != m.ID {
+						o := output[m.ID]
+						o.PercentCarry += 1
 						o = output[f.ID]
+						o.PercentCarry += 1
+						if f.Type_ID == 2 {
+							o = output[f.ID]
+							o.PercentShow += 1
+						}
+						if m.Type_ID == 2 {
+							o = output[m.ID]
+							o.PercentShow += 1
+						}
+					} else {
+						o := output[m.ID]
+						o.PercentCarry += 1
 						o.PercentShow += 1
 					}
-					if m.Type_ID == 2 {
-						o = output[m.ID]
-						o.PercentShow += 1
-					}
-				} else {
-					o := output[m.ID]
-					o.PercentCarry += 1
-					o.PercentShow += 1
+				}
+				for _, e := range output {
+					e.Total = len(pairs)
 				}
 			}
+			cList := make([]*Chance, 0)
 			for _, e := range output {
-				e.PercentShow /= float64(len(pairs))
-				e.PercentCarry /= float64(len(pairs))
+				cList = append(cList, e)
 			}
+			out.Data = cList
 		}
-		cList := make([]Chance, 0)
-		for _, e := range output {
-			cList = append(cList, *e)
-		}
-		out.Data = cList
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
