@@ -1,0 +1,149 @@
+<div class="container" style="max-width: 750px;">
+	  <h2 class="header contentbox-header" style="max-width: 750px;">Search</h2>
+	  <div class="contentbox">
+		<div class="container-fluid">		
+			<div class="container-fluid">
+					<table id="messageTable">
+						<th>
+							<td>Sender</td>
+							<td>Date</td>
+							<td>Subject</td>
+							<td>Message</td>
+						</th>
+						<tr id="entry0">
+							<td>Sender</td>
+							<td>Date</td>
+							<td>Subject</td>
+							<td>Message</td>
+						</tr>
+					</table>
+			
+			
+			
+					<h3 style="text-align: center"><label class="checkbox-inline"><input id="b1" type="checkbox" value="">Projects</label>
+					<input id="terms" type="text" class="form-control" name="search" placeholder="Search here"></h3>
+
+					<button onclick="Search()" class="btn btn-shutterOut" name="submit" id="button-submit">Search</button>
+
+			</div>
+			<div class="container-fluid">
+				<h2 style="text-align: center; text-decoration: underline;"> RESULTS </h2>
+				<ul class="media-list" id="resultList">
+					<div class="media" id="result">
+						<div class="media-left well">
+							<a href="#" id="resultImgURL">
+								<img class="media-object" src="..." alt="Generic placeholder image" id="resultImg">
+							</a>
+						</div>
+						<div class="media-body well">
+							<h4 class="media-heading" >Media heading</h4>
+							Location: <text ></text>
+							<p ></p>
+						</div>
+					</div>
+				</ul>
+			</div>		
+		</div>
+	  </div>  
+</div>
+  
+  <script>
+	var searchEntry = document.getElementById("entry0").cloneNode(true); //copies entry
+	document.getElementById("entry0").outerHTML = ""; //deletes entry
+	
+	function FillTable(){
+		//listClear()
+		//if (document.getElementById("b1").checked)
+			SearchProjects();
+	}
+	
+	function SearchProjects(){
+		var url = "http://bloomgenetics.tech/api/v1/projects";
+		var data = "?pid="+document.getElementById("terms").value+"&name="+document.getElementById("terms").value;
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = getData;
+		xhttp.open("GET", url + data, true);
+		if (localStorage["Authorization"])
+			xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+		xhttp.send(null);
+	}
+	
+	
+	function getData() {
+		if(this.readyState == 4 && this.status == 200) {
+			searchResults(this.responseText);
+		}
+	}
+	
+	function searchResults(data){
+		for (var i = 0; i < t1.data.length; i++){
+			var e = t1.data[i];
+			var person = false
+			if (typeof e.public === "undefined") {
+				person = true
+			}
+			var entry = searchEntry.cloneNode(true);
+			if (person) {
+				entry.children[0].innerHTML="Name";
+				entry.children[1].innerHTML="Time";
+				entry.children[2].innerHTML="Title";
+				entry.children[3].innerHTML="Text";
+			}
+			add(entry);
+		}
+	
+	
+	/*var t1 = JSON.parse(data);
+		for (var i = 0; i < t1.data.length; i++){
+			var e = t1.data[i];
+			var person = false
+			if (typeof e.public === "undefined") {
+				person = true
+			}
+			var entry = searchEntry.cloneNode(true);
+//<a href="#" id="resultImgURL">
+			var c = entry.children[1];
+			
+			if (person) {
+				entry.id += "User" + e.id
+				entry.children[0].children[0].href = "/profile.html?id=" + e.id
+				var rName = c.childNodes[1];
+				var rSpecies = c.childNodes[3];
+				var rDescription = c.childNodes[5];
+				rName.innerHTML = "User: " + e.id
+				rSpecies.innerHTML = e.growzone
+				rDescription.innerHTML = "Active: " + e.season
+				add(entry)
+			} else if (e.public == true) {
+				entry.id += "Project" + e.id
+				entry.children[0].children[0].href = "/project.html?id=" + e.id
+				var rName = c.childNodes[1];
+				var rSpecies = c.childNodes[3];
+				var rDescription = c.childNodes[5];
+				rName.innerHTML = "Project: " + e.name;
+				rSpecies.innerHTML = e.species;
+				rDescription.innerHTML = e.description;
+				add(entry)
+			}
+		}*/
+		var testIfExist = document.getElementById("entry0")
+		if (!testIfExist){
+			var div = document.createElement('div');
+			div.innerHTML = '<text>There were no results</text>';
+			add(div);
+		}
+	}
+	function listClear() {
+		var list = document.getElementById("resultList")
+		while (list.firstChild) {
+ 		   list.removeChild(list.firstChild);
+		}
+	}
+	function add(result) {
+		var list = document.getElementById("messageTable");
+		list.appendChild(result);
+	}
+	
+	
+	
+  </script>
