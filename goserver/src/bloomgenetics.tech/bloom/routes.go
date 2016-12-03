@@ -142,6 +142,12 @@ var routes = Routes{
 		handlers.ProjectsPidCrossesCid,
 	},
 	Route{
+		"projects_pid_crosses_cid_punnet",
+		[]string{"GET"},
+		"/projects/{pid}/crosses/{cid}/punnet",
+		handlers.ProjectsPidCrossesCidPunnet,
+	},
+	Route{
 		"projects_pid_crosses_cid_candidates",
 		[]string{"GET", "POST"},
 		"/projects/{pid}/crosses/{cid}/candidates",

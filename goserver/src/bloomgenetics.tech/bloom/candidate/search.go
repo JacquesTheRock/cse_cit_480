@@ -57,6 +57,18 @@ func GetAll(pid int64) ([]entity.Candidate, error) {
 
 }
 
+func GetParents(c entity.Cross) ([]entity.Candidate, error) {
+	q1 := CandidateQuery{}
+	q1.ID.Int64 = c.Parent1ID
+	q1.ID.Valid = true
+	q2 := CandidateQuery{}
+	q2.ID.Int64 = c.Parent2ID
+	q2.ID.Valid = true
+	out1, _ := SearchCandidates(q1)
+	out2, _ := SearchCandidates(q2)
+	return append(out1, out2...), nil
+}
+
 func SearchCandidates(q CandidateQuery) ([]entity.Candidate, error) {
 	const qBase = "SELECT s.id,c.id,c.project_id,s.note,s.img_id FROM crosses c JOIN specimen s ON c.id = s.cross_id"
 	queryVars := make([]interface{}, 0)
