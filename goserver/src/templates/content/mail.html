@@ -1,3 +1,8 @@
+<style>
+table, th, td {
+    border: 1px solid black;
+}</style>
+
 <div class="container" style="max-width: 750px;">
 	  <h2 class="header contentbox-header" style="max-width: 750px;">Search</h2>
 	  <div class="contentbox">
@@ -87,6 +92,7 @@
 	}
 	
 	function searchResults(data){
+		//var t1 = JSON.parse(data);
 		for (var i = 0; i < t1.data.length; i++){
 			var e = t1.data[i];
 			var person = false
