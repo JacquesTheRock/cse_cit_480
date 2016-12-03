@@ -19,7 +19,7 @@
 					</table>
 			
 			
-			
+			<!--
 					<h3 style="text-align: center"><label class="checkbox-inline"><input id="b1" type="checkbox" value="">Projects</label>
 					<input id="terms" type="text" class="form-control" name="search" placeholder="Search here"></h3>
 
@@ -42,19 +42,30 @@
 						</div>
 					</div>
 				</ul>
-			</div>		
+			</div>	
+-->			
 		</div>
 	  </div>  
 </div>
   
   <script>
+  window.onload = FillTable();
 	var searchEntry = document.getElementById("entry0").cloneNode(true); //copies entry
 	document.getElementById("entry0").outerHTML = ""; //deletes entry
 	
 	function FillTable(){
 		//listClear()
 		//if (document.getElementById("b1").checked)
-			SearchProjects();
+		//	SearchProjects();
+		
+			var entry = searchEntry.cloneNode(true);
+			
+				entry.children[0].innerHTML="Name";
+				entry.children[1].innerHTML="Time";
+				entry.children[2].innerHTML="Title";
+				entry.children[3].innerHTML="Text";
+				
+			add(entry);
 	}
 	
 	function SearchProjects(){
