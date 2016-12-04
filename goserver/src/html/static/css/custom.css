@@ -217,7 +217,7 @@ html, body {
 	margin-left: -12px;
 	font-weight: bold;
 	display: inline-block;
-	position:relative
+	position:relative;
 }
 
 .contentbox-header-leftmost{
