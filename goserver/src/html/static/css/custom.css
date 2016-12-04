@@ -251,7 +251,8 @@ html, body {
 	margin-left: 0px;
 	font-weight: bold;
 	display: inline-block;
-	position:relative;
+	position:absolute;
+	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	max-width: 500px;
