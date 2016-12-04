@@ -213,7 +213,7 @@ html, body {
 	border-right: 3px solid #4b3827;
 	border-radius: 8px 8px 0px 0px;
     padding: 10px; 	
-	margin-bottom: -2.5px;
+	margin-bottom: -3px;
 	font-weight: bold;
 	display: inline-block;	
 }
@@ -223,7 +223,7 @@ html, body {
 	background-image: url(/static/media/paper.jpg);
 	background-repeat: repeat-y repeat-x;
 	border-radius: 8px 8px 0px 0px; 	
-	margin-bottom: -2.5px;
+	margin-bottom: -3px;
 	display: inline-block;	
 	
 }
