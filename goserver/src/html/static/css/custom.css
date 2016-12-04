@@ -217,7 +217,7 @@ html, body {
 	margin-left: -12px;
 	font-weight: bold;
 	display: inline-block;
-	position:initial;
+	position:static;
 }
 
 .contentbox-header-leftmost{
@@ -234,7 +234,7 @@ html, body {
 	margin-left: 0px;
 	font-weight: bold;
 	display: inline-block;
-	position:initial;
+	position:static;
 }
 
 .contentbox-header-row{
