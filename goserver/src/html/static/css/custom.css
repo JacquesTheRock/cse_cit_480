@@ -233,7 +233,8 @@ html, body {
 	margin-bottom: -4px;
 	margin-left: 0px;
 	font-weight: bold;
-	display: inline-block;	
+	display: inline-block;
+	position:relative;
 }
 
 .contentbox-header-row{
