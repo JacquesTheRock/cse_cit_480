@@ -216,7 +216,8 @@ html, body {
 	margin-bottom: -50px;
 	margin-left: -12px;
 	font-weight: bold;
-	display: inline-block;	
+	display: inline-block;
+	position:relative
 }
 
 .contentbox-header-leftmost{
