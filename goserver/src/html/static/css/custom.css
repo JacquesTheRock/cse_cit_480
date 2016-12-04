@@ -244,7 +244,7 @@ html, body {
 	color: #60443d;
 	border-top: 3px solid #4b3827;
 	border-left: 3px solid #4b3827;
-	border-right: 4px solid #4b3827;
+	border-right: 3px solid #4b3827;
 	border-radius: 8px 8px 0px 0px;
     padding: 10px; 	
 	margin-bottom: -4px;
@@ -252,6 +252,10 @@ html, body {
 	font-weight: bold;
 	display: inline-block;
 	position:relative;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 200px;
 }
 
 
