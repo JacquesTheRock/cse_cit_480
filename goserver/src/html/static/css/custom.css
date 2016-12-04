@@ -253,7 +253,6 @@ html, body {
 	display: inline-block;
 	position:relative;
 	white-space: nowrap;
-	overflow: hidden;
 	max-width: 500px;
 }
 
