@@ -208,9 +208,9 @@ html, body {
 	background-image: url(/static/media/paper.jpg);
 	background-repeat: repeat-y repeat-x;
 	color: #60443d;
-	border-top: 3px solid #4b3827;
-	border-left: 3px solid #4b3827;
-	border-right: 0px solid #4b3827;
+	border-top: 6px solid #4b3827;
+	border-left: 6px solid #4b3827;
+	border-right: 6px solid #4b3827;
 	border-radius: 8px 8px 0px 0px;
     padding: 10px; 	
 	margin-bottom: -3px;
@@ -224,7 +224,7 @@ html, body {
 	background-image: url(/static/media/paper.jpg);
 	background-repeat: repeat-y repeat-x;
 	border-radius: 8px 8px 0px 0px;
-	border-right: 4px solid #4b3827; 	
+	border-right: 0px solid #4b3827; 	
 	margin-bottom: -3px;
 	display: inline-block;	
 	
