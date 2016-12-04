@@ -219,7 +219,7 @@ html, body {
 	display: inline-block;	
 }
 
-.contentbox-header-project{
+.contentbox-header-leftmost{
 	background-color: #ececec;
 	background-image: url(/static/media/paper.jpg);
 	background-repeat: repeat-y repeat-x;
