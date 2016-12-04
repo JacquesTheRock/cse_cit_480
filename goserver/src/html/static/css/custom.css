@@ -203,7 +203,7 @@ html, body {
 	
 }
 
-.contentbox-header-project{
+.contentbox-header{
 	background-color: #ececec;
 	background-image: url(/static/media/paper.jpg);
 	background-repeat: repeat-y repeat-x;
@@ -220,7 +220,7 @@ html, body {
 	position:relative;
 }
 
-.contentbox-header{
+.contentbox-header-project{
 	background-color: #ececec;
 	background-image: url(/static/media/paper.jpg);
 	background-repeat: repeat-y repeat-x;
