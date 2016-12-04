@@ -223,7 +223,8 @@ html, body {
 	background-color: #ececec;
 	background-image: url(/static/media/paper.jpg);
 	background-repeat: repeat-y repeat-x;
-	border-radius: 8px 8px 0px 0px; 	
+	border-radius: 8px 8px 0px 0px;
+	border-right: 3px solid #4b3827; 	
 	margin-bottom: -3px;
 	display: inline-block;	
 	
