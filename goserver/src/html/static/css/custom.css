@@ -209,6 +209,23 @@ html, body {
 	background-repeat: repeat-y repeat-x;
 	color: #60443d;
 	border-top: 3px solid #4b3827;
+	border-left: 3px solid #4b3827;
+	border-right: 3px solid #4b3827;
+	border-radius: 8px 8px 0px 0px;
+    padding: 10px; 	
+	margin-bottom: -5px;
+	margin-left: 0px;
+	font-weight: bold;
+	display: inline-block;
+	position:relative;
+}
+
+.contentbox-header{
+	background-color: #ececec;
+	background-image: url(/static/media/paper.jpg);
+	background-repeat: repeat-y repeat-x;
+	color: #60443d;
+	border-top: 3px solid #4b3827;
 	border-left: 4px solid #4b3827;
 	border-right: 4px solid #4b3827;
 	border-radius: 8px 8px 0px 0px;
@@ -237,16 +254,6 @@ html, body {
 	position:relative;
 }
 
-.contentbox-header-row{
-	background-color: #ececec;
-	background-image: url(/static/media/paper.jpg);
-	background-repeat: repeat-y repeat-x;
-	border-radius: 8px 8px 0px 0px;
-	border-right: 0px solid #4b3827; 	
-	margin-bottom: -12px;
-	display: inline-block;	
-	
-}
 
  
  /*contentbox stop*/
