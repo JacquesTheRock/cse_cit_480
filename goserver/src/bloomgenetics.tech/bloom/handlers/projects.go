@@ -1031,11 +1031,6 @@ func getProjectsPidCrossesCidPunnet(w http.ResponseWriter, r *http.Request) {
 			for _, t := range p.Traits {
 				p1[t.Pool] = append(p1[t.Pool], t)
 			}
-			for _, p := range p1 {
-				if len(p) == 1 {
-					p = append(p, p[0])
-				}
-			}
 			if len(parents) > 1 {
 				p = parents[1] // Set to other parent
 			} else {
@@ -1044,9 +1039,15 @@ func getProjectsPidCrossesCidPunnet(w http.ResponseWriter, r *http.Request) {
 			for _, t := range p.Traits {
 				p2[t.Pool] = append(p2[t.Pool], t)
 			}
-			for _, p := range p2 {
-				if len(p) == 1 {
-					p = append(p, p[0])
+			//Every pool needs 2 Traits, so if it has less, expand it
+			for i, _ := range p1 {
+				if len(p1[i]) == 1 {
+					p1[i] = append(p1[i], p1[i][0])
+				}
+			}
+			for i, _ := range p2 {
+				if len(p2[i]) == 1 {
+					p2[i] = append(p2[i], p2[i][0])
 				}
 			}
 			type Chance struct {
@@ -1055,27 +1056,27 @@ func getProjectsPidCrossesCidPunnet(w http.ResponseWriter, r *http.Request) {
 				PercentShow  float64      `json:"show"`
 				Total        int          `json:"count"`
 			}
+			type Pair struct {
+				M entity.Trait
+				F entity.Trait
+			}
 			output := make(map[int64]*Chance)
-
-			for i, p := range p1 {
-				var pairs [][2]entity.Trait
-				for _, f := range p {
-					for _, m := range p2[i] {
-						if m.ID < f.ID {
-							m, f = f, m //Maintain an order
-						}
+			for i, p := range p1 { // for each pool
+				var pairs []Pair
+				for _, f := range p { // for each trait in the pool
+					for _, m := range p2[i] { // for each trait in the p2 pool
 						output[m.ID] = &Chance{Trait: m, PercentCarry: 0, PercentShow: 0}
 						output[f.ID] = &Chance{Trait: f, PercentCarry: 0, PercentShow: 0}
-						pair := [2]entity.Trait{m, f}
-						pairs = append(pairs, pair) // Essentially, dot Product
+						pairs = append(pairs, Pair{M: m, F: f})
 					}
 				}
 				for _, pair := range pairs {
-					m := pair[0]
-					f := pair[1]
+					m := pair.M
+					f := pair.F
+					util.PrintDebug(m.Name + " vs " + f.Name)
+					o := output[m.ID]
+					o.PercentCarry += 1
 					if f.ID != m.ID {
-						o := output[m.ID]
-						o.PercentCarry += 1
 						o = output[f.ID]
 						o.PercentCarry += 1
 						if f.Type_ID == 2 {
@@ -1086,9 +1087,14 @@ func getProjectsPidCrossesCidPunnet(w http.ResponseWriter, r *http.Request) {
 							o = output[m.ID]
 							o.PercentShow += 1
 						}
+						if m.Type_ID == 1 && f.Type_ID == 1 {
+							o = output[m.ID]
+							o.PercentShow += 1
+							o = output[f.ID]
+							o.PercentShow += 1
+						}
 					} else {
-						o := output[m.ID]
-						o.PercentCarry += 1
+						o = output[m.ID]
 						o.PercentShow += 1
 					}
 				}

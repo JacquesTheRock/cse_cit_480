@@ -14,7 +14,7 @@ type CandidateQuery struct {
 }
 
 func GetTraits(e entity.Candidate) (entity.Candidate, error) {
-	const qBase = "SELECT t.id,t.project_id,t.name,t.pool,tt.id,tt.name,tt.weight FROM specimen_trait st JOIN trait t ON st.trait_id = t.id JOIN trait_t tt ON t.class = tt.id WHERE st.specimen_id = $1"
+	const qBase = "SELECT t.id,t.project_id,t.name,t.pool,tt.id,tt.name,tt.weight FROM specimen_trait st JOIN trait t ON st.trait_id = t.id JOIN trait_t tt ON t.class = tt.id WHERE st.specimen_id = $1ORDER BY t.pool"
 	rows, err := util.Database.Query(qBase, e.ID)
 	if err != nil {
 		util.PrintError("Unable to get Candidates traits")
