@@ -21,13 +21,13 @@
 		  <section class="row-fluid">
 			<h2 id="nameHeader" >Cross Name: BLA BLA BLA</h2>
 		  </section>
-		  <section class="row-fluid">
+		  <section class="row-fluid" style="background:rgba(255,255,255,0.5);">
 			<h3>
 				<b>
 					TreeView
 				</b>
 			</h3>
-			  <canvas id="tree" width="500" height="200"></canvas>
+			  <canvas id="tree" width="644.54" height="350"></canvas>
 
 	   
 		  </section>
@@ -259,26 +259,26 @@ function updateCandidateList() {
 function makeImageFunc(elID) {
 	return function () {
 		if(this.readyState == 4 && this.status == 200) {
-                	var out = JSON.parse(this.responseText)
-                	if(out.code == 400)
-                	        errorField.innerHTML = "Not allowed to view image"
-                	else if (out.code != 0)
-                	        errorField.innerHTML = out.status
-                	else {
-                	        var el = document.getElementById(elID)
-                	        el.src = out.data.data
-                	}
+			var out = JSON.parse(this.responseText)
+			if(out.code == 400)
+				errorField.innerHTML = "Not allowed to view image"
+			else if (out.code != 0)
+				errorField.innerHTML = out.status
+			else {
+				var el = document.getElementById(elID)
+				el.src = out.data.data
+			}
 		}
 	}
 }
 function getCandidateImage(iid,elID) {
 	var url = "http://bloomgenetics.tech/api/v1/images/" + iid
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = makeImageFunc(elID);
-        xhttp.open("GET", url, true);
-        if(localStorage["Authorization"])
-                xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
-        xhttp.send(null)
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = makeImageFunc(elID);
+	xhttp.open("GET", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
+	xhttp.send(null)
 }
 
 function getParent(pcid,p) {
@@ -388,16 +388,16 @@ function clickNode() {
 const TMOD = 3
 
 function calcTreeWidth() {
-        var twidth = ctx.measureText(this.el.name + "").width
-        twidth = twidth + (2 * TMOD)
-        var myWidth = twidth < (2 * this.el.r) ? (2 * this.el.r) : twidth
-        this.width = myWidth
-        var subWidth = 0
-        for (var i = 0; i < this.el.children.length; i++) {
-                var e = this.el.children[i]
-                subWidth += e.Width();
-        }
-        return subWidth <= myWidth ? myWidth : subWidth
+	var twidth = ctx.measureText(this.el.name + "").width
+	twidth = twidth + (2 * TMOD)
+	var myWidth = twidth < (2 * this.el.r) ? (2 * this.el.r) : twidth
+	this.width = myWidth
+	var subWidth = 0
+	for (var i = 0; i < this.el.children.length; i++) {
+		var e = this.el.children[i]
+		subWidth += e.Width();
+	}
+	return subWidth <= myWidth ? myWidth : subWidth
 }
 
 
@@ -411,56 +411,56 @@ function max(a,b) {
 
 
 function drawNode(pos) {
-        var subWidth = this.Width()
-        ctx.beginPath();
-        this.el.pos.x = pos.x
-        this.el.pos.y = pos.y
-        ctx.save()
-        var xscale = 1.0
-        var ixscale = 1.0
-        if(this.width >= 2 * this.el.r ) {
-                xscale = (this.width / 2) / this.el.r;
-                ixscale = 1/xscale
-        }
+	var subWidth = this.Width()
+	ctx.beginPath();
+	this.el.pos.x = pos.x
+	this.el.pos.y = pos.y
+	ctx.save()
+	var xscale = 1.0
+	var ixscale = 1.0
+	if(this.width >= 2 * this.el.r ) {
+		xscale = (this.width / 2) / this.el.r;
+		ixscale = 1/xscale
+	}
 
-        if(this.el.type  != "current") {
-        	ctx.scale(xscale, 1)
+	if(this.el.type  != "current") {
+		ctx.scale(xscale, 1)
 		ctx.arc(this.el.pos.x * ixscale, this.el.pos.y, this.el.r, 0, 2 * Math.PI)
-        } else {
-                ctx.rect(this.el.pos.x - this.width/2, this.el.pos.y - this.el.r, this.width, this.el.r * 2);
-        }
+	} else {
+		ctx.rect(this.el.pos.x - this.width/2, this.el.pos.y - this.el.r, this.width, this.el.r * 2);
+	}
 
 
-        ctx.stroke();
-        ctx.restore();
-        var newPos = {
-                y: pos.y - 50, // go up
-                x: pos.x //Move the tree left
-        }
-        if(this.el.children.length > 1)
-                newPos.x -= (subWidth / 2)
-        var tWidth = subWidth;
-        for (var i = 0; i < this.el.children.length; i++) {
-                var c = this.el.children[i]
-                c.drawNode(newPos)
-                ctx.moveTo(this.el.pos.x, this.el.pos.y - this.el.r);
-                ctx.lineTo(newPos.x, newPos.y + c.el.r)
-                ctx.stroke();
-                var change = c.Width()
+	ctx.stroke();
+	ctx.restore();
+	var newPos = {
+		y: pos.y - 50, // go up
+		x: pos.x //Move the tree left
+	}
+	if(this.el.children.length > 1)
+		newPos.x -= (subWidth / 2)
+	var tWidth = subWidth;
+	for (var i = 0; i < this.el.children.length; i++) {
+		var c = this.el.children[i]
+		c.drawNode(newPos)
+		ctx.moveTo(this.el.pos.x, this.el.pos.y - this.el.r);
+		ctx.lineTo(newPos.x, newPos.y + c.el.r)
+		ctx.stroke();
+		var change = c.Width()
 		var t = 0
-                if(i + 1 < this.el.children.length) {
-                        var newT  = this.el.children[i+1].Width() / 2
-                        t = t < newT ? newT : t
-                }
+		if(i + 1 < this.el.children.length) {
+			var newT  = this.el.children[i+1].Width() / 2
+			t = t < newT ? newT : t
+		}
 		if (i - 1 >=  0) {
 			var newT = this.el.children[i-1].Width() / 2
-                        t = t < newT ? newT : t
+			t = t < newT ? newT : t
 		}
 		change += t
-                newPos.x += change
-        }
-        ctx.lineWidth=1;
-        ctx.strokeText(this.el.name,pos.x - (this.width/2) +  TMOD ,pos.y+4)
+		newPos.x += change
+	}
+	ctx.lineWidth=1;
+	ctx.strokeText(this.el.name,pos.x - (this.width/2) +  TMOD ,pos.y+4)
 }
 
 prevMouse = {x:0,y:0}
@@ -510,17 +510,43 @@ function mouseClick(e) {
 	}
 }
 
+function clickDown(e) {
+	clicked = true
+	dragged = false
+}
+
+function clickUp(e) {
+	clicked = false
+	if(!dragged)
+		mouseClick(e)
+	dragged = false
+}
+
+function touchDrag(e) {
+	e.clientX = e.touches[0].clientX
+	e.clientY = e.touches[0].clientY
+	mouseDrag(e)
+	e.preventDefault()
+}
+function touchStart(e) {
+	var rect = canvas.getBoundingClientRect();
+	e.clientX = e.touches[0].clientX
+	e.clientY = e.touches[0].clientY
+	prevMouse.x = e.clientX - rect.left
+	prevMouse.y = e.clientY - rect.top
+	clickDown(e)
+}
+
+
 
 function begin() {
 	canvas = document.getElementById("tree");	
 	canvas.addEventListener('mousemove', mouseDrag, false);
-	canvas.addEventListener('mousedown', function(e) {clicked = true;dragged=false;}, false);
-	canvas.addEventListener('mouseup', function(e) {
-			clicked = false;
-			if (!dragged)
-				mouseClick(e)
-			dragged=false;
-		}, false);
+	canvas.addEventListener('touchmove', touchDrag, false);
+	canvas.addEventListener('mousedown', clickDown, false);
+	canvas.addEventListener('touchstart', touchStart, false);
+	canvas.addEventListener('mouseup', clickUp);
+	canvas.addEventListener('touchend', clickUp);
 	ctx = canvas.getContext("2d");
 	ctx.font = "8pt Courier"
 	var URL = "http://bloomgenetics.tech/api/v1";

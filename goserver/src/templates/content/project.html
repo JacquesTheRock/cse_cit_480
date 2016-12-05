@@ -528,17 +528,40 @@ function mouseClick(e) {
 	}
 }
 
+function clickDown(e) {
+	clicked = true
+	dragged = false
+}
+
+function clickUp(e) {
+	clicked = false
+	if(!dragged)
+		mouseClick(e)
+	dragged = false
+}
+function touchDrag(e) {
+	e.clientX = e.touches[0].clientX
+	e.clientY = e.touches[0].clientY
+	mouseDrag(e)
+	e.preventDefault()
+}
+function touchStart(e) {
+	var rect = canvas.getBoundingClientRect();
+	e.clientX = e.touches[0].clientX
+	e.clientY = e.touches[0].clientY
+	prevMouse.x = e.clientX - rect.left
+	prevMouse.y = e.clientY - rect.top
+	clickDown(e)
+}
 
 function begin() {
 	canvas = document.getElementById("tree");	
 	canvas.addEventListener('mousemove', mouseDrag, false);
-	canvas.addEventListener('mousedown', function(e) {clicked = true;dragged=false;}, false);
-	canvas.addEventListener('mouseup', function(e) {
-			clicked = false;
-			if (!dragged)
-				mouseClick(e)
-			dragged=false;
-		}, false);
+	canvas.addEventListener('touchmove', touchDrag, false);
+	canvas.addEventListener('mousedown', clickDown, false);
+	canvas.addEventListener('touchstart', touchStart, false);
+	canvas.addEventListener('mouseup', clickUp);
+	canvas.addEventListener('touchend', clickUp);
 	ctx = canvas.getContext("2d");
 	ctx.font = "8pt Courier"
 	var URL = "http://bloomgenetics.tech/api/v1";
