@@ -393,7 +393,7 @@ var trees = [];
 var nodes = [];
 var canvas = null;
 var ctx = null;
-var camera_pos = {x:300,y:300}
+var camera_pos = {x:0,y:0}
 function Tree(r, l = 0) {
 	this.el = {
 		pos: {x: 0, y: 0},
@@ -465,10 +465,16 @@ function drawNode(pos) {
 		ctx.lineTo(newPos.x, newPos.y + c.el.r)
 		ctx.stroke();
 		var change = c.Width()
+		var t = 0
 		if(i + 1 < this.el.children.length) {
-			var t  = this.el.children[i+1].Width()
-			change += t
+			var newT  = this.el.children[i+1].Width() / 2
+			t = t < newT ? newT : t
 		}
+		if(i - 1 >= 0) {
+			var newT  = this.el.children[i-1].Width() / 2
+			t = t < newT ? newT : t
+		}
+		change += t
 		newPos.x += change
 	}
 	ctx.lineWidth=1;
@@ -546,11 +552,12 @@ function begin() {
 }
 
 function draw() {
+        var canvas = document.getElementById("tree");   
 	if (trees.length == 0)
 		return
 	offset = {
-		x: camera_pos.x,
-		y: camera_pos.y
+		x: camera_pos.x + canvas.width / 2,
+		y: camera_pos.y + canvas.height - 30
 		}
 	for (r of trees) {
 		r.drawNode(offset)

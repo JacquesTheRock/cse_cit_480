@@ -218,6 +218,8 @@ function updateTraitInfo() {
 		else {
 			el = document.getElementById("traitPool")
 			var d = out.data
+			if (!d)
+				d = [] //Initialize to empty array if no traits
 			for (e of d) {
 				el.innerHTML += "<tr>" +
 					"<td>" + e.trait.type + "</td>" +
@@ -324,7 +326,7 @@ function getCandidateList() {
 getCrossInfo();
 </script>
 <script>
-function getData() {
+function getTree() {
 	if(this.readyState == 4 && this.status == 200) {
 		errdiv = document.getElementById("error");	
 		var resp = JSON.parse(this.responseText)
@@ -355,7 +357,7 @@ var trees = [];
 var nodes = [];
 var canvas = null;
 var ctx = null;
-var camera_pos = {x:250,y:125}
+var camera_pos = {x:0,y:0}
 function Tree(r, l = 0) {
 	this.el = {
 		pos: {x: 0, y: 0},
@@ -371,6 +373,7 @@ function Tree(r, l = 0) {
 	if(this.el.type != 'current')
 		this.el.onclick = clickNode
 	this.drawNode = drawNode
+	this.Width = calcTreeWidth
 	if (!r.children) 
 		return;
 	for( c of r.children) {
@@ -382,6 +385,23 @@ function clickNode() {
 	window.location = "/cross.html?id=" + this.id + "&pid=" + pid
 }
 
+const TMOD = 3
+
+function calcTreeWidth() {
+        var twidth = ctx.measureText(this.el.name + "").width
+        twidth = twidth + (2 * TMOD)
+        var myWidth = twidth < (2 * this.el.r) ? (2 * this.el.r) : twidth
+        this.width = myWidth
+        var subWidth = 0
+        for (var i = 0; i < this.el.children.length; i++) {
+                var e = this.el.children[i]
+                subWidth += e.Width();
+        }
+        return subWidth <= myWidth ? myWidth : subWidth
+}
+
+
+
 function max(a,b) {
 	if(a < b)
 		return b
@@ -389,43 +409,58 @@ function max(a,b) {
 		return a
 }
 
+
 function drawNode(pos) {
-	ctx.beginPath();
-	this.el.pos.x = pos.x;
-	this.el.pos.y = pos.y;
-	ctx.lineWidth=2;
-	ctx.stroke();
-	ctx.closePath();
-	var twidth = ctx.measureText(this.el.name + "").width
-	ctx.save();
-	if(this.el.type  != "current") {
-		var xscale = 1
-		if((twidth / 2) + 3 > this.el.r)
-			xscale = (twidth/2 + 3)/this.el.r;
-		var ixscale = 1/xscale
-		ctx.scale(xscale, 1)
-		ctx.arc(this.el.pos.x * ixscale, this.el.pos.y, this.el.r, 0,  2 * Math.PI);
-	} else {
-		var width = max(this.el.r - 5, twidth /2 + 3 )
-		ctx.rect(this.el.pos.x - width, this.el.pos.y - this.el.r, width * 2, this.el.r * 2);
-	}
-	ctx.stroke();
-	ctx.restore();
-	ctx.lineWidth=1;
-	ctx.strokeText(this.el.name,pos.x - twidth/2,pos.y+4)
-	if (!this.el.children)
-		return;
-	var offset = { x: pos.x, y: pos.y }
-	offset.x -= (this.el.children.length * 15);
-	offset.y = pos.y - 50;
-	for (c of this.el.children) {
-		c.drawNode(offset);
-		ctx.moveTo(this.el.pos.x,this.el.pos.y - this.el.r);
-		ctx.lineWidth=1;
-		ctx.lineTo(offset.x,offset.y + this.el.r);
-		ctx.stroke();
-		offset.x += 60;
-	}
+        var subWidth = this.Width()
+        ctx.beginPath();
+        this.el.pos.x = pos.x
+        this.el.pos.y = pos.y
+        ctx.save()
+        var xscale = 1.0
+        var ixscale = 1.0
+        if(this.width >= 2 * this.el.r ) {
+                xscale = (this.width / 2) / this.el.r;
+                ixscale = 1/xscale
+        }
+
+        if(this.el.type  != "current") {
+        	ctx.scale(xscale, 1)
+		ctx.arc(this.el.pos.x * ixscale, this.el.pos.y, this.el.r, 0, 2 * Math.PI)
+        } else {
+                ctx.rect(this.el.pos.x - this.width/2, this.el.pos.y - this.el.r, this.width, this.el.r * 2);
+        }
+
+
+        ctx.stroke();
+        ctx.restore();
+        var newPos = {
+                y: pos.y - 50, // go up
+                x: pos.x //Move the tree left
+        }
+        if(this.el.children.length > 1)
+                newPos.x -= (subWidth / 2)
+        var tWidth = subWidth;
+        for (var i = 0; i < this.el.children.length; i++) {
+                var c = this.el.children[i]
+                c.drawNode(newPos)
+                ctx.moveTo(this.el.pos.x, this.el.pos.y - this.el.r);
+                ctx.lineTo(newPos.x, newPos.y + c.el.r)
+                ctx.stroke();
+                var change = c.Width()
+		var t = 0
+                if(i + 1 < this.el.children.length) {
+                        var newT  = this.el.children[i+1].Width() / 2
+                        t = t < newT ? newT : t
+                }
+		if (i - 1 >=  0) {
+			var newT = this.el.children[i-1].Width() / 2
+                        t = t < newT ? newT : t
+		}
+		change += t
+                newPos.x += change
+        }
+        ctx.lineWidth=1;
+        ctx.strokeText(this.el.name,pos.x - (this.width/2) +  TMOD ,pos.y+4)
 }
 
 prevMouse = {x:0,y:0}
@@ -490,7 +525,7 @@ function begin() {
 	ctx.font = "8pt Courier"
 	var URL = "http://bloomgenetics.tech/api/v1";
 	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = getData;
+	xhttp.onreadystatechange = getTree;
 	xhttp.open("GET", URL + "/projects/" + pid + "/treview/" + cid, true);
 	if (localStorage.getItem("Authorization")) {
 		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
@@ -499,11 +534,12 @@ function begin() {
 }
 
 function draw() {
+	var canvas = document.getElementById("tree");	
 	if (trees.length == 0)
 		return
 	offset = {
-		x: camera_pos.x,
-		y: camera_pos.y
+		x: camera_pos.x + canvas.width / 2,
+		y: camera_pos.y + canvas.height - 30
 		}
 	for (r of trees) {
 		r.drawNode(offset)
