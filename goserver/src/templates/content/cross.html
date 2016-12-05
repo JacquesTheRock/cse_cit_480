@@ -27,7 +27,7 @@
 					TreeView
 				</b>
 			</h3>
-			  <canvas id="tree" width="644.54" height="350"></canvas>
+			<canvas id="tree" width="100%" height="350"></canvas>
 
 	   
 		  </section>
@@ -322,6 +322,20 @@ function getCandidateList() {
 	xhttp.send(null)
 		
 }
+
+/* canvas resizer start*/
+var canvas = document.querySelector('canvas');
+fitToContainer(canvas);
+
+function fitToContainer(canvas){
+  // Make it visually fill the positioned parent
+  canvas.style.width ='100%';
+  canvas.style.height='100%';
+  // ...then set the internal size to match
+  canvas.width  = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+/* canvas resizer stop*/
 
 getCrossInfo();
 </script>
