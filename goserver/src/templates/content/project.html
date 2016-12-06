@@ -34,8 +34,8 @@
 						</section></h4>
 					</section>
 					<div>
-						<div style="display: inline-block;"><button style="font-size: 20px;" onclick="CreateCandidate()" class="btn btn-shutterOut">Email Project Owner</button></div>
-						<div style="display: inline-block;"><button style="font-size: 20px;" onclick="CreateCandidate()" class="btn btn-shutterOut">Ask to Join Project</button></a></div>
+						<div style="display: inline-block;"><button style="font-size: 20px;" onclick="MessageOwner()" class="btn btn-shutterOut">Email Project Owner</button></div>
+						<div style="display: inline-block;"><button style="font-size: 20px;" onclick="JoinProject()" class="btn btn-shutterOut">Ask to Join Project</button></a></div>
 					</div>
 					<section class="row-fluid">
 						<h3><b>Description:</b></h3>
@@ -157,6 +157,7 @@ if (localStorage["Authorization"]) {
 
 
 newcross.href += "?pid=" + projectID
+var owner = ""
 
 
 function removePluses(list=["newcross","editButton","newmember"]) {
@@ -234,6 +235,8 @@ function updateMembersList() {
 				var RoleF = c.childNodes[3];
 				NameF.innerHTML = d.user_id
 				RoleF.innerHTML = d.role_name
+				if(d.role_id == 5)
+					projectProfile.owner = d.user_id
 				list.appendChild(entry)
 			}
 		}
@@ -307,6 +310,36 @@ function updateCrossList() {
 }
 
 
+
+function messageResp() {
+	if(this.readyState == 4) {
+		var resp = JSON.parse(this.responseText)
+		if(resp.code == 0)
+			alert("Message Sent!")
+		else
+			alert("Failed to Send message")
+	}
+}
+
+function MessageOwner() {
+	var data = {
+		src: 'jabreaux',
+		dest: projectProfile.owner,
+		subject: "Hello",
+		message: "Default Message"
+	}
+	sendMessage(data)
+}
+
+function sendMessage(data) {
+	var url = "http://bloomgenetics.tech/api/v1/users/" + projectProfile.owner + "/mail";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = messageResp;
+	xhttp.open("POST", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(JSON.stringify(data))
+}
 
 
 
