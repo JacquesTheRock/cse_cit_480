@@ -7,19 +7,24 @@
 		  <div id="result"></div>
 			<div class="form-group">
 			  <label for="username">Username:</label>
-			  <input type="text" class="form-control" id="username" placeholder="Username">
+			  <input type="text" class="form-control" id="username" placeholder="Username" required>
 			</div>
 			<div class="form-group">
 			  <label for="password">Password:</label>
-			  <input type="password" class="form-control" id="password" placeholder="Enter password">
+			  <input pattern=".{6,50}" type="password" class="form-control" id="password" placeholder="Enter password" required>
 			</div>
 			<div class="form-group">
 			  <label for="confirmpassword">Confirm Password:</label>
-			  <input type="password" class="form-control" id="confirmpassword" placeholder="Confirm Password">
+			  <input type="password" class="form-control" id="confirmpassword" placeholder="Confirm Password" required>
 			</div>
 			<div class="form-group">
+			  <label for="name">Display Name:</label>
+			  <input type="text" class="form-control" id="name" placeholder="Enter a Name">
+			</div>
+	
+			<div class="form-group">
 			  <label for="email">Email:</label>
-			  <input type="email" class="form-control" id="email" placeholder="Enter email">
+			  <input required type="email" class="form-control" id="email" placeholder="Enter email">
 			</div>
 			<div class="form-group">
 			  <label for="address">Address:</label>
@@ -65,12 +70,24 @@
 
 
 <script>
+document.getElementById("password").onchange = validatePassword
+document.getElementById("confirmpassword").onchange = validatePassword
+function validatePassword() {
+	var pass = document.getElementById("password")
+	var conf = document.getElementById("confirmpassword")
+	if(pass.value != conf.value)
+		conf.setCustomValidity("Password Don't Match")
+	else
+		conf.setCustomValidity("")
+}
+
 function CreateUser(){
 	var url = "http://bloomgenetics.tech/api/v1/users";
 	var xhttp = new XMLHttpRequest()
 	if (document.getElementById("password").value == document.getElementById("confirmpassword").value){
 		var data = "username=" + document.getElementById("username").value +
 				"&email=" + document.getElementById("email").value +
+				"&name=" + document.getElementById("name").value +
 				"&password=" + document.getElementById("password").value +
 				"&location=" + document.getElementById("address").value +
 				"&growzone=" + document.getElementById("gzone").value +
@@ -80,6 +97,10 @@ function CreateUser(){
 		xhttp.open("POST", url, true);
 		xhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		xhttp.send(data);
+	} else {
+		var out = document.getElementById("result");
+		out.innerHTML = "password don't match"
+		document.location = "#"
 	}
 }
 function getData(){
@@ -87,7 +108,7 @@ function getData(){
 		var out = document.getElementById("result");
 		var resp = JSON.parse(this.responseText);
 		if(resp.code == 0) {
-			window.location="/index.html"
+			window.location="/login.html"
 		} else {
 			out.innerHTML = resp.status;
 		}

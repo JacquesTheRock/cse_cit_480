@@ -102,7 +102,11 @@ function updatePersonalInfo() {
 			personalInfo.innerHTML += "<b>Season Active:</b>" + d.season + "<br>\n"
 			personalInfo.innerHTML += "<b>Address:</b>" + d.location + "<br>\n"
 			personalInfo.innerHTML += "<b>Email:</b>" + d.email + "<br>\n"
-			nHeader.innerHTML = d.name + "'s Profile "
+			if (d.name != "")
+				nHeader.innerHTML = d.name + "'s Profile "
+			else
+				nHeader.innerHTML = d.id + "'s Profile "
+				
 			if(d.id && loginUser != "guest" && d.id == loginUser) { 
 				nHeader.innerHTML += editButton.outerHTML
 				document.getElementById("submitSpecialty").value = d.specialty;
