@@ -15,34 +15,7 @@
 	
 
 		<div class="contentbox">
-		
-			<div class="container-fluid">		
-				<div class="container-fluid">
-						<h3 style="text-align: center"><label class="checkbox-inline"><input id="b1" type="checkbox" value="">Projects</label>
-						<label class="checkbox-inline"><input id="b2" type="checkbox" value="">People</label>
-						<input id="terms" type="text" class="form-control" name="search" placeholder="Search here"></h3>
-
-						<button onclick="Search()" class="btn btn-shutterOut" name="submit" id="button-submit">Search</button>
-
-				</div>
-				<div class="container-fluid">
-					<h2 style="text-align: center; text-decoration: underline;"> RESULTS </h2>
-					<ul class="media-list" id="resultList">
-						<div class="media" id="result">
-							<div class="media-left well">
-								<a href="#" id="resultImgURL">
-									<img class="media-object" width='96' src="/static/media/flower.png" alt="Generic placeholder image" id="resultImg">
-								</a>
-							</div>
-							<div class="media-body well">
-								<h4 class="media-heading" >Media heading</h4>
-								Location: <text ></text>
-								<p ></p>
-							</div>
-						</div>
-					</ul>
-				</div>		
-			</div>
+		<button onclick="Search()" class="btn btn-shutterOut" name="submit" id="button-submit">Add New Member</button>
 		
 		
 		
@@ -82,8 +55,54 @@
 	  
 	  
 	  
+	<!-- add member pop up content start-->
+	<div id="addMemberModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal content-->
+
+				  <div class="contentbox">
+					<div class="container-fluid">		
+						<div class="container-fluid">
+								<h3 style="text-align: center"><label class="checkbox-inline"><input id="b1" type="checkbox" value="">Projects</label>
+								<label class="checkbox-inline"><input id="b2" type="checkbox" value="">People</label>
+								<input id="terms" type="text" class="form-control" name="search" placeholder="Search here"></h3>
+
+								<button onclick="Search()" class="btn btn-shutterOut" name="submit" id="button-submit">Search</button>
+
+						</div>
+						<div class="container-fluid">
+							<h2 style="text-align: center; text-decoration: underline;"> RESULTS </h2>
+							<ul class="media-list" id="resultList">
+								<div class="media" id="result">
+									<div class="media-left well">
+										<a href="#" id="resultImgURL">
+											<img class="media-object" width='96' src="/static/media/flower.png" alt="Generic placeholder image" id="resultImg">
+										</a>
+									</div>
+									<div class="media-body well">
+										<h4 class="media-heading" >Media heading</h4>
+										Location: <text ></text>
+										<p ></p>
+									</div>
+								</div>
+							</ul>
+						</div>		
+					</div>
+				  </div>
+
+
+		</div>
+	</div>
+	<!-- add member pop up content stop-->
 	  
-	<!-- edit page pop up content start-->
+	  
+	  
+	  
+	  
+	  
+	  
+	<!-- edit member pop up content start-->
 	<div id="editMemberModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 
@@ -114,5 +133,5 @@
 
 		</div>
 	</div>
-	<!-- edit page pop up content stop-->
+	<!-- edit member pop up content stop-->
 </div>
