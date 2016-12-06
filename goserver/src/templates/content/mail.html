@@ -22,41 +22,14 @@ table, th, td {
 							<td>Message</td>
 						</tr>
 					</table>
-			
-			
-			<!--
-					<h3 style="text-align: center"><label class="checkbox-inline"><input id="b1" type="checkbox" value="">Projects</label>
-					<input id="terms" type="text" class="form-control" name="search" placeholder="Search here"></h3>
-
-					<button onclick="Search()" class="btn btn-shutterOut" name="submit" id="button-submit">Search</button>
-
-			</div>
-			<div class="container-fluid">
-				<h2 style="text-align: center; text-decoration: underline;"> RESULTS </h2>
-				<ul class="media-list" id="resultList">
-					<div class="media" id="result">
-						<div class="media-left well">
-							<a href="#" id="resultImgURL">
-								<img class="media-object" src="..." alt="Generic placeholder image" id="resultImg">
-							</a>
-						</div>
-						<div class="media-body well">
-							<h4 class="media-heading" >Media heading</h4>
-							Location: <text ></text>
-							<p ></p>
-						</div>
-					</div>
-				</ul>
-			</div>	
--->			
 		</div>
 	  </div>  
 	  
 	  
-	<div id="newTraitModal" class="modal fade" role="dialog">
+	<!-- <div id="newTraitModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 
-		<!-- Modal content-->
+		Modal content
 
 				  <div class="contentbox">
 					<div class="container-fluid">
@@ -81,7 +54,7 @@ table, th, td {
 
 
 		</div>
-	</div>
+	</div>-->
 </div>
   
   <script>
@@ -91,21 +64,14 @@ table, th, td {
 	
 	function FillTable(){
 		//listClear()
-		//if (document.getElementById("b1").checked)
-		//	SearchProjects();
-			var entry = searchEntry.cloneNode(true);
-			
-				entry.children[0].innerHTML="Name";
-				entry.children[1].innerHTML="Time";
-				entry.children[2].innerHTML="Title<a style=\"margin-left: 10px;\" data-toggle=\"modal\" data-target=\"#newTraitModal\" class=\"glyphicon glyphicon-edit pull-right\"></a>";
-				entry.children[3].innerHTML="Text";
-				
-			add(entry);
+			GetMail();
 	}
 	
-	function SearchProjects(){
-		var url = "http://bloomgenetics.tech/api/v1/projects";
-		var data = "?pid="+document.getElementById("terms").value+"&name="+document.getElementById("terms").value;
+	function GetMail(){
+		token = localStorage["Authorization"].split(" ")[1];
+		user = atob(token).split(":")[0];
+		var url = "http://bloomgenetics.tech/api/v1/users/"+user+"/mail";
+		var data = "?uid="+user;
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = getData;
 		xhttp.open("GET", url + data, true);
@@ -114,27 +80,26 @@ table, th, td {
 		xhttp.send(null);
 	}
 	
-	
 	function getData() {
 		if(this.readyState == 4 && this.status == 200) {
-			searchResults(this.responseText);
+			mailResults(this.responseText);
 		}
 	}
 	
-	function searchResults(data){
-		//var t1 = JSON.parse(data);
+	function mailResults(data){
+		var t1 = JSON.parse(data)
 		for (var i = 0; i < t1.data.length; i++){
 			var e = t1.data[i];
-			var person = false
-			if (typeof e.public === "undefined") {
-				person = true
-			}
 			var entry = searchEntry.cloneNode(true);
-			if (person) {
-				entry.children[0].innerHTML="Name";//e.name etc
-				entry.children[1].innerHTML="Time";
-				entry.children[2].innerHTML="Title";
-				entry.children[3].innerHTML="Text";
+			
+			if (typeof e.public === "undefined") {
+				entry.children[0].innerHTML=e.src;
+				entry.children[1].innerHTML=e.date;
+				entry.children[2].innerHTML=
+				e.subject+"<a style=\"margin-left: 10px;\" data-toggle=\"modal\" data-target=\"#newTraitModal\" class=\"glyphicon glyphicon-edit pull-right\">"+
+				"Text"+"</a>";
+				entry.children[3].id="microsecond-id"
+				entry.children[3].innerHTML=e.message;
 			}
 			add(entry);
 		}
