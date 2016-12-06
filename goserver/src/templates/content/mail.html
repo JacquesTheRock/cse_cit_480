@@ -9,12 +9,12 @@ table, th, td {
 		<div class="container-fluid">		
 			<div class="container-fluid">
 					<table id="messageTable">
-						<th>
-							<td>Sender</td>
-							<td>Date</td>
-							<td>Subject</td>
-							<td>Message</td>
-						</th>
+						<tr>
+							<th>Sender</th>
+							<th>Date</th>
+							<th>Subject</th>
+							<th>Message</th>
+						</tr>
 						<tr id="entry0">
 							<td>Sender</td>
 							<td>Date</td>
@@ -51,23 +51,53 @@ table, th, td {
 -->			
 		</div>
 	  </div>  
+	  
+	  
+	<div id="newTraitModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal content-->
+
+				  <div class="contentbox">
+					<div class="container-fluid">
+					  <div id="result"></div>
+						<div class="form-group">
+							<label for="traitname">Trait Name</label>
+							<input type="text" class="form-control" id="traitname" placeholder="Name the trait you want to breed for">
+						</div>
+						<div class="form-group">
+						<label class="radio-inline"><input type="radio" name="optradio" value='2'>Dominant</label>
+						<label class="radio-inline"><input type="radio" name="optradio" value='1'>Recessive</label>
+						<label class="radio-inline"><input type="radio" name="optradio" value='3'>Unknown</label>
+						</div>
+						<div class="form-group">
+							<label for="pool">Pool</label>
+							<input type="number" class="form-control" id="pool" placeholder="1">
+						</div>	
+						<button onclick="AddTrait()" class="btn btn-shutterOut">Add Trait</button>
+			
+					</div>
+				  </div>
+
+
+		</div>
+	</div>
 </div>
   
   <script>
-  window.onload = FillTable();
-	var searchEntry = document.getElementById("entry0").cloneNode(true); //copies entry
+	var searchEntry = document.getElementById("entry0");
+	searchEntry = searchEntry.cloneNode(true); //copies entry
 	document.getElementById("entry0").outerHTML = ""; //deletes entry
 	
 	function FillTable(){
 		//listClear()
 		//if (document.getElementById("b1").checked)
 		//	SearchProjects();
-		
 			var entry = searchEntry.cloneNode(true);
 			
 				entry.children[0].innerHTML="Name";
 				entry.children[1].innerHTML="Time";
-				entry.children[2].innerHTML="Title";
+				entry.children[2].innerHTML="Title<a style=\"margin-left: 10px;\" data-toggle=\"modal\" data-target=\"#newTraitModal\" class=\"glyphicon glyphicon-edit pull-right\"></a>";
 				entry.children[3].innerHTML="Text";
 				
 			add(entry);
@@ -101,7 +131,7 @@ table, th, td {
 			}
 			var entry = searchEntry.cloneNode(true);
 			if (person) {
-				entry.children[0].innerHTML="Name";
+				entry.children[0].innerHTML="Name";//e.name etc
 				entry.children[1].innerHTML="Time";
 				entry.children[2].innerHTML="Title";
 				entry.children[3].innerHTML="Text";
@@ -110,39 +140,6 @@ table, th, td {
 		}
 	
 	
-	/*var t1 = JSON.parse(data);
-		for (var i = 0; i < t1.data.length; i++){
-			var e = t1.data[i];
-			var person = false
-			if (typeof e.public === "undefined") {
-				person = true
-			}
-			var entry = searchEntry.cloneNode(true);
-//<a href="#" id="resultImgURL">
-			var c = entry.children[1];
-			
-			if (person) {
-				entry.id += "User" + e.id
-				entry.children[0].children[0].href = "/profile.html?id=" + e.id
-				var rName = c.childNodes[1];
-				var rSpecies = c.childNodes[3];
-				var rDescription = c.childNodes[5];
-				rName.innerHTML = "User: " + e.id
-				rSpecies.innerHTML = e.growzone
-				rDescription.innerHTML = "Active: " + e.season
-				add(entry)
-			} else if (e.public == true) {
-				entry.id += "Project" + e.id
-				entry.children[0].children[0].href = "/project.html?id=" + e.id
-				var rName = c.childNodes[1];
-				var rSpecies = c.childNodes[3];
-				var rDescription = c.childNodes[5];
-				rName.innerHTML = "Project: " + e.name;
-				rSpecies.innerHTML = e.species;
-				rDescription.innerHTML = e.description;
-				add(entry)
-			}
-		}*/
 		var testIfExist = document.getElementById("entry0")
 		if (!testIfExist){
 			var div = document.createElement('div');
@@ -163,4 +160,5 @@ table, th, td {
 	
 	
 	
+  window.onload = FillTable();
   </script>
