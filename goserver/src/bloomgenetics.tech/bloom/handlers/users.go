@@ -317,7 +317,6 @@ func postUsersUidMail(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			out.Code = code.UNDEFINED
 			out.Status = "Failed to send mail"
-			util.PrintDebug(err)
 		}
 	}
 

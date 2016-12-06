@@ -63,7 +63,7 @@ func PostMail(m entity.Mail) (entity.Mail, error) {
 	_, err := util.Database.Exec(qBase, m.Dest, m.Src, m.Subject, m.Message)
 	if err != nil {
 		util.PrintDebug(err)
-		return entity.Mail{}, nil
+		return entity.Mail{}, err
 	}
 	m = entity.Mail{Dest: m.Dest, Src: m.Src}
 	return m, nil
