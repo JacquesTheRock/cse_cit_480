@@ -50,7 +50,7 @@
 					<canvas id="tree" width="100%" height="350"></canvas>
 					</section>
 					<section class="row-fluid">
-			<h3><b><div style="display: inline-block;">Members<a style="margin-left: 10px;" data-toggle="modal" data-target="#addMemberModal" class="glyphicon glyphicon-plus pull-right"></a></div></h3></b>
+			<h3><b><div style="display: inline-block;">Members<a id="newmember" style="margin-left: 10px;" data-toggle="modal" data-target="#addMemberModal" class="glyphicon glyphicon-plus pull-right"></a></div></h3></b>
 			<div class="row">
 				<ul class="media-list" id="memberList">
 					<div class="media" id="membEntry">
@@ -143,10 +143,10 @@ document.getElementById("membEntry").outerHTML = ""
 var cEntry = document.getElementById("crossEntry").cloneNode(true)
 document.getElementById("crossEntry").outerHTML = ""
 var projectInfo = document.getElementById("projectInfo")
-var errorField = document.getElementById("error")
 var projectID = getParameterByName("id");
 var loginUser = "guest"
 var editButton = document.getElementById("editButton")
+var newmember = document.getElementById("newmember")
 var nHeader = document.getElementById("nameHeader")
 var projectProfile
 if (localStorage["Authorization"]) {
@@ -156,8 +156,17 @@ if (localStorage["Authorization"]) {
 
 
 
-var newcross = document.getElementById("newcross")
 newcross.href += "?pid=" + projectID
+
+
+function removePluses(list=["newcross","editButton","newmember"]) {
+	var pluses = list
+	for (s of pluses) {
+		var el = document.getElementById(s)
+		if (el)
+			el.parentElement.removeChild(el)
+	}
+}
 
 function getParameterByName(name, url) {
 	if (!url) {
@@ -175,9 +184,9 @@ function updateProjectInfo() {
 		 if(this.readyState == 4 && this.status == 200) {
 				var out = JSON.parse(this.responseText)
 				if (out.code == 400) {
-						errorField.innerHTML = "Unable to view project profile: Are you logged in?";
+						removePluses()
 				} else if (out.code != 0) {
-						errorField.innerHTML = out.status
+						removePluses()
 				} else {
 						var d = out.data
 
@@ -197,8 +206,13 @@ function updateProjectInfo() {
 								document.getElementById("submitDescription").value = d.description;
 						}	
 						var newcross = document.getElementById("newcross")
-						if(d.role != "Admin" && d.role != "Owner" && d.role != "Member")
-							newcross.outerHTML = ""
+						if(d.role != "Admin" && d.role != "Owner" && d.role != "Member") {
+							removePluses(["newcross"])
+						}
+						if(d.role != "Admin" && d.role != "Owner") {
+							removePluses(["newmember"])
+							removePluses(["editButton"])	
+						}
 				}
 		}
 }
@@ -208,7 +222,7 @@ function updateMembersList() {
 	if(this.readyState == 4 && this.status == 200) {
 		var out = JSON.parse(this.responseText)
 		if (out.code != 0) {
-			errorField.innerHTML = out.status;
+			removePluses()
 		} else {
 			for(var i = 0; i < out.data.length; i++) {
 				var d = out.data[i]
@@ -228,32 +242,31 @@ function updateMembersList() {
 }
 
 function updateProjectInfo() {
-		 if(this.readyState == 4 && this.status == 200) {
-				var out = JSON.parse(this.responseText)
-				if (out.code == 400) {
-						errorField.innerHTML = "Unable to view project profile: Are you logged in?";
-				} else if (out.code != 0) {
-						errorField.innerHTML = out.status
-				} else {
-						var d = out.data
-						projectProfile = d
-						projectInfo.innerHTML = "<b>Species:</b> " + d.species + "<br>\n"
-						projectInfo.innerHTML += "<b>Location:</b> " + d.location + "<br\n>"
-						projectInfo.innerHTML += "<b>Type:</b> " + d.type + "<br>\n"
-						projectInfo.innerHTML += "<b>Availability:</b> " + (d.public ? "Public" : "Private") + "<br>\n"
-						projectInfo.innerHTML += "<b>My Role:</b> " + d.role + "<br>\n"
-						document.getElementById("projectAbout").innerHTML = d.description
-						nHeader.innerHTML = d.name
-						if(d.id && loginUser != "guest" && (d.role == "Admin" || d.role == "Owner")) {
-								nHeader.innerHTML += editButton.outerHTML
-								document.getElementById("submitSpecies").value = d.species;
-								document.getElementById("submitLocation").value = d.location;
-								document.getElementById("submitAvailability").value = d.public;
-								document.getElementById("submitDescription").value = d.description;
-						}
-
-				}
+	 if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code == 400) {
+			removePluses()
+		} else if (out.code != 0) {
+			removePluses()
+		} else {
+			var d = out.data
+			projectProfile = d
+			projectInfo.innerHTML = "<b>Species:</b> " + d.species + "<br>\n"
+			projectInfo.innerHTML += "<b>Location:</b> " + d.location + "<br\n>"
+			projectInfo.innerHTML += "<b>Type:</b> " + d.type + "<br>\n"
+			projectInfo.innerHTML += "<b>Availability:</b> " + (d.public ? "Public" : "Private") + "<br>\n"
+			projectInfo.innerHTML += "<b>My Role:</b> " + d.role + "<br>\n"
+			document.getElementById("projectAbout").innerHTML = d.description
+			nHeader.innerHTML = d.name
+			if(d.id && loginUser != "guest" && (d.role == "Admin" || d.role == "Owner")) {
+					nHeader.innerHTML += editButton.outerHTML
+					document.getElementById("submitSpecies").value = d.species;
+					document.getElementById("submitLocation").value = d.location;
+					document.getElementById("submitAvailability").value = d.public;
+					document.getElementById("submitDescription").value = d.description;
+			}
 		}
+	}
 }
 
 function updateCrossList() {
@@ -261,7 +274,7 @@ function updateCrossList() {
 	if(this.readyState == 4 && this.status == 200) {
 		var out = JSON.parse(this.responseText)
 		if (out.code != 0) {
-			errorField.innerHTML = out.status;
+			removePluses()
 		} else {
 			for(var i = 0; i < out.data.length; i++) {
 				var d = out.data[i]
@@ -298,10 +311,10 @@ function updateCrossList() {
 
 
 function getProjectInfo() {
-	var url = "http://bloomgenetics.tech/api/v1/projects/";
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = updateProjectInfo;
-	xhttp.open("GET", url + projectID, true);
+	xhttp.open("GET", url, true);
 	if(localStorage["Authorization"])
 		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
 	xhttp.send(null)
@@ -376,9 +389,8 @@ function getData() {
 		errdiv = document.getElementById("error");	
 		var resp = JSON.parse(this.responseText)
 		if (resp.code != 0) {
-			errdiv.innerHTML = "Unable to load treeview for Project " +
-				projectID + " because:<br> " +
-				resp.status;
+			removePluses()
+			return
 		}
 		if (resp.data == null)
 			return
@@ -411,7 +423,15 @@ function Tree(r, l = 0) {
 	if (!r.children) 
 		return;
 	for( c of r.children) {
-		this.el.children[this.el.children.length] = new Tree(c,l+1);
+		var found = false
+		for (n of nodes) {
+			if (n.id == c.data.id) {
+				found = true
+				break;
+			}
+		}
+		if(!found)
+			this.el.children[this.el.children.length] = new Tree(c,l+1);
 	}
 }
 
@@ -490,7 +510,11 @@ function mouseDrag(e) {
 		x: e.clientX - rect.left,
 		y: e.clientY - rect.top
 	}
+	if(mousePos.x < 0 || mousePos.y < 0 || mousePos.y > canvas.height || mousePos.x > canvas.width) {
+		clicked = false
+	}
 	if (clicked) {
+		canvas.style.cursor = "auto"
 		dragged = true;
 		delta = {
 			x: mousePos.x - prevMouse.x,
@@ -500,10 +524,29 @@ function mouseDrag(e) {
 		camera_pos.y += delta.y * 0.7
 		ctx.clearRect(0,0,canvas.width,canvas.height);
 		draw();
+	} else { //If not clicked, I've gotta findout how to draw mouse
+		if(hover(mousePos)) {
+			canvas.style.cursor = "pointer"
+		} else {
+			canvas.style.cursor = "auto"
+		}
 	}
 	prevMouse.x = mousePos.x
 	prevMouse.y = mousePos.y
 	
+}
+
+function hover(pos) {
+	for(var i = 0; i < nodes.length; i++) {
+		var node = nodes[i]
+		var xSq = (pos.x - node.pos.x)
+		xSq *= xSq
+		var ySq = (pos.y - node.pos.y)
+		ySq *= ySq
+		if(xSq + ySq < node.r * node.r)
+			return node		
+	}
+	return null;
 }
 
 function mouseClick(e) {
