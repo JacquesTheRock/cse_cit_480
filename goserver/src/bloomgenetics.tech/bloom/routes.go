@@ -42,6 +42,9 @@ func Wrapper(inner http.Handler, name string) http.Handler {
 				uid = "guest"
 			}
 			res, err := auth.CheckAuth(uid, pid, name, r.Method)
+			if !res {
+				res, err = auth.CheckAuth(uid, 0, name, r.Method)
+			}
 			util.PrintDebug("Auth against: " + r.Method + " " + name + " result: " + strconv.FormatBool(res))
 			if res {
 				inner.ServeHTTP(w, r)
