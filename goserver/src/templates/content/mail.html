@@ -122,7 +122,7 @@ table, th, td {
 		var list = document.getElementById("messageTable");
 		list.appendChild(result);
 	}
-	function sendMail(message){
+	function SendMail(){
 		token = localStorage["Authorization"].split(" ")[1];
 		user = atob(token).split(":")[0];
 		var recipientUID = document.getElementById("Recipient");
