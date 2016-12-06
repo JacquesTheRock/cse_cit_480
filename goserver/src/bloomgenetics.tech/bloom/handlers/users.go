@@ -305,13 +305,20 @@ func postUsersUidMail(w http.ResponseWriter, r *http.Request) {
 	out.Data = entity.Mail{}
 	if err != nil {
 		util.PrintError("Bad request body, expected mail JSON")
+		out.Code = code.INVALIDFIELD
+		out.Status = "Not JSON body"
 		util.PrintDebug(err)
 	}
 	if m.Dest == "" {
 		m.Dest = uid
 	}
-	if m.Dest == uid {
+	if out.Code == 0 && m.Dest == uid {
 		out.Data, err = user.PostMail(m)
+		if err != nil {
+			out.Code = code.UNDEFINED
+			out.Status = "Failed to send mail"
+			util.PrintDebug(err)
+		}
 	}
 
 	w.WriteHeader(http.StatusOK)
