@@ -7,6 +7,38 @@
 	
 		</span></a>
 	</h2>
+	
+	
+	
+	<div>
+		<li id="projectHeader" class="contentbox-header-leftmost" style="font-size: 20px; z-index: 2;">Project
+		</li>
+		<li id="" class="contentbox-header-new" style="font-size: 20px;z-index: 3;">Crosses
+		</li>
+		<li id="idHeader" class="contentbox-header-new" style="font-size: 20px; z-index: 4;">Cross:
+		</li>
+		<li id="crossHeader" class="contentbox-header-new" style="font-size: 30px; z-index: 5;">Candidate:
+			<a id="editButton" data-toggle="modal" data-target="#editCandidateModal">
+				<span class="pull-right">
+					<span class="glyphicon glyphicon-edit">
+					</span>
+	
+				</span>
+			</a>
+		</li>
+			<a id="editButton" data-toggle="modal" data-target="#editCrossModal">
+				<span class="pull-right">
+					<span class="glyphicon glyphicon-edit">
+					</span>	
+				</span>
+			</a>
+
+	</div>
+	
+	
+	
+	
+	
       <div class="contentbox">
 	<div class="container-fluid">
 	  <!--Adds style color to "Player Profile"-->
@@ -198,7 +230,7 @@ function updateCandidateInfo() {
 			tmp += "<br>"
 			infoEl.innerHTML = tmp
 
-			infoEl = document.getElementById("nameHeader")
+			infoEl = document.getElementById("crossHeader")
 			infoEl.innerHTML = "Candidate: " + c.id + infoEl.innerHTML
 
 			infoEl = document.getElementById("traitTable")
