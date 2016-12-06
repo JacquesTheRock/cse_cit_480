@@ -16,7 +16,7 @@
 					<div class="media" id="result">
 						<div class="media-left well">
 							<a href="#" id="resultImgURL">
-								<img class="media-object" src="..." alt="Generic placeholder image" id="resultImg">
+								<img class="media-object" width='96' src="/static/media/flower.png" alt="Generic placeholder image" id="resultImg">
 							</a>
 						</div>
 						<div class="media-body well">
@@ -89,9 +89,13 @@
 				var rName = c.childNodes[1];
 				var rSpecies = c.childNodes[3];
 				var rDescription = c.childNodes[5];
-				rName.innerHTML = "User: " + e.id
+				if (e.name == "")
+					rName.innerHTML = "User: " + e.id
+				else
+					rName.innerHTML = "User: " + e.name
 				rSpecies.innerHTML = e.growzone
 				rDescription.innerHTML = "Active: " + e.season
+				rDescription.innerHTML += "<br>View <a href='/profile.html?id=" + e.id + "'>profile</a>"
 				add(entry)
 			} else if (e.public == true) {
 				entry.id += "Project" + e.id
@@ -102,6 +106,7 @@
 				rName.innerHTML = "Project: " + e.name;
 				rSpecies.innerHTML = e.species;
 				rDescription.innerHTML = e.description;
+				rDescription.innerHTML += "<br>View <a href='/project.html?id=" + e.id + "'>profile</a>"
 				add(entry)
 			}
 		}
