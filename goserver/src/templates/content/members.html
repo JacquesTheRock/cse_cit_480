@@ -1,7 +1,5 @@
 <div class="container" style="max-width: 900px;">
 	<!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
-
-	
 	
 	<div>
 		<li id="projectHeader" class="contentbox-header-leftmost" style="font-size: 20px; z-index: 3;">Project
@@ -17,6 +15,38 @@
 	
 
 		<div class="contentbox">
+		
+			<div class="container-fluid">		
+				<div class="container-fluid">
+						<h3 style="text-align: center"><label class="checkbox-inline"><input id="b1" type="checkbox" value="">Projects</label>
+						<label class="checkbox-inline"><input id="b2" type="checkbox" value="">People</label>
+						<input id="terms" type="text" class="form-control" name="search" placeholder="Search here"></h3>
+
+						<button onclick="Search()" class="btn btn-shutterOut" name="submit" id="button-submit">Search</button>
+
+				</div>
+				<div class="container-fluid">
+					<h2 style="text-align: center; text-decoration: underline;"> RESULTS </h2>
+					<ul class="media-list" id="resultList">
+						<div class="media" id="result">
+							<div class="media-left well">
+								<a href="#" id="resultImgURL">
+									<img class="media-object" width='96' src="/static/media/flower.png" alt="Generic placeholder image" id="resultImg">
+								</a>
+							</div>
+							<div class="media-body well">
+								<h4 class="media-heading" >Media heading</h4>
+								Location: <text ></text>
+								<p ></p>
+							</div>
+						</div>
+					</ul>
+				</div>		
+			</div>
+		
+		
+		
+		
 			<h3><b>Member List</b></h3>
 			<div class="row">
 				<ul class="media-list" id="memberList">
