@@ -22,14 +22,14 @@ func SearchUsers(u entity.User) ([]entity.User, error) {
 			query += op
 		}
 		queryVars = append(queryVars, u.DisplayName)
-		query = query + "name LIKE $" + strconv.Itoa(len(queryVars)) + " "
+		query = query + "lower(name) LIKE lower($" + strconv.Itoa(len(queryVars)) + ") "
 	}
 	if u.Location != "" {
 		if len(queryVars) > 0 {
 			query += "OR "
 		}
 		queryVars = append(queryVars, u.Location)
-		query = query + "location LIKE $" + strconv.Itoa(len(queryVars)) + " "
+		query = query + "lower(location) LIKE lower($" + strconv.Itoa(len(queryVars)) + ") "
 	}
 	if u.Growzone != "" {
 		if len(queryVars) > 0 {
