@@ -298,6 +298,7 @@ func getUsersUidMail(w http.ResponseWriter, r *http.Request) {
 func postUsersUidMail(w http.ResponseWriter, r *http.Request) {
 	out := entity.ApiData{}
 	vars := mux.Vars(r)
+	sender := auth.GetLogin(r.Header.Get("Authorization"))
 	uid := vars["uid"]
 	decoder := json.NewDecoder(r.Body)
 	var m entity.Mail
@@ -311,6 +312,13 @@ func postUsersUidMail(w http.ResponseWriter, r *http.Request) {
 	}
 	if m.Dest == "" {
 		m.Dest = uid
+	}
+	if m.Src == "" {
+		m.Src = sender.ID
+	}
+	if m.Src != sender.ID {
+		out.Code = code.INVALIDFIELD
+		out.Status = "Username mismatch. Spoofing not supported"
 	}
 	if out.Code == 0 && m.Dest == uid {
 		out.Data, err = user.PostMail(m)
