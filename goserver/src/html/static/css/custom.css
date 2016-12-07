@@ -303,16 +303,17 @@ border: 3px solid #333333;
 }
 
 .nav-sub{
-	max-width: 30%;
-}
+	max-width: 20%;
 
 }
 
-@media only screen and (max-width: 700px) {
+}
+
+@media only screen and (max-width: 200px) {
 
 .nav-main{
 	font-size: 30px;
-	font-size: 4.0vw;
+	font-size: 3.5vw;
 }
 
 .nav-sub{
