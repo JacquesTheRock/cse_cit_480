@@ -257,6 +257,7 @@ html, body {
 }
 
 .nav-main{
+	white-space:nowrap;
 	text-overflow: clip;
 	max-width: 500px;
 	font-size: 30px
