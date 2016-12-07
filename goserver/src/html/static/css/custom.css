@@ -257,8 +257,7 @@ html, body {
 }
 
 .nav-main{
-	white-space:nowrap;
-	max-width: 500px;
+	max-width: 400px;
 	font-size: 30px
 }
 
