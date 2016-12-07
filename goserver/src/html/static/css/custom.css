@@ -298,6 +298,19 @@ border: 3px solid #333333;
 @media only screen and (max-width: 700px) {
 
 .nav-main{
+	max-width: 400px;
+	font-size: 20px
+}
+
+.nav-sub{
+	font-size: 10px;
+}
+
+}
+
+@media only screen and (max-width: 700px) {
+
+.nav-main{
 	font-size: 3.5vw;
 }
 
@@ -306,5 +319,6 @@ border: 3px solid #333333;
 }
 
 }
+
 
 /* mobile responsive stop*/
