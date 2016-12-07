@@ -290,7 +290,6 @@ border: 3px solid #333333;
 
 /* mobile responsive start*/
 @media only screen and (max-width: 700px) {
-    body {
 .contentbox-header-leftmost{
 	background-color: #ececec;
 	background-image: url(/static/media/paper.jpg);
@@ -312,7 +311,6 @@ border: 3px solid #333333;
 	font-size: 3.5vw;
 	
 }
-    }
 }
 
 /* mobile responsive stop*/
