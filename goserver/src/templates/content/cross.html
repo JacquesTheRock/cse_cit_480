@@ -123,6 +123,8 @@ newCN.href += "?pid=" + pid + "&cid=" + cid
 var crossProfile
 var editButton = document.getElementById("editButton");
 var idHeader = document.getElementById("idHeader")
+var oldIDHeader = document.getElementById("idHeader").cloneNode("true")
+
 document.getElementById("projectlink").href += "?id=" + pid
 document.getElementById("crosslink").href += "?id=" + pid + "#crossList"
 
@@ -138,19 +140,30 @@ function getParameterByName(name, url) {
 	return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+function respCrossUpdate() {
+	if(this.readyState == 4) {
+		var out = JSON.parse(this.responseText)
+		if(out.code != 0) {
+			alert(out.status)
+		} else {
+			getCrossInfo()
+			$("#editCrossModal").modal('hide')
+		}
+	}
+}
+
 function UpdateCross() {
 	var name = document.getElementById("submitCrossname");
 	var note = document.getElementById("submitNotes");
 	var url = "http://bloomgenetics.tech/api/v1/projects/" + pid + "/crosses/" + cid; 
 	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-	}
+	xhttp.onreadystatechange = respCrossUpdate
 	xhttp.open("PUT", url, true);
 	if(localStorage["Authorization"])
 		xhttp.setRequestHeader("Authorization", localStorage["Authorization"])
 	xhttp.setRequestHeader("Content-type", "application/json");
-	crossProfile.description = note;
-	crossProfile.name = name;
+	crossProfile.description = note.value;
+	crossProfile.name = name.value;
 	xhttp.send(JSON.stringify(crossProfile));
 }
 
@@ -166,7 +179,7 @@ function updateCrossInfo() {
 		else {
 			var d = out.data
 			crossProfile = d.data
-			idHeader.innerHTML = "Cross: " + d.data.id + idHeader.innerHTML
+			idHeader.innerHTML = "Cross: " + d.data.id + oldIDHeader.innerHTML
 			document.getElementById("nameHeader").innerHTML = "Cross Name: " + d.data.name
 			document.getElementById("crossNote").innerHTML = d.data.description
 			if(d.data.parent1 == 0)
@@ -197,6 +210,10 @@ function updateCrossInfo() {
 			}
 			getCandidateList();
 			getTraitInfo()
+			var name = document.getElementById("submitCrossname");
+			var note = document.getElementById("submitNotes");
+			name.value = crossProfile.name
+			note.value = crossProfile.description
 		}
 	}
 }
