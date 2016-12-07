@@ -253,7 +253,10 @@ html, body {
 	display: inline-block;
 	position:relative;
 	white-space: wrap;
-	
+}
+
+.contentbox-width{
+max-width: 1000px
 }
 
 .nav-main{
