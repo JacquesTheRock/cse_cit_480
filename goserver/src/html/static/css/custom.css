@@ -257,7 +257,13 @@ html, body {
 	
 }
 
+.nav-main{
+	font-size: 30px
+}
 
+.nav-sub{
+	font-size: 20px
+}
  
  /*contentbox stop*/
  
