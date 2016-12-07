@@ -259,6 +259,7 @@ html, body {
 .nav-main{
 	white-space:nowrap;
 	text-overflow: clip;
+	overflow: hidden;
 	max-width: 500px;
 	font-size: 30px
 }
