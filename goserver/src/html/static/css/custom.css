@@ -296,27 +296,6 @@ border: 3px solid #333333;
 
 /* mobile responsive start*/
 @media only screen and (max-width: 700px) {
-.contentbox-header-leftmost{
-	background-color: #ececec;
-	background-image: url(/static/media/paper.jpg);
-	background-repeat: repeat-y repeat-x;
-	color: #60443d;
-	border-top: 3px solid #4b3827;
-	border-left: 3px solid #4b3827;
-	border-right: 3px solid #4b3827;
-	border-radius: 8px 8px 0px 0px;
-    padding: 10px; 	
-	margin-bottom: -4px;
-	margin-left: 0px;
-	font-weight: bold;
-	display: inline-block;
-	position:relative;
-	white-space: wrap;
-	max-width: 400px;
-	font-size: 30px;
-	font-size: 3.5vw;
-	
-}
 
 .nav-main{
 	font-size: 3.5vw;
