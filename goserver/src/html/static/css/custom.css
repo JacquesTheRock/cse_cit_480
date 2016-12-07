@@ -298,12 +298,12 @@ border: 3px solid #333333;
 @media only screen and (max-width: 800px) {
 
 .nav-main{
-	width: 50%;
+	max-width: 60%;
 	font-size: 30px;
 }
 
 .nav-sub{
-	max-width: 400px;
+	max-width: 20%;
 	font-size: 15px;
 }
 
