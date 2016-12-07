@@ -32,7 +32,7 @@
 						</section></h4>
 					</section>
 					<div>
-						<div style="display: inline-block;"><button style="font-size: 20px;" onclick="MessageOwner()" class="btn btn-shutterOut">Message Project Owner</button></div>
+						<div style="display: inline-block;"><button data-toggle="modal" data-target="#messageModal" style="font-size: 20px;" class="btn btn-shutterOut">Message Project Owner</button></div>
 						<div style="display: inline-block;"><button style="font-size: 20px;" onclick="JoinProject()" class="btn btn-shutterOut">Ask to Join Project</button></a></div>
 					</div>
 					<section class="row-fluid">
@@ -135,6 +135,36 @@
 	</div>
 	<!-- edit page modal conent stop-->
 
+	<!-- send message modal conent start-->
+	<div id="messageModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal content-->
+
+				  <div class="contentbox">
+					<div class="container-fluid">
+					  <div id="result"></div>
+						<div class="form-group">
+							<label for="Recipient">To</label>
+							<input id="Recipient" type="text" class="form-control" name="search" placeholder="Enter a User's ID">
+						</div>
+						<div class="form-group">
+							<label for="Subject">Subject</label>
+							<input id="Subject" type="text" class="form-control" name="search" placeholder="Short Description">
+						</div>
+						<div class="form-group">
+							<label for="Message">Message</label>
+							<input id="Message" type="text" class="form-control" name="search" placeholder="Message Body">
+						</div>
+						<button onclick="SendMail()" class="btn btn-shutterOut" name="submit" id="button-submit">Send Message</button>
+			
+					</div>
+				  </div>
+
+
+		</div>
+	</div>
+	<!-- send message modal conent start-->
 
 <script>
 var cEntry = document.getElementById("crossEntry").cloneNode(true)
