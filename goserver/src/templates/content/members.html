@@ -2,9 +2,11 @@
 	<!--<div class="col-sm-offset-1 col-sm-10 col-sm-offset-1">-->
 	
 	<div>
-		<li id="projectHeader" class="contentbox-header-leftmost" style="font-size: 20px; z-index: 3;">Project
+		<li id="projectHeader" class="contentbox-header-leftmost" style="font-size: 20px; z-index: 3;">
+			<a id="projectlink" href="project.html">Project</a>
 		</li>
-		<li id="" class="contentbox-header-new" style="font-size: 20px;z-index: 4;">Crosses
+		<li id="" class="contentbox-header-new" style="font-size: 20px;z-index: 4;">
+			<a id="crosslink" href="project.html">Crosses</a>
 		</li>
 		<li id="memberHeader" class="contentbox-header-new" style="font-size: 30px; z-index: 5;">Members
 		</li>
@@ -66,13 +68,13 @@
 						<div class="container-fluid">
 								<input id="terms" type="text" class="form-control" name="search" placeholder="Search here"></h3>
 
-								<button onclick="Search()" class="btn btn-shutterOut" name="submit" id="button-submit">Search</button>
+								<button onclick="searchUsers()" class="btn btn-shutterOut" name="submit" id="button-submit">Search</button>
 
 						</div>
 						<div class="container-fluid">
 							<h2 style="text-align: center; text-decoration: underline;"> RESULTS </h2>
-							<ul class="media-list" id="resultList">
-								<div class="media" id="result">
+							<ul class="media-list" id="searchList">
+								<div class="media" id="searchEntry">
 									<div class="media-left well">
 										<a href="#" id="resultImgURL">
 											<img class="media-object" width='96' src="/static/media/flower.png" alt="Generic placeholder image" id="resultImg">
@@ -82,6 +84,7 @@
 										<h4 class="media-heading" >Media heading</h4>
 										Location: <text ></text>
 										<p ></p>
+										<a style="margin-left: 10px;" class="glyphicon glyphicon-plus pull-right"></a>
 									</div>
 								</div>
 							</ul>
@@ -108,19 +111,25 @@
 
 				  <div class="contentbox">
 					<div class="container-fluid">
-					  <div id="result"></div>
+					  <div ></div>
 						<section class="row container-fluid">
+							<h3 id="membername">Member<h2>
 							<div class="row-fluid" style="text-align: center">
 								<h3 style="display: inline-block;">Role: </h3>
 								<div class="dropdown" style="display: inline-block;">
-									<button id='memberbutton' class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Role
-										<span class="caret"></span>
+									<button id='memberbutton' class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><div id="roletext">
+										<span class="caret">
+										</span>
 									</button>
 									<ul class="dropdown-menu" id="parent1list">
+										<li><a onclick="setRole('Owner')">Owner</a></li>
+										<li><a onclick="setRole('Admin')">Admin</a></li>
+										<li><a onclick="setRole('Member')">Member</a></li>
+										<li><a onclick="setRole('Remove')">Remove</a></li>
 									</ul>
 								</div>
 								<div  style="display: inline-block; width: 50%; text-bottom">
-									<button onclick="UpdateMemberRole()" class="btn btn-shutterOut">Update</button>
+									<button onclick="setMemberRole()" class="btn btn-shutterOut">Update</button>
 								</div>
 							</div>
 							
@@ -133,3 +142,212 @@
 	</div>
 	<!-- edit member pop up content stop-->
 </div>
+<script>
+
+function getParameterByName(name, url) {
+	if (!url) {
+	  url = window.location.href;
+	}
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+
+function onClickModalOpen(uid,r) {
+	return function() {
+		role.user_id = uid
+		setRole(r)
+		var membName = document.getElementById("membername")
+		membName.innerHTML = uid
+	}
+}
+
+function searchResults() {
+	if (this.readyState == 4) {
+		var resp = JSON.parse(this.responseText);
+		if (resp.code != 0) {
+			alert(resp.status)
+			return
+		}
+		var a = resp.data
+		var list = document.getElementById("searchList")
+		list.innerHTML = ""
+		if (!a)
+			a = []
+		for (e of a) {
+			var entry = searchEntry.cloneNode(true);
+			var c = entry.children[1];
+			entry.id = e.id
+			entry.children[0].children[0].href = "/profile.html?id=" + e.id
+			var rName = c.childNodes[1];
+			var rSpecies = c.childNodes[3];
+			var rDescription = c.childNodes[5];
+			var button = c.childNodes[7]
+			button.onclick = newMembFunc(e.id)
+			if (e.name == "")
+				rName.innerHTML = e.id
+			else
+				rName.innerHTML = e.name
+			rSpecies.innerHTML = e.growzone
+			rDescription.innerHTML = "Active: " + e.season
+			list.appendChild(entry)
+		}
+		
+	}
+}
+function newMembFunc(uid) {
+	return function() {
+		role.user_id = uid
+		role.role_id = 3
+		role.role_name = "Member"
+		addMember()
+	}
+}
+
+function searchUsers() {
+		var url = "http://bloomgenetics.tech/api/v1/users";
+	var data = "?id="+document.getElementById("terms").value+"&name="+document.getElementById("terms").value;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = searchResults;
+	xhttp.open("GET", url + data, true);
+	if (localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null);
+}
+var role = {
+	role_id: 0,
+	role_name: 0,
+	user_id: ""
+}
+var membButton = document.getElementById("memberbutton").cloneNode(true)
+
+function setRole(s) {
+	role.role_id = 0
+	role.role_name = s
+	switch(s) {
+		case "Owner":
+			role.role_id = 5
+			break
+		case "Admin":
+			role.role_id = 4
+			break
+		case "Member":
+			role.role_id = 3
+			break
+		case "Remove":
+			role.role_id = -1
+			break;
+	}
+	var button = document.getElementById("memberbutton")
+	button.childNodes[0].innerHTML  = s + membButton.childNodes[0].innerHTML
+}
+
+function updateMembersList() {
+	var list = document.getElementById("memberList");
+	if(this.readyState == 4 && this.status == 200) {
+		var out = JSON.parse(this.responseText)
+		if (out.code != 0) {
+			removePluses()
+		} else {
+			list.innerHTML = ""
+			for(var i = 0; i < out.data.length; i++) {
+				var d = out.data[i]
+				var entry = mEntry.cloneNode(true)
+				entry.id += d.id
+				entry.children[0].children[0].children[0].href = "/profile.html?id=" + d.user_id
+				var c = entry.children[0].children[1].childNodes[1]
+				var NameF = c.childNodes[1];
+				var RoleF = c.childNodes[3];
+				var ModalButton = RoleF.childNodes[3]
+				NameF.innerHTML = d.user_id
+				RoleF.innerHTML = "Role: " + d.role_name + ModalButton.outerHTML
+				RoleF.childNodes[1].onclick = onClickModalOpen(d.user_id, d.role_name)
+				list.appendChild(entry)
+			}
+		}
+		
+	}
+}
+
+function getMembersInfo() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID + "/roles";
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateMembersList;
+	xhttp.open("GET", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.send(null)
+}
+
+function newMemberRole() {
+	if (this.readyState == 4) {
+		var resp = JSON.parse(this.responseText)
+		if (resp.code != 0)
+			alert(resp.status)
+		getMembersInfo()
+		$('#addMemberModal').modal('hide')
+	}
+}
+
+function updateMemberRole() {
+	if (this.readyState == 4) {
+		var resp = JSON.parse(this.responseText)
+		if (resp.code != 0)
+			alert(resp.status)
+		getMembersInfo()
+		$('#editMemberModal').modal('hide')
+	}
+} 
+
+function addMember() {
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID + "/roles"
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = newMemberRole;
+	xhttp.open("POST", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.setRequestHeader("Content-type","application/json")
+	xhttp.send(JSON.stringify(role))
+}
+
+function deleteMember() {
+        var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID + "/roles/" + role.user_id;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = updateMemberRole;
+        xhttp.open("DELETE", url, true);
+        if(localStorage["Authorization"])
+                xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+        xhttp.send(null)
+
+}
+
+function setMemberRole() {
+	if(role.role_id == -1) {
+		deleteMember()
+		return
+	}
+	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID + "/roles/" + role.user_id;
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = updateMemberRole;
+	xhttp.open("PUT", url, true);
+	if(localStorage["Authorization"])
+		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
+	xhttp.setRequestHeader("Content-type","application/json")
+	xhttp.send(JSON.stringify(role))
+}
+
+var projectID = getParameterByName("pid");
+document.getElementById("projectlink").href += "?id=" + projectID
+document.getElementById("crosslink").href += "?id=" + projectID + "#crossList"
+var mEntry = document.getElementById("membEntry").cloneNode(true)
+var searchEntry = document.getElementById("searchEntry").cloneNode(true)
+document.getElementById("searchEntry").outerHTML = ""
+document.getElementById("membEntry").outerHTML = ""
+
+
+getMembersInfo()
+</script>

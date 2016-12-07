@@ -9,9 +9,11 @@
 				</span>
 			</a>
 		</li>
-		<li id="" class="contentbox-header-new" style="font-size: 20px;z-index: 4;">Crosses
+		<li id="crossHeader" class="contentbox-header-new" style="font-size: 20px;z-index: 4;">
+			<a id="crosslink" href="#crossList">Crosses</a>
 		</li>
-		<li id="memberHeader" class="contentbox-header-new" style="font-size: 20px;z-index: 3;">Members
+		<li id="memberHeader" class="contentbox-header-new" style="font-size: 20px;z-index: 3;">
+			<a id="memberlink" href="/members.html">Members</a>
 		</li>
 
 	</div>
@@ -46,6 +48,7 @@
 					<canvas id="tree" width="100%" height="350"></canvas>
 					</section>
 					<section class="row-fluid">
+<!-- Old Members stuff
 			<h3><b><div style="display: inline-block;">Members<a id="newmember" style="margin-left: 10px;" data-toggle="modal" data-target="#addMemberModal" class="glyphicon glyphicon-plus pull-right"></a></div></h3></b>
 			<div class="row">
 				<ul class="media-list" id="memberList">
@@ -66,6 +69,7 @@
 				</ul>
 			</div>
 			<p></p><br>
+-->
 					</section>
 					
 					<section class="row-fluid">
@@ -157,8 +161,6 @@
 </div>
 
 <script>
-var mEntry = document.getElementById("membEntry").cloneNode(true)
-document.getElementById("membEntry").outerHTML = ""
 var cEntry = document.getElementById("crossEntry").cloneNode(true)
 document.getElementById("crossEntry").outerHTML = ""
 var projectInfo = document.getElementById("projectInfo")
@@ -178,6 +180,8 @@ if (localStorage["Authorization"]) {
 newcross.href += "?pid=" + projectID
 var owner = ""
 
+var mLink = document.getElementById("memberlink")
+mLink.href += "?pid=" + projectID
 
 function removePluses(list=["newcross","editButton","newmember"]) {
 	var pluses = list
@@ -236,7 +240,7 @@ function updateProjectInfo() {
 				}
 		}
 }
-
+/*
 function updateMembersList() {
 	var list = document.getElementById("memberList");
 	if(this.readyState == 4 && this.status == 200) {
@@ -262,7 +266,7 @@ function updateMembersList() {
 		
 	}
 }
-
+*/
 function updateProjectInfo() {
 	 if(this.readyState == 4 && this.status == 200) {
 		var out = JSON.parse(this.responseText)
@@ -372,7 +376,7 @@ function getProjectInfo() {
 		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
 	xhttp.send(null)
 }
-
+/*
 function getMembersInfo() {
 	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID + "/roles";
 	var xhttp = new XMLHttpRequest();
@@ -382,6 +386,7 @@ function getMembersInfo() {
 		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
 	xhttp.send(null)
 }
+*/
 
 
 function getCrossInfo() {
@@ -417,7 +422,7 @@ function UpdateProject() {
 }	
 
 getProjectInfo()
-getMembersInfo()
+//getMembersInfo()
 getCrossInfo()
 
 /* canvas resizer start*/
