@@ -299,16 +299,17 @@ border: 3px solid #333333;
 
 .nav-main{
 	max-width: 400px;
-	font-size: 20px
+	font-size: 30px;
 }
 
 .nav-sub{
-	font-size: 10px;
+	max-width: 400px;
+	font-size: 15px;
 }
 
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 700px) {
 
 .nav-main{
 	font-size: 3.5vw;
