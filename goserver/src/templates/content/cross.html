@@ -52,6 +52,7 @@
 			<table class="table table-styiped">
 				<thead>
 					<tr>
+						<th>Group</th>
 						<th>Type</th>
 						<th>Name</th>
 						<th>Carrier</th>
@@ -240,6 +241,7 @@ function updateTraitInfo() {
 				d = [] //Initialize to empty array if no traits
 			for (e of d) {
 				el.innerHTML += "<tr>" +
+					"<td>" + e.trait.pool + "</td>" +
 					"<td>" + e.trait.type + "</td>" +
 					"<td>" + e.trait.name + "</td>" +
 					"<td>" + 100 * (e.carry / e.count) + "</td>" +
