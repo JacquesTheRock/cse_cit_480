@@ -167,7 +167,7 @@ html, body {
   border-radius: 3px;
 }
 .btn-shutterOut:hover, .btn-shutterOut:focus, .btn-shutterOut:active {
-  color: #dfd3c8;
+  color: #009900;
 }
 .btn-shutterOut:hover:before, .btn-shutterOut:focus:before, .btn-shutterOut:active:before {
   -webkit-transform: scaleX(1);
