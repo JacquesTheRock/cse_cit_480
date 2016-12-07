@@ -317,6 +317,15 @@ border: 3px solid #333333;
 	font-size: 3.5vw;
 	
 }
+
+.nav-main{
+	font-size: 3.5vw;
+}
+
+.nav-sub{
+	font-size: 3.0vw;
+}
+
 }
 
 /* mobile responsive stop*/
