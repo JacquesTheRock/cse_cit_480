@@ -5,11 +5,14 @@
 	
 	
 	<div>
-		<li id="projectHeader" class="contentbox-header-leftmost" style="font-size: 20px; z-index: 2;">Project
+		<li id="projectHeader" class="contentbox-header-leftmost" style="font-size: 20px; z-index: 2;">
+			<a id="projectlink" href="/project.html">Project</a>
 		</li>
-		<li id="" class="contentbox-header-new" style="font-size: 20px;z-index: 3;">Crosses
+		<li id="" class="contentbox-header-new" style="font-size: 20px;z-index: 3;">
+			<a id="crosslink" href="/project.html">Crosses</a>
 		</li>
-		<li id="idHeader" class="contentbox-header-new" style="font-size: 20px; z-index: 4;">Cross:
+		<li id="idHeader" class="contentbox-header-new" style="font-size: 20px; z-index: 4;">
+			<a id="pcrosslink" href="/cross.html">Cross:</a>
 		</li>
 		<li id="crossHeader" class="contentbox-header-new" style="font-size: 30px; z-index: 5;">
 			<a id="editButton" data-toggle="modal" data-target="#editCandidateModal">
@@ -170,6 +173,11 @@
 var pid = getParameterByName("pid");
 var cid = getParameterByName("cid");
 var cnid = getParameterByName("id");
+document.getElementById("projectlink").href += "?id=" + pid
+document.getElementById("crosslink").href += "?id=" + pid + "#crossList"
+document.getElementById("pcrosslink").href += "?id=" + cid + "&pid=" + pid
+
+
 
 function getParameterByName(name, url) {
 	if (!url) {
