@@ -32,8 +32,8 @@
 						</section></h4>
 					</section>
 					<div>
-						<div style="display: inline-block;"><button type="button" value="Message Project Owner" onclick="window.location.href='mail.html'"  style="font-size: 20px;" class="btn btn-shutterOut">Message Project Owner</button></div>
-					<!--	<div style="display: inline-block;"><button data-toggle="modal" data-target="#messageModal" style="font-size: 20px;" class="btn btn-shutterOut">Message Project Owner</button></div> ->
+					<!-- <div style="display: inline-block;"><button type="button" value="Message Project Owner" onclick="window.location.href='mail.html'"  style="font-size: 20px;" class="btn btn-shutterOut">Message Project Owner</button></div>-->
+					<div style="display: inline-block;"><button data-toggle="modal" data-target="#messageModal" style="font-size: 20px;" class="btn btn-shutterOut">Message Project Owner</button></div>
 					<!--<div style="display: inline-block;"><button style="font-size: 20px;" onclick="JoinProject()" class="btn btn-shutterOut">Ask to Join Project</button></a></div> -->
 					</div>
 					<section class="row-fluid">
@@ -158,7 +158,7 @@
 							<label for="Message">Message</label>
 							<input id="Message" type="text" class="form-control" name="search" placeholder="Message Body">
 						</div>
-						<button onclick="SendMail()" class="btn btn-shutterOut" name="submit" id="button-submit">Send Message</button>
+						<button onclick="MessageOwner()" class="btn btn-shutterOut" name="submit" id="button-submit">Send Message</button>
 			
 					</div>
 				  </div>
@@ -248,8 +248,8 @@ function updateProjectInfo() {
 				}
 		}
 }
-/*
-function updateMembersList() {
+
+function projectOwnerResp() {
 	var list = document.getElementById("memberList");
 	if(this.readyState == 4 && this.status == 200) {
 		var out = JSON.parse(this.responseText)
@@ -258,23 +258,13 @@ function updateMembersList() {
 		} else {
 			for(var i = 0; i < out.data.length; i++) {
 				var d = out.data[i]
-				var entry = mEntry.cloneNode(true)
-				entry.id += d.id
-				entry.children[0].children[0].children[0].href = "/profile.html?id=" + d.user_id
-				var c = entry.children[0].children[1]
-				var NameF = c.childNodes[1];
-				var RoleF = c.childNodes[3];
-				NameF.innerHTML = d.user_id
-				RoleF.innerHTML = d.role_name
 				if(d.role_id == 5)
 					projectProfile.owner = d.user_id
-				list.appendChild(entry)
 			}
 		}
 		
 	}
 }
-*/
 function updateProjectInfo() {
 	 if(this.readyState == 4 && this.status == 200) {
 		var out = JSON.parse(this.responseText)
@@ -299,6 +289,7 @@ function updateProjectInfo() {
 					document.getElementById("submitAvailability").value = d.public;
 					document.getElementById("submitDescription").value = d.description;
 			}
+			getProjectOwner()
 		}
 	}
 }
@@ -348,7 +339,7 @@ function messageResp() {
 		if(resp.code == 0)
 			alert("Message Sent!")
 		else
-			alert("Failed to Send message")
+			alert(out.status)
 	}
 }
 
@@ -356,10 +347,11 @@ function MessageOwner() {
 	var data = {
 		src: '',
 		dest: projectProfile.owner,
-		subject: "Hello",
-		message: "Default Message"
+		subject: document.getElementById("Subject").value,
+		message: document.getElementById("Message").value
 	}
 	sendMessage(data)
+	$("#messageModal").modal('hide')
 }
 
 function sendMessage(data) {
@@ -384,17 +376,16 @@ function getProjectInfo() {
 		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
 	xhttp.send(null)
 }
-/*
-function getMembersInfo() {
+
+function getProjectOwner() {
 	var url = "http://bloomgenetics.tech/api/v1/projects/" + projectID + "/roles";
 	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = updateMembersList;
+	xhttp.onreadystatechange = projectOwnerResp;
 	xhttp.open("GET", url, true);
 	if(localStorage["Authorization"])
 		xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
 	xhttp.send(null)
 }
-*/
 
 
 function getCrossInfo() {
@@ -430,7 +421,6 @@ function UpdateProject() {
 }	
 
 getProjectInfo()
-//getMembersInfo()
 getCrossInfo()
 
 /* canvas resizer start*/
