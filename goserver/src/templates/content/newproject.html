@@ -59,6 +59,19 @@ if (!localStorage["Authorization"]) {
 			  <label for="public">Public (boolean)?</label>
 			  <input type="text" class="form-control" id="public" placeholder="public">
 			</div>
+			
+			<div class="form-group">
+				<label for="public">Public or Private Project?</label>
+				<select id="public" class="form-control">
+					<option value="true" selected>Public</option>
+					<option value="false">Private</option>
+				
+				</select>
+			</div>
+			
+			
+			
+			
 			<button onclick="CreateProject()" class="btn btn-shutterOut">Create Project</button>
 		
 		
