@@ -24,10 +24,10 @@
       <ul class="nav navbar-nav navbar-right">
 
 		  </form>
-			<li><a href="\search.html"> <span class="glyphicon glyphicon-search"  aria-hidden="true"></span> Search </a> </li> 
-			<li><a id='mail' href="\mail.html"> <span class="glyphicon glyphicon-envelope"  aria-hidden="true"></span> Mailbox </a> </li> 
-			<li><a id="profile" href="\profile.html">guest</a></li>
-			<li class="dropdown">
+			<li><a id ="navsearch" href="\search.html"> <span class="glyphicon glyphicon-search"  aria-hidden="true"></span> Search </a> </li> 
+			<li><a id='navmail' href="\mail.html"> <span class="glyphicon glyphicon-envelope"  aria-hidden="true"></span> Mailbox </a> </li> 
+			<li><a id="navprofile" href="\profile.html">guest</a></li>
+			<li id="navdropdown" class="dropdown">
 			  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Projects<span class="caret"></span></a>
 			  <ul id="projects" class="dropdown-menu">
 <!--
@@ -53,13 +53,19 @@ function fixNavbar() {
 		user = atob(token).split(":")[0];
 		registerEl = document.getElementById("navRegister");
 		registerEl.parentElement.innerHTML = "";
-		profileEl = document.getElementById("profile");
+		profileEl = document.getElementById("navprofile");
 		profileEl.innerHTML = user;
 		/*registerEl.parentElement.innerHTML = "<p>Hello " + user +
 			 '</p><span class="sr-only"></span>';*/
 		loginEl = document.getElementById("navLogin");
 		loginEl.innerHTML = "Logout";
 		loginEl.href = "/logout.html";
+	} else {
+		for (s of ["navprofile", "navsearch", "navmail", "navdropdown"]) {
+			el = document.getElementById(s);
+			el.parentNode.removeChild(el);
+		}
+		
 	}
 }
 
