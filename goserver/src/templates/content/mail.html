@@ -8,22 +8,25 @@ table, th, td {
 	  <h2 class="header contentbox-header" style="max-width: 750px;">Messages</h2>
 	  <div class="contentbox">
 		<button data-toggle="modal" data-target="#messageModal" class="btn btn-shutterOut" name="submit">Create Message</button>
-		
 		<div class="container-fluid">		
 			<div class="container-fluid">
-				<table id="messageTable" width="100%">
-					<tr>
-						<th width="10%">Sender</th>
-						<th width="15%">Date</th>
-						<th width="20%">Subject</th>
-						<th width="55%">Message</th>
-					</tr>
-					<tr id="entry0">
-						<td>Sender</td>
-						<td>Date</td>
-						<td>Subject</td>
-						<td>Message</td>
-					</tr>
+				<table class="table table-striped" id="messageTable" width="100%">
+					<thead>
+						<tr>
+							<th width="10%">Sender</th>
+							<th width="15%">Date</th>
+							<th width="20%">Subject</th>
+							<th width="55%">Message</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr id="entry0">
+							<td>Sender</td>
+							<td>Date</td>
+							<td>Subject</td>
+							<td>Message</td>
+						</tr>
+					</tbody>
 				</table>
 		</div>
 	  </div>  
@@ -68,7 +71,17 @@ table, th, td {
 		//listClear()
 			GetMail();
 	}
-	
+
+
+function respSendMail() {
+	if(this.readyState == 4) {
+		var out = JSON.parse(this.responseText)
+		if (out.code != 0)
+			alert(out.status)
+		$("#messageModal").modal('hide')
+	}
+}
+
 	function GetMail(){
 		token = localStorage["Authorization"].split(" ")[1];
 		user = atob(token).split(":")[0];
@@ -126,16 +139,16 @@ table, th, td {
 	function SendMail(){
 		token = localStorage["Authorization"].split(" ")[1];
 		user = atob(token).split(":")[0];
-		var recipientUID = document.getElementById("Recipient");
+		var recipientUID = document.getElementById("Recipient").value;
 		var url = "http://bloomgenetics.tech/api/v1/users/"+recipientUID+"/mail";
 		var data = {
 			src: user,
-			message: document.getElementById("Message"),
-			subject: document.getElementById("Subject")
+			message: document.getElementById("Message").value,
+			subject: document.getElementById("Subject").value
 		}
 		var xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = getData;
-		xhttp.open("POST", url + data, true);
+		xhttp.onreadystatechange = respSendMail;
+		xhttp.open("POST", url, true);
 		if (localStorage["Authorization"])
 			xhttp.setRequestHeader("Authorization", localStorage["Authorization"]);
 		xhttp.setRequestHeader("Content-type", "application/json");
